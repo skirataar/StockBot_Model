@@ -1,0 +1,104 @@
+{
+  "audit_metadata": {
+    "sprint": "6.0.3",
+    "title": "Final Accounting Invariant Audit",
+    "role": "Lead Quantitative Research Engineer",
+    "date": "2026-10-28",
+    "verdict": "PASS WITH LIMITATIONS",
+    "model_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+    "test_parquet_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381"
+  },
+  "check_1_fee_rounding": {
+    "unrounded_component_sums_inr": {
+      "brokerage": 24840.0,
+      "stt": 114136.84439,
+      "exchange": 3389.864278,
+      "sebi": 114.136844,
+      "stamp": 8556.323645,
+      "gst": 5101.920202,
+      "slippage": 57068.422195,
+      "total_friction": 213207.511554
+    },
+    "component_totals_rounded_individually_inr": {
+      "brokerage": 24840.0,
+      "stt": 114137.05,
+      "exchange": 3390.06,
+      "sebi": 113.82,
+      "stamp": 8556.2,
+      "gst": 5101.93,
+      "slippage": 57068.46,
+      "sum_of_rounded_components": 213207.52
+    },
+    "production_total_friction_inr": 213207.51,
+    "decimal_arithmetic_friction_inr": {
+      "decimal_round_half_even": 213207.51,
+      "decimal_round_half_up": 213207.51
+    },
+    "one_paisa_discrepancy_derivation": {
+      "sum_of_displayed_components_inr": 213207.52,
+      "production_total_friction_inr": 213207.51,
+      "difference_inr": 0.01,
+      "total_order_legs_inspected": 1242,
+      "legs_with_sub_paisa_divergence": 546,
+      "negative_divergences_sum_inr": -2.81,
+      "positive_divergences_sum_inr": 2.82,
+      "net_combinatorial_residual_inr": 0.01,
+      "proof": "Across 1,242 order legs, 267 negative 1-paisa and 7 negative 2-paisa divergences (-\u20b92.81) cancel against 262 positive 1-paisa and 10 positive 2-paisa divergences (+\u20b92.82), leaving an exact net residual of +\u20b90.01."
+    }
+  },
+  "check_2_ten_paise_equity_reconciliation": {
+    "final_portfolio_equity_inr": 840519.64,
+    "final_cash_inr": 183338.74,
+    "final_invested_mtm_value_inr": 657180.9,
+    "portfolio_equity_change_inr": -159480.36,
+    "normally_closed_trades_count": 613,
+    "closed_trades_realized_gross_pnl_inr": 63759.07,
+    "closed_trades_realized_costs_inr": 210693.24,
+    "closed_trades_realized_net_pnl_inr": -146934.17,
+    "open_positions_count": 8,
+    "open_positions_cash_outlay_inr": 669727.01,
+    "open_positions_mtm_value_inr": 657180.9,
+    "open_positions_unrealized_mtm_pnl_inr": -12546.11,
+    "hypothetical_sell_friction_inr": 1198.38,
+    "synthetic_liquidation_trade_gross_pnl_inr": -11230.2,
+    "synthetic_liquidation_trade_costs_inr": 2514.27,
+    "synthetic_liquidation_trade_net_pnl_inr": -13744.47,
+    "all_621_trades_net_pnl_inr": -160678.64,
+    "single_explicit_equation": {
+      "formula": "Equity_Change - All_Trades_Net_PnL = Hypothetical_Sell_Friction - delta_liq - delta_cash",
+      "equity_change_inr": -159480.36,
+      "all_trades_net_pnl_inr": -160678.64,
+      "variance_inr": 1198.28,
+      "hypothetical_sell_friction_inr": 1198.38,
+      "delta_liq_inr": 0.02,
+      "delta_cash_inr": 0.08,
+      "reconciled_value_inr": 1198.28,
+      "gap_inr": 0.0,
+      "classification": {
+        "realized": "Closed trades Net P&L (-\u20b9146,934.17)",
+        "unrealized": "Open positions MTM loss (-\u20b912,546.11)",
+        "hypothetical": "Un-incurred exit friction on open positions (\u20b91,198.38)",
+        "rounding_artifacts": "Synthetic liquidation rounding (\u20b90.02) + Cash update accumulation (\u20b90.08) = \u20b90.10"
+      }
+    },
+    "invariants_confirmed": {
+      "no_buy_side_double_counting": true,
+      "invested_capital_includes_buy_fees": true,
+      "gross_pnl_uses_raw_unadjusted_prices": true
+    }
+  },
+  "check_3_independent_test_quality": {
+    "test_file": "tests/test_final_invariant_audit_6_0_3.py",
+    "tests_executed": [
+      "test_brokerage_cap_edge_cases",
+      "test_stamp_duty_and_stt_asymmetry",
+      "test_gst_base_composition_both_legs",
+      "test_reproducible_paisa_discrepancy_cancellation",
+      "test_single_explicit_equation_ten_paise_reconciliation",
+      "test_mutation_fails_on_altered_brokerage_cap"
+    ],
+    "test_count": 6,
+    "test_status": "ALL_PASSED",
+    "repository_total_tests": 54
+  }
+}

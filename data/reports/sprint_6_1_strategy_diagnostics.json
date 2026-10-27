@@ -1,0 +1,635 @@
+{
+  "metadata": {
+    "report_id": "sprint_6_1_strategy_diagnostics",
+    "timestamp": "2026-10-28T01:52:00+05:30",
+    "author_role": "Lead Quantitative Researcher",
+    "diagnostic_status": "COMPLETE",
+    "research_nature": "Read-only quantitative diagnostics on frozen Sprint 5.0 LightGBM swing strategy backtest",
+    "reproducibility_status": "100% REPRODUCIBLE"
+  },
+  "reproducibility_and_hashes": {
+    "frozen_model_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+    "test_dataset_parquet_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+    "test_period_start": "2025-01-01",
+    "test_period_end": "2026-07-22",
+    "trading_sessions_count": 388,
+    "universe_approved_constituents_count": 49,
+    "test_dataset_rows": 19012,
+    "approved_feature_count": 30,
+    "trades_count": 621,
+    "regular_market_trades": 613,
+    "synthetic_end_of_period_liquidations": 8,
+    "starting_capital_inr": 1000000.0,
+    "reported_gross_pnl_inr": 52528.87,
+    "reported_total_friction_inr": 213207.51,
+    "reported_net_trade_ledger_pnl_inr": -160678.64,
+    "reported_final_mark_to_market_equity_inr": 840519.64,
+    "reported_net_portfolio_return_pct": -15.95,
+    "equal_weight_buy_and_hold_benchmark_gross_return_pct": 10.26,
+    "accounting_invariants_status": "PASS WITH LIMITATIONS (Sprint 6.0.3 verified 10-paisa mark-to-market roundoff)",
+    "discrepancies_against_baseline": []
+  },
+  "classification_diagnostics": {
+    "confusion_matrix": {
+      "class_order": [
+        "SELL (-1)",
+        "HOLD (0)",
+        "BUY (1)"
+      ],
+      "description": "Rows represent actual true labels, columns represent model predicted classifications",
+      "matrix": [
+        [
+          1625,
+          2075,
+          915
+        ],
+        [
+          2762,
+          5356,
+          1336
+        ],
+        [
+          1618,
+          2178,
+          1147
+        ]
+      ],
+      "actual_totals": {
+        "SELL (-1)": 4615,
+        "HOLD (0)": 9454,
+        "BUY (1)": 4943,
+        "total": 19012
+      },
+      "predicted_totals": {
+        "SELL (-1)": 6005,
+        "HOLD (0)": 9609,
+        "BUY (1)": 3398,
+        "total": 19012
+      }
+    },
+    "classification_metrics": {
+      "sell_class_minus_1": {
+        "precision": 0.2706,
+        "recall": 0.3521,
+        "f1_score": 0.306,
+        "support": 4615
+      },
+      "hold_class_0": {
+        "precision": 0.5574,
+        "recall": 0.5665,
+        "f1_score": 0.5619,
+        "support": 9454
+      },
+      "buy_class_plus_1": {
+        "precision": 0.3376,
+        "recall": 0.232,
+        "f1_score": 0.275,
+        "support": 4943
+      },
+      "macro_avg": {
+        "precision": 0.3885,
+        "recall": 0.3836,
+        "f1_score": 0.381
+      },
+      "weighted_avg": {
+        "precision": 0.4306,
+        "recall": 0.4275,
+        "f1_score": 0.4252
+      },
+      "overall_accuracy": 0.4275
+    },
+    "class_proportions": {
+      "sell_class_minus_1": {
+        "actual_pct": 24.27,
+        "predicted_pct": 31.59
+      },
+      "hold_class_0": {
+        "actual_pct": 49.73,
+        "predicted_pct": 50.54
+      },
+      "buy_class_plus_1": {
+        "actual_pct": 26.0,
+        "predicted_pct": 17.87
+      }
+    },
+    "buy_probability_distribution": {
+      "true_buy": {
+        "sample_count": 4943,
+        "mean": 0.3069,
+        "std": 0.0785,
+        "median": 0.3033,
+        "min": 0.0811,
+        "p25": 0.2573,
+        "p75": 0.3536,
+        "max": 0.6372
+      },
+      "non_buy": {
+        "sample_count": 14069,
+        "mean": 0.2904,
+        "std": 0.0713,
+        "median": 0.2917,
+        "min": 0.0781,
+        "p25": 0.2449,
+        "p75": 0.3343,
+        "max": 0.5864
+      },
+      "mean_probability_separation": 0.0165
+    },
+    "calibration_diagnostics": {
+      "buy_binary_brier_score": 0.1927,
+      "quantile_calibration_curve": [
+        {
+          "bin_index": 1,
+          "mean_predicted_p_buy": 0.168,
+          "actual_fraction_true_buy": 0.2219,
+          "calibration_error": 0.0538
+        },
+        {
+          "bin_index": 2,
+          "mean_predicted_p_buy": 0.2159,
+          "actual_fraction_true_buy": 0.2204,
+          "calibration_error": 0.0045
+        },
+        {
+          "bin_index": 3,
+          "mean_predicted_p_buy": 0.2477,
+          "actual_fraction_true_buy": 0.2367,
+          "calibration_error": -0.011
+        },
+        {
+          "bin_index": 4,
+          "mean_predicted_p_buy": 0.2694,
+          "actual_fraction_true_buy": 0.2367,
+          "calibration_error": -0.0327
+        },
+        {
+          "bin_index": 5,
+          "mean_predicted_p_buy": 0.2868,
+          "actual_fraction_true_buy": 0.2367,
+          "calibration_error": -0.05
+        },
+        {
+          "bin_index": 6,
+          "mean_predicted_p_buy": 0.3025,
+          "actual_fraction_true_buy": 0.2462,
+          "calibration_error": -0.0563
+        },
+        {
+          "bin_index": 7,
+          "mean_predicted_p_buy": 0.3192,
+          "actual_fraction_true_buy": 0.2567,
+          "calibration_error": -0.0625
+        },
+        {
+          "bin_index": 8,
+          "mean_predicted_p_buy": 0.3395,
+          "actual_fraction_true_buy": 0.2735,
+          "calibration_error": -0.0659
+        },
+        {
+          "bin_index": 9,
+          "mean_predicted_p_buy": 0.3673,
+          "actual_fraction_true_buy": 0.2962,
+          "calibration_error": -0.0712
+        },
+        {
+          "bin_index": 10,
+          "mean_predicted_p_buy": 0.4306,
+          "actual_fraction_true_buy": 0.3749,
+          "calibration_error": -0.0557
+        }
+      ],
+      "calibration_commentary": "Quantile bins show positive monotonic ordering between predicted probability and empirical win rate, but model is systematically overconfident by 2-7 percentage points in deciles 2-10."
+    }
+  },
+  "trade_level_edge_decomposition": {
+    "portfolio_level_totals": {
+      "trade_count": 621,
+      "gross_pnl_inr": 52528.87,
+      "total_friction_inr": 213207.51,
+      "net_pnl_inr": -160678.64,
+      "gross_pnl_mean_inr": 84.59,
+      "gross_pnl_median_inr": -72.15,
+      "gross_pnl_std_inr": 3541.45,
+      "net_pnl_mean_inr": -258.74,
+      "net_pnl_median_inr": -395.59,
+      "net_pnl_std_inr": 3537.21,
+      "costs_per_trade_mean_inr": 343.33,
+      "costs_per_trade_median_inr": 348.55
+    },
+    "win_rates_and_profit_factors": {
+      "gross_win_rate_pct": 49.28,
+      "gross_wins_count": 306,
+      "gross_losses_count": 314,
+      "net_win_rate_pct": 44.61,
+      "net_wins_count": 277,
+      "net_losses_count": 344,
+      "friction_flipped_trades_count": 29,
+      "gross_profit_factor": 1.0684,
+      "gross_gains_inr": 820960.96,
+      "gross_losses_inr": -768432.09,
+      "net_profit_factor": 0.8174,
+      "net_gains_inr": 719249.65,
+      "net_losses_inr": -879928.29,
+      "definitions": {
+        "gross_win_rate": "count(gross_pnl > 0) / N",
+        "net_win_rate": "count(net_pnl > 0) / N",
+        "gross_profit_factor": "sum(gross_pnl > 0) / abs(sum(gross_pnl < 0))",
+        "net_profit_factor": "sum(net_pnl > 0) / abs(sum(net_pnl < 0))"
+      }
+    },
+    "cost_proportions": {
+      "total_friction_pct_of_gross_net_alpha": 405.89,
+      "total_friction_pct_of_absolute_gross_pnl": 13.41,
+      "total_friction_pct_of_gross_gains": 25.97
+    },
+    "conviction_breakdown_by_probability_band": [
+      {
+        "probability_band": "[0.33, 0.40)",
+        "trade_count": 350,
+        "trade_share_pct": 56.36,
+        "gross_pnl": -106335.06,
+        "total_costs": 120966.94,
+        "net_pnl": -227302.0,
+        "gross_win_rate_pct": 45.43,
+        "net_win_rate_pct": 40.0,
+        "avg_gross_pnl": -303.81,
+        "avg_net_pnl": -649.43,
+        "gross_profit_factor": 0.7524,
+        "net_profit_factor": 0.544
+      },
+      {
+        "probability_band": "[0.40, 0.45)",
+        "trade_count": 181,
+        "trade_share_pct": 29.15,
+        "gross_pnl": 58778.41,
+        "total_costs": 61834.58,
+        "net_pnl": -3056.17,
+        "gross_win_rate_pct": 53.59,
+        "net_win_rate_pct": 49.17,
+        "avg_gross_pnl": 324.74,
+        "avg_net_pnl": -16.88,
+        "gross_profit_factor": 1.2674,
+        "net_profit_factor": 0.9877
+      },
+      {
+        "probability_band": "[0.45, 0.50)",
+        "trade_count": 64,
+        "trade_share_pct": 10.31,
+        "gross_pnl": 48676.56,
+        "total_costs": 21635.19,
+        "net_pnl": 27041.37,
+        "gross_win_rate_pct": 54.69,
+        "net_win_rate_pct": 54.69,
+        "avg_gross_pnl": 760.57,
+        "avg_net_pnl": 422.52,
+        "gross_profit_factor": 1.5541,
+        "net_profit_factor": 1.2773
+      },
+      {
+        "probability_band": "[0.50, 1.00]",
+        "trade_count": 26,
+        "trade_share_pct": 4.19,
+        "gross_pnl": 51408.96,
+        "total_costs": 8770.8,
+        "net_pnl": 42638.16,
+        "gross_win_rate_pct": 57.69,
+        "net_win_rate_pct": 50.0,
+        "avg_gross_pnl": 1977.27,
+        "avg_net_pnl": 1639.93,
+        "gross_profit_factor": 2.6441,
+        "net_profit_factor": 2.2155
+      }
+    ]
+  },
+  "portfolio_and_exposure_diagnostics": {
+    "invested_exposure": {
+      "gross_exposure_mean_pct": 54.54,
+      "gross_exposure_median_pct": 57.98,
+      "gross_exposure_min_pct": 0.0,
+      "gross_exposure_max_pct": 99.98,
+      "invested_market_value_mean_inr": 504048.42,
+      "invested_market_value_max_inr": 1022577.89,
+      "sessions_at_10_positions_capacity": 127,
+      "sessions_at_10_positions_pct": 32.73
+    },
+    "cash_utilization": {
+      "cash_balance_mean_inr": 440599.16,
+      "cash_balance_median_inr": 426093.6,
+      "cash_balance_min_inr": 211.26,
+      "cash_balance_max_inr": 1032613.52,
+      "cash_pct_of_equity_mean": 45.46,
+      "solvency_floor_violation": false
+    },
+    "order_rejections": {
+      "total_rejected_orders": 1407,
+      "reasons": {
+        "MAX_PORTFOLIO_POSITIONS_REACHED": 1383,
+        "ZERO_VOLUME_OR_MARKET_HALT": 24,
+        "INSUFFICIENT_CASH_FOR_ONE_SHARE": 0
+      }
+    },
+    "concurrent_open_positions_distribution": {
+      "0": 67,
+      "1": 28,
+      "2": 25,
+      "3": 16,
+      "4": 34,
+      "5": 22,
+      "6": 22,
+      "7": 13,
+      "8": 22,
+      "9": 12,
+      "10": 127
+    },
+    "holding_duration": {
+      "mean_sessions": 3.46,
+      "median_sessions": 4.0,
+      "distribution_by_session": {
+        "1": 144,
+        "2": 82,
+        "3": 49,
+        "4": 36,
+        "5": 310
+      }
+    },
+    "exit_reasons_asymmetry": {
+      "EARLY_SELL_SIGNAL": {
+        "trade_count": 337,
+        "trade_share_pct": 54.27,
+        "gross_pnl": 278313.73,
+        "total_costs": 117420.12,
+        "net_pnl": 160893.61,
+        "gross_win_rate_pct": 56.68,
+        "net_win_rate_pct": 51.63,
+        "avg_net_pnl": 477.43
+      },
+      "END_OF_PERIOD_LIQUIDATION": {
+        "trade_count": 8,
+        "trade_share_pct": 1.29,
+        "gross_pnl": -11230.2,
+        "total_costs": 2514.27,
+        "net_pnl": -13744.47,
+        "gross_win_rate_pct": 25.0,
+        "net_win_rate_pct": 0.0,
+        "avg_net_pnl": -1718.06
+      },
+      "MAX_HOLD_5D": {
+        "trade_count": 276,
+        "trade_share_pct": 44.44,
+        "gross_pnl": -214554.66,
+        "total_costs": 93273.12,
+        "net_pnl": -307827.78,
+        "gross_win_rate_pct": 40.94,
+        "net_win_rate_pct": 37.32,
+        "avg_net_pnl": -1115.32
+      }
+    },
+    "drawdown_and_recovery": {
+      "peak_equity_inr": 1034117.09,
+      "peak_equity_date": "2025-04-28",
+      "trough_equity_inr": 788652.53,
+      "max_drawdown_pct": 23.74,
+      "max_drawdown_date": "2026-03-23",
+      "final_session_date": "2026-07-22",
+      "final_drawdown_pct": 18.72,
+      "recovered_before_end_of_period": false,
+      "peak_to_trough_sessions": 226
+    }
+  },
+  "time_and_regime_diagnostics": {
+    "performance_by_calendar_year": [
+      {
+        "year": 2025,
+        "sessions": 249,
+        "trades_count": 324,
+        "starting_equity": 1000000.0,
+        "ending_equity": 958379.56,
+        "net_return_pct": -4.16,
+        "max_drawdown_pct": 8.86,
+        "avg_gross_exposure_pct": 41.26,
+        "gross_pnl": 76529.9,
+        "total_costs": 118150.34,
+        "net_pnl": -41620.44
+      },
+      {
+        "year": 2026,
+        "sessions": 139,
+        "trades_count": 297,
+        "starting_equity": 958379.56,
+        "ending_equity": 840519.64,
+        "net_return_pct": -12.3,
+        "max_drawdown_pct": 23.74,
+        "avg_gross_exposure_pct": 78.34,
+        "gross_pnl": -24001.03,
+        "total_costs": 95057.17,
+        "net_pnl": -119058.2
+      }
+    ],
+    "performance_by_calendar_quarter": [
+      {
+        "quarter": "2025Q1",
+        "sessions": 62,
+        "trades_count": 138,
+        "starting_equity": 1000000.0,
+        "ending_equity": 985729.66,
+        "net_return_pct": -1.43,
+        "max_drawdown_pct": 7.39,
+        "avg_gross_exposure_pct": 67.26,
+        "net_pnl": -18503.11
+      },
+      {
+        "quarter": "2025Q2",
+        "sessions": 61,
+        "trades_count": 106,
+        "starting_equity": 991038.14,
+        "ending_equity": 1030225.97,
+        "net_return_pct": 3.95,
+        "max_drawdown_pct": 5.09,
+        "avg_gross_exposure_pct": 47.09,
+        "net_pnl": 51088.32
+      },
+      {
+        "quarter": "2025Q3",
+        "sessions": 64,
+        "trades_count": 73,
+        "starting_equity": 1028687.33,
+        "ending_equity": 958845.85,
+        "net_return_pct": -6.79,
+        "max_drawdown_pct": 8.86,
+        "avg_gross_exposure_pct": 47.86,
+        "net_pnl": -73739.35
+      },
+      {
+        "quarter": "2025Q4",
+        "sessions": 62,
+        "trades_count": 7,
+        "starting_equity": 958845.85,
+        "ending_equity": 958379.56,
+        "net_return_pct": -0.05,
+        "max_drawdown_pct": 7.6,
+        "avg_gross_exposure_pct": 2.7,
+        "net_pnl": -466.3
+      },
+      {
+        "quarter": "2026Q1",
+        "sessions": 60,
+        "trades_count": 117,
+        "starting_equity": 958379.56,
+        "ending_equity": 788869.3,
+        "net_return_pct": -17.69,
+        "max_drawdown_pct": 23.74,
+        "avg_gross_exposure_pct": 57.9,
+        "net_pnl": -149823.38
+      },
+      {
+        "quarter": "2026Q2",
+        "sessions": 63,
+        "trades_count": 146,
+        "starting_equity": 811009.46,
+        "ending_equity": 824631.98,
+        "net_return_pct": 1.68,
+        "max_drawdown_pct": 21.71,
+        "avg_gross_exposure_pct": 93.78,
+        "net_pnl": 29341.55
+      },
+      {
+        "quarter": "2026Q3",
+        "sessions": 16,
+        "trades_count": 34,
+        "starting_equity": 819896.04,
+        "ending_equity": 840519.64,
+        "net_return_pct": 2.52,
+        "max_drawdown_pct": 20.72,
+        "avg_gross_exposure_pct": 94.18,
+        "net_pnl": 1423.63
+      }
+    ],
+    "market_regime_diagnostics": {
+      "regime_methodology": "Strictly trailing 20-trading-day momentum of the 49-constituent equal-weight buy-and-hold benchmark index. Uses zero forward data.",
+      "thresholds": {
+        "BULL_TREND": "Trailing 20-day benchmark return > +2.0%",
+        "BEAR_TREND": "Trailing 20-day benchmark return < -2.0%",
+        "SIDEWAYS": "Trailing 20-day benchmark return in [-2.0%, +2.0%]",
+        "UNCLASSIFIED": "Initial 20-session warm-up window"
+      },
+      "performance_by_regime": [
+        {
+          "regime": "BULL_TREND",
+          "definition": "Trailing 20-day return > +2.0%",
+          "sessions_count": 118,
+          "trades_count": 171,
+          "gross_pnl": -43858.24,
+          "total_costs": 60142.76,
+          "net_pnl": -104001.0,
+          "gross_win_rate_pct": 47.37,
+          "net_win_rate_pct": 45.03
+        },
+        {
+          "regime": "SIDEWAYS",
+          "definition": "Trailing 20-day return in [-2.0%, +2.0%]",
+          "sessions_count": 190,
+          "trades_count": 264,
+          "gross_pnl": 14050.05,
+          "total_costs": 89744.95,
+          "net_pnl": -75694.9,
+          "gross_win_rate_pct": 52.65,
+          "net_win_rate_pct": 44.32
+        },
+        {
+          "regime": "BEAR_TREND",
+          "definition": "Trailing 20-day return < -2.0%",
+          "sessions_count": 60,
+          "trades_count": 137,
+          "gross_pnl": 69350.26,
+          "total_costs": 45412.11,
+          "net_pnl": 23938.15,
+          "gross_win_rate_pct": 46.72,
+          "net_win_rate_pct": 45.99
+        },
+        {
+          "regime": "UNCLASSIFIED",
+          "definition": "Initial 20-day warm-up",
+          "sessions_count": 20,
+          "trades_count": 49,
+          "gross_pnl": 12986.8,
+          "total_costs": 17907.69,
+          "net_pnl": -4920.89,
+          "gross_win_rate_pct": 44.9,
+          "net_win_rate_pct": 40.82
+        }
+      ]
+    }
+  },
+  "benchmark_interpretation_and_fairness": {
+    "equal_weight_buy_and_hold_benchmark": {
+      "constituents_count": 49,
+      "starting_capital_inr": 1000000.0,
+      "gross_ending_equity_inr": 1102607.68,
+      "gross_return_pct": 10.26,
+      "estimated_entry_delivery_friction_inr": 1905.27,
+      "estimated_net_ending_equity_inr": 1100702.41,
+      "estimated_net_return_pct": 10.07,
+      "exposure_profile": "100.0% continuous gross equity exposure across entire 388 sessions",
+      "turnover_pct": 0.0,
+      "is_fair_hurdle": true
+    },
+    "top_10_alphabetical_benchmark": {
+      "constituents": [
+        "ADANIENT",
+        "ADANIPORTS",
+        "APOLLOHOSP",
+        "ASIANPAINT",
+        "AXISBANK",
+        "BAJAJ-AUTO",
+        "BAJFINANCE",
+        "BAJAJFINSV",
+        "BEL",
+        "BPCL"
+      ],
+      "starting_capital_inr": 1000000.0,
+      "gross_ending_equity_inr": 1284411.33,
+      "gross_return_pct": 28.44,
+      "critique": "Arbitrary static portfolio suffering severe survivorship and industry concentration bias (e.g. BEL gained >90%). Generated zero turnover and paid zero exit friction. Methodologically invalid as a baseline hurdle for active swing trading.",
+      "is_fair_hurdle": false
+    }
+  },
+  "conclusions_and_hypotheses": {
+    "verified_observations": [
+      "Baseline reproduction is 100% verified against frozen model (SHA256: 41e61760fc...) and test dataset (SHA256: 7f9d0ce56b...), yielding 621 trades, \u20b952,528.87 gross P&L, \u20b9213,207.51 friction, and -\u20b9160,678.64 net P&L.",
+      "The model generates weak class probability separation: mean P(BUY) for true BUYs is 0.3069 vs 0.2904 for non-BUYs (separation of only 1.65 percentage points).",
+      "Friction was catastrophic to strategy viability: statutory delivery friction and slippage totaled \u20b9213,207.51 (405.89% of gross net alpha and 21.32% of initial portfolio capital).",
+      "Low-conviction trades caused 100% of the portfolio's net loss: trades entered in P(BUY) in [0.33, 0.40) lost -\u20b9106,335.06 in gross alpha and burned \u20b9120,966.94 in friction, generating -\u20b9227,302.00 net P&L across 350 trades (56.4% of all trades).",
+      "High-conviction trades P(BUY) >= 0.40 were profitable after full friction: 271 trades generated +\u20b9158,863.93 gross P&L, \u20b992,240.57 friction, and +\u20b966,623.36 net P&L.",
+      "Exit mechanisms exhibited severe asymmetric performance: early exits triggered by model SELL signals were profitable (+\u20b9160,893.61 net across 337 trades), while 5-day time-stop exits were catastrophic (-\u20b9307,827.78 net across 276 trades).",
+      "Portfolio capacity constraints blocked 1,383 candidate BUY signals due to the 10-position ceiling while positions were held to day 5."
+    ],
+    "plausible_explanations_requiring_testing": [
+      "The 5-day fixed holding duration acts as an unhedged adverse-selection trap: winning positions generate early SELL signals and are closed profitably, while deteriorating positions drift downwards without triggering a SELL signal and are held to full 5-day liquidation.",
+      "Model overconfidence in intermediate probability deciles (2-7 percentage points above empirical frequency) leads to over-trading marginal edge setups in high-friction delivery equity.",
+      "Buying into strong momentum extensions (BULL_TREND regime) in NIFTY 50 large caps leads to mean-reversion pullbacks over 5-day horizons, explaining the -\u20b9104,001.00 net loss in bull markets."
+    ],
+    "unanswerable_questions_from_existing_artifacts": [
+      "Whether intraday stop-loss or ATR-based volatility stops would salvage the 5-day exit drag without introducing additional execution slippage (requires tick or intraday bar data).",
+      "Whether an optimized classification threshold (e.g., P(BUY) >= 0.45) selected strictly on validation data generalizes out-of-sample or causes excessive turnover reduction.",
+      "Whether cash-settled NIFTY stock futures (with 2 bps STT on sell vs 10 bps on both legs for delivery) would restore economic viability without excessive margin drag."
+    ],
+    "pre_registered_hypotheses_for_sprint_6_2": [
+      {
+        "hypothesis_id": "H1_CONVICTION_THRESHOLD_TUNING",
+        "formulation": "Tuning the entry threshold P(BUY) >= theta on the validation dataset (expected theta around 0.42-0.45) will eliminate >50% of low-edge turnover while preserving >80% of net profitable alpha.",
+        "status": "UNTESTED_HYPOTHESIS"
+      },
+      {
+        "hypothesis_id": "H2_DYNAMIC_VOLATILITY_STOP",
+        "formulation": "Replacing the unconditional 5-session calendar stop with an ATR trailing stop or time-decay profit target will truncate left-tail losses in MAX_HOLD_5D exits.",
+        "status": "UNTESTED_HYPOTHESIS"
+      },
+      {
+        "hypothesis_id": "H3_DERIVATIVES_FRICTION_ARBITRAGE",
+        "formulation": "Executing trades via Single Stock Futures (where statutory STT is only 2 bps on sell turnover) reduces friction by ~70%, making marginal swing trades economically viable.",
+        "status": "UNTESTED_HYPOTHESIS"
+      }
+    ]
+  }
+}

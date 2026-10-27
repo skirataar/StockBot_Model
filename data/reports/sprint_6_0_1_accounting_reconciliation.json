@@ -1,0 +1,136 @@
+{
+  "audit_metadata": {
+    "sprint": "6.0.1",
+    "title": "Sprint 6.0.1 Backtest Accounting Reconciliation & Benchmark Audit",
+    "auditor_role": "Lead Quantitative Research Engineer",
+    "date": "2026-10-28",
+    "evaluation_period": "2025-01-01 to 2026-07-22",
+    "sessions_count": 388,
+    "model_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+    "test_parquet_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+    "verdict": "PASS WITH LIMITATIONS"
+  },
+  "cost_component_reconciliation": {
+    "brokerage": {
+      "reported_inr": 12420.0,
+      "recomputed_inr": 24840.0,
+      "difference_inr": 12420.0,
+      "reported_share_pct": 5.82,
+      "recomputed_share_pct": 11.65,
+      "cause": "Sprint 6.0 report table estimated 621 * 20.0 (one leg only), whereas engine executed two legs (buy and sell brokerage of \u20b920 each per trade)."
+    },
+    "stt": {
+      "reported_inr": 114306.0,
+      "recomputed_inr": 114137.05,
+      "difference_inr": -168.95,
+      "reported_share_pct": 65.42,
+      "recomputed_share_pct": 53.53,
+      "cause": "Report approximated turnover using invested capital (\u20b95.72 Cr) rather than actual raw turnover (\u20b95.70 Cr buy, \u20b95.71 Cr sell). Reported share 65.42% was an unnormalized prototype relic."
+    },
+    "stamp_duty": {
+      "reported_inr": 8572.95,
+      "recomputed_inr": 8556.2,
+      "difference_inr": -16.75,
+      "reported_share_pct": 4.91,
+      "recomputed_share_pct": 4.01,
+      "cause": "Report approximated using invested capital rather than raw buy turnover base."
+    },
+    "exchange_charges": {
+      "reported_inr": 3394.89,
+      "recomputed_inr": 3390.06,
+      "difference_inr": -4.83,
+      "reported_share_pct": 1.94,
+      "recomputed_share_pct": 1.59,
+      "cause": "Report approximated turnover base."
+    },
+    "sebi_fee": {
+      "reported_inr": 114.31,
+      "recomputed_inr": 113.82,
+      "difference_inr": -0.49,
+      "reported_share_pct": 0.07,
+      "recomputed_share_pct": 0.05,
+      "cause": "Report approximated turnover base."
+    },
+    "gst": {
+      "reported_inr": 2867.25,
+      "recomputed_inr": 5101.93,
+      "difference_inr": 2234.68,
+      "reported_share_pct": 1.41,
+      "recomputed_share_pct": 2.39,
+      "cause": "Report calculated GST on one-leg brokerage only, whereas engine levied 18% GST on both buy and sell legs."
+    },
+    "slippage": {
+      "reported_inr": 57068.45,
+      "recomputed_inr": 57068.46,
+      "difference_inr": 0.01,
+      "reported_share_pct": 32.71,
+      "recomputed_share_pct": 26.77,
+      "cause": "Exact match (within 1 paisa floating point rounding)."
+    },
+    "total_friction": {
+      "reported_inr": 213207.51,
+      "recomputed_inr": 213207.51,
+      "difference_inr": 0.0,
+      "status": "PASS",
+      "sum_of_reported_components_inr": 198743.85,
+      "sum_of_reported_shares_pct": 112.28,
+      "sum_of_recomputed_shares_pct": 100.0,
+      "finding": "The simulation engine and Trade Ledger accurately deducted \u20b9213,207.51 total costs across all 621 trades with 100% mathematical precision. The discrepancies existed solely in the Markdown report formatting interpolation of Section 3."
+    }
+  },
+  "pnl_and_equity_reconciliation": {
+    "initial_capital_inr": 1000000.0,
+    "ending_portfolio_equity_inr": 840519.64,
+    "cumulative_net_return_pct": -15.95,
+    "total_gross_pnl_inr": 52528.87,
+    "total_costs_inr": 213207.51,
+    "trade_ledger_net_pnl_inr": -160678.64,
+    "pnl_equation_verified": true,
+    "equity_change_inr": -159480.36,
+    "equity_variance_vs_trade_net_pnl_inr": 1198.28,
+    "variance_explanation": "On session 388 close, 8 positions remained open in the portfolio ledger valued at mark-to-market without hypothetical sell friction. The trade ledger closed them synthetically for trade-level statistics, deducting \u20b91,198.28 in hypothetical sell costs. Reconciles to 10 paise."
+  },
+  "turnover_reconciliation": {
+    "reported_turnover_inr": 57152998.81,
+    "raw_buy_turnover_inr": 57042157.63,
+    "raw_sell_turnover_inr": 57094686.76,
+    "combined_two_way_turnover_inr": 114136844.39,
+    "average_one_way_turnover_inr": 57068422.2,
+    "classification": "Reported turnover of \u20b95.72 Crore is One-Way Buy-Side Invested Capital (including buy fees), equivalent to ~\u20b95.71 Crore average one-way turnover or \u20b911.41 Crore combined two-way turnover."
+  },
+  "benchmark_audit": {
+    "buy_and_hold_benchmark": {
+      "name": "NIFTY 50 Equal-Weight Buy & Hold",
+      "cumulative_return_pct": 10.26,
+      "final_equity_inr": 1102607.68,
+      "sharpe_ratio": 0.04,
+      "max_drawdown_pct": 12.4,
+      "universe_size": 49,
+      "friction_modeled": "Gross (no execution costs or slippage subtracted)",
+      "sizing_type": "Continuous shares (alloc / p0)"
+    },
+    "non_ml_baseline": {
+      "name": "Non-ML Top-10 Static Baseline",
+      "cumulative_return_pct": 28.44,
+      "final_equity_inr": 1284448.74,
+      "sharpe_ratio": 0.71,
+      "max_drawdown_pct": 14.59,
+      "selection_method": "First 10 constituents alphabetically (ADANIENT to BHARTIARTL)",
+      "nature": "Static buy-and-hold (zero trades, zero rotation, zero friction)",
+      "fairness_finding": "Not a rotating swing trading baseline. Benefits from holding 10 large-cap winners with 100% continuous market exposure and zero delivery friction."
+    }
+  },
+  "execution_consistency_checks": {
+    "signal_to_entry_timing": "PASS (All entries occur strictly at t+1 Open with 5 bps slippage)",
+    "true_label_independence": "PASS (signal and forward_return_5d completely omitted from model and strategy)",
+    "cash_floor_solvency": "PASS (Minimum cash \u20b9211.26, zero negative cash sessions)",
+    "integer_share_allocations": "PASS (100% integer quantities between 5 and 645 shares)",
+    "overlapping_positions_prevention": "PASS (0 concurrent overlapping trades per symbol)",
+    "trade_count": 621,
+    "rejected_orders_count": 1407,
+    "rejected_reasons": {
+      "MAX_PORTFOLIO_POSITIONS_REACHED": 1383,
+      "ZERO_VOLUME_OR_MARKET_HALT": 24
+    }
+  }
+}

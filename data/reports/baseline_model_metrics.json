@@ -1,0 +1,909 @@
+{
+  "metadata": {
+    "experiment": "Sprint 5.0 Baseline ML Classification",
+    "engine": "src/models/baseline_classifier.py",
+    "timestamp": "2026-10-28 00:16:28",
+    "random_seed": 42,
+    "libraries": {
+      "scikit-learn": "1.9.0",
+      "lightgbm": "4.7.0",
+      "joblib": "1.5.3"
+    },
+    "features_count": 30,
+    "features": [
+      "ret_1d",
+      "ret_5d",
+      "ret_10d",
+      "ret_20d",
+      "ret_60d",
+      "ret_120d",
+      "mom_5d",
+      "mom_10d",
+      "mom_20d",
+      "mom_60d",
+      "realised_vol_10d",
+      "realised_vol_20d",
+      "realised_vol_60d",
+      "vol_ratio_20d_60d",
+      "vol_ma_30d",
+      "volume_z_score_30d",
+      "volume_spike_flag",
+      "high_52w",
+      "low_52w",
+      "dist_52w_high",
+      "dist_52w_low",
+      "crash_flag",
+      "month",
+      "quarter",
+      "month_sin",
+      "month_cos",
+      "market_return",
+      "market_volatility",
+      "excess_return",
+      "beta_60d"
+    ],
+    "target": "signal",
+    "classes": {
+      "1": "BUY",
+      "0": "HOLD",
+      "-1": "SELL"
+    },
+    "selected_model": "lightgbm"
+  },
+  "preflight": {
+    "splits": {
+      "train": {
+        "rows": 146878,
+        "columns": 34,
+        "stocks": 48,
+        "min_date": "2010-01-04",
+        "max_date": "2022-12-23",
+        "class_counts": {
+          "-1": 38112,
+          "0": 62559,
+          "1": 46207
+        },
+        "class_pcts": {
+          "-1": 25.95,
+          "0": 42.59,
+          "1": 31.46
+        }
+      },
+      "val": {
+        "rows": 23658,
+        "columns": 34,
+        "stocks": 49,
+        "min_date": "2023-01-02",
+        "max_date": "2024-12-23",
+        "class_counts": {
+          "-1": 4951,
+          "0": 11732,
+          "1": 6975
+        },
+        "class_pcts": {
+          "-1": 20.93,
+          "0": 49.59,
+          "1": 29.48
+        }
+      },
+      "test": {
+        "rows": 19012,
+        "columns": 34,
+        "stocks": 49,
+        "min_date": "2025-01-01",
+        "max_date": "2026-07-22",
+        "class_counts": {
+          "-1": 4615,
+          "0": 9454,
+          "1": 4943
+        },
+        "class_pcts": {
+          "-1": 24.27,
+          "0": 49.73,
+          "1": 26.0
+        }
+      }
+    },
+    "feature_missingness": [
+      {
+        "feature": "ret_1d",
+        "train_nan": 48,
+        "train_pct": 0.03,
+        "val_nan": 1,
+        "val_pct": 0.0,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "ret_5d",
+        "train_nan": 240,
+        "train_pct": 0.16,
+        "val_nan": 5,
+        "val_pct": 0.02,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "ret_10d",
+        "train_nan": 480,
+        "train_pct": 0.33,
+        "val_nan": 10,
+        "val_pct": 0.04,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "ret_20d",
+        "train_nan": 960,
+        "train_pct": 0.65,
+        "val_nan": 20,
+        "val_pct": 0.08,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "ret_60d",
+        "train_nan": 2880,
+        "train_pct": 1.96,
+        "val_nan": 60,
+        "val_pct": 0.25,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "ret_120d",
+        "train_nan": 5760,
+        "train_pct": 3.92,
+        "val_nan": 120,
+        "val_pct": 0.51,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "mom_5d",
+        "train_nan": 240,
+        "train_pct": 0.16,
+        "val_nan": 5,
+        "val_pct": 0.02,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "mom_10d",
+        "train_nan": 480,
+        "train_pct": 0.33,
+        "val_nan": 10,
+        "val_pct": 0.04,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "mom_20d",
+        "train_nan": 960,
+        "train_pct": 0.65,
+        "val_nan": 20,
+        "val_pct": 0.08,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "mom_60d",
+        "train_nan": 2880,
+        "train_pct": 1.96,
+        "val_nan": 60,
+        "val_pct": 0.25,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "realised_vol_10d",
+        "train_nan": 480,
+        "train_pct": 0.33,
+        "val_nan": 10,
+        "val_pct": 0.04,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "realised_vol_20d",
+        "train_nan": 960,
+        "train_pct": 0.65,
+        "val_nan": 20,
+        "val_pct": 0.08,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "realised_vol_60d",
+        "train_nan": 2880,
+        "train_pct": 1.96,
+        "val_nan": 60,
+        "val_pct": 0.25,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "vol_ratio_20d_60d",
+        "train_nan": 2880,
+        "train_pct": 1.96,
+        "val_nan": 60,
+        "val_pct": 0.25,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "vol_ma_30d",
+        "train_nan": 432,
+        "train_pct": 0.29,
+        "val_nan": 9,
+        "val_pct": 0.04,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "volume_z_score_30d",
+        "train_nan": 432,
+        "train_pct": 0.29,
+        "val_nan": 9,
+        "val_pct": 0.04,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "volume_spike_flag",
+        "train_nan": 0,
+        "train_pct": 0.0,
+        "val_nan": 0,
+        "val_pct": 0.0,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "high_52w",
+        "train_nan": 6000,
+        "train_pct": 4.09,
+        "val_nan": 125,
+        "val_pct": 0.53,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "low_52w",
+        "train_nan": 6000,
+        "train_pct": 4.09,
+        "val_nan": 125,
+        "val_pct": 0.53,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "dist_52w_high",
+        "train_nan": 6000,
+        "train_pct": 4.09,
+        "val_nan": 125,
+        "val_pct": 0.53,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "dist_52w_low",
+        "train_nan": 6000,
+        "train_pct": 4.09,
+        "val_nan": 125,
+        "val_pct": 0.53,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "crash_flag",
+        "train_nan": 0,
+        "train_pct": 0.0,
+        "val_nan": 0,
+        "val_pct": 0.0,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "month",
+        "train_nan": 0,
+        "train_pct": 0.0,
+        "val_nan": 0,
+        "val_pct": 0.0,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "quarter",
+        "train_nan": 0,
+        "train_pct": 0.0,
+        "val_nan": 0,
+        "val_pct": 0.0,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "month_sin",
+        "train_nan": 0,
+        "train_pct": 0.0,
+        "val_nan": 0,
+        "val_pct": 0.0,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "month_cos",
+        "train_nan": 0,
+        "train_pct": 0.0,
+        "val_nan": 0,
+        "val_pct": 0.0,
+        "test_nan": 0,
+        "test_pct": 0.0
+      },
+      {
+        "feature": "market_return",
+        "train_nan": 953,
+        "train_pct": 0.65,
+        "val_nan": 0,
+        "val_pct": 0.0,
+        "test_nan": 196,
+        "test_pct": 1.03
+      },
+      {
+        "feature": "market_volatility",
+        "train_nan": 18461,
+        "train_pct": 12.57,
+        "val_nan": 19,
+        "val_pct": 0.08,
+        "test_nan": 3822,
+        "test_pct": 20.1
+      },
+      {
+        "feature": "excess_return",
+        "train_nan": 957,
+        "train_pct": 0.65,
+        "val_nan": 1,
+        "val_pct": 0.0,
+        "test_nan": 196,
+        "test_pct": 1.03
+      },
+      {
+        "feature": "beta_60d",
+        "train_nan": 49479,
+        "train_pct": 33.69,
+        "val_nan": 60,
+        "val_pct": 0.25,
+        "test_nan": 5831,
+        "test_pct": 30.67
+      }
+    ],
+    "checks_passed": true
+  },
+  "models": {
+    "dummy_most_frequent": {
+      "train": {
+        "model_name": "dummy_most_frequent",
+        "split": "train",
+        "sample_count": 146878,
+        "accuracy": 0.4259,
+        "balanced_accuracy": 0.3333,
+        "macro_f1": 0.1991,
+        "weighted_f1": 0.2544,
+        "per_class": {
+          "-1": {
+            "name": "SELL",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 38112
+          },
+          "0": {
+            "name": "HOLD",
+            "precision": 0.4259,
+            "recall": 1.0,
+            "f1": 0.5974,
+            "support": 62559
+          },
+          "1": {
+            "name": "BUY",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 46207
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "SELL (-1)",
+            "HOLD (0)",
+            "BUY (1)"
+          ],
+          "matrix": [
+            [
+              0,
+              38112,
+              0
+            ],
+            [
+              0,
+              62559,
+              0
+            ],
+            [
+              0,
+              46207,
+              0
+            ]
+          ]
+        },
+        "distributions": {
+          "actual": {
+            "-1": 38112,
+            "0": 62559,
+            "1": 46207
+          },
+          "predicted": {
+            "-1": 0,
+            "0": 146878,
+            "1": 0
+          }
+        }
+      },
+      "validation": {
+        "model_name": "dummy_most_frequent",
+        "split": "val",
+        "sample_count": 23658,
+        "accuracy": 0.4959,
+        "balanced_accuracy": 0.3333,
+        "macro_f1": 0.221,
+        "weighted_f1": 0.3288,
+        "per_class": {
+          "-1": {
+            "name": "SELL",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 4951
+          },
+          "0": {
+            "name": "HOLD",
+            "precision": 0.4959,
+            "recall": 1.0,
+            "f1": 0.663,
+            "support": 11732
+          },
+          "1": {
+            "name": "BUY",
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "support": 6975
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "SELL (-1)",
+            "HOLD (0)",
+            "BUY (1)"
+          ],
+          "matrix": [
+            [
+              0,
+              4951,
+              0
+            ],
+            [
+              0,
+              11732,
+              0
+            ],
+            [
+              0,
+              6975,
+              0
+            ]
+          ]
+        },
+        "distributions": {
+          "actual": {
+            "-1": 4951,
+            "0": 11732,
+            "1": 6975
+          },
+          "predicted": {
+            "-1": 0,
+            "0": 23658,
+            "1": 0
+          }
+        }
+      },
+      "overfitting_diagnostics": {
+        "train_val_macro_f1_delta": -0.0219,
+        "train_val_acc_delta": -0.07,
+        "overfitting_risk": "LOW"
+      }
+    },
+    "logistic_regression": {
+      "train": {
+        "model_name": "logistic_regression",
+        "split": "train",
+        "sample_count": 146878,
+        "accuracy": 0.4146,
+        "balanced_accuracy": 0.3917,
+        "macro_f1": 0.3894,
+        "weighted_f1": 0.4085,
+        "per_class": {
+          "-1": {
+            "name": "SELL",
+            "precision": 0.3104,
+            "recall": 0.3237,
+            "f1": 0.3169,
+            "support": 38112
+          },
+          "0": {
+            "name": "HOLD",
+            "precision": 0.4914,
+            "recall": 0.5637,
+            "f1": 0.5251,
+            "support": 62559
+          },
+          "1": {
+            "name": "BUY",
+            "precision": 0.3761,
+            "recall": 0.2878,
+            "f1": 0.3261,
+            "support": 46207
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "SELL (-1)",
+            "HOLD (0)",
+            "BUY (1)"
+          ],
+          "matrix": [
+            [
+              12337,
+              16229,
+              9546
+            ],
+            [
+              14775,
+              35265,
+              12519
+            ],
+            [
+              12632,
+              20275,
+              13300
+            ]
+          ]
+        },
+        "distributions": {
+          "actual": {
+            "-1": 38112,
+            "0": 62559,
+            "1": 46207
+          },
+          "predicted": {
+            "-1": 39744,
+            "0": 71769,
+            "1": 35365
+          }
+        }
+      },
+      "validation": {
+        "model_name": "logistic_regression",
+        "split": "val",
+        "sample_count": 23658,
+        "accuracy": 0.4545,
+        "balanced_accuracy": 0.363,
+        "macro_f1": 0.3413,
+        "weighted_f1": 0.4068,
+        "per_class": {
+          "-1": {
+            "name": "SELL",
+            "precision": 0.2438,
+            "recall": 0.2159,
+            "f1": 0.229,
+            "support": 4951
+          },
+          "0": {
+            "name": "HOLD",
+            "precision": 0.5249,
+            "recall": 0.7553,
+            "f1": 0.6194,
+            "support": 11732
+          },
+          "1": {
+            "name": "BUY",
+            "precision": 0.3435,
+            "recall": 0.1178,
+            "f1": 0.1755,
+            "support": 6975
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "SELL (-1)",
+            "HOLD (0)",
+            "BUY (1)"
+          ],
+          "matrix": [
+            [
+              1069,
+              3320,
+              562
+            ],
+            [
+              1862,
+              8861,
+              1009
+            ],
+            [
+              1453,
+              4700,
+              822
+            ]
+          ]
+        },
+        "distributions": {
+          "actual": {
+            "-1": 4951,
+            "0": 11732,
+            "1": 6975
+          },
+          "predicted": {
+            "-1": 4384,
+            "0": 16881,
+            "1": 2393
+          }
+        }
+      },
+      "overfitting_diagnostics": {
+        "train_val_macro_f1_delta": 0.0481,
+        "train_val_acc_delta": -0.0399,
+        "overfitting_risk": "LOW"
+      }
+    },
+    "lightgbm": {
+      "train": {
+        "model_name": "lightgbm",
+        "split": "train",
+        "sample_count": 146878,
+        "accuracy": 0.4988,
+        "balanced_accuracy": 0.4983,
+        "macro_f1": 0.4945,
+        "weighted_f1": 0.4994,
+        "per_class": {
+          "-1": {
+            "name": "SELL",
+            "precision": 0.4368,
+            "recall": 0.5244,
+            "f1": 0.4766,
+            "support": 38112
+          },
+          "0": {
+            "name": "HOLD",
+            "precision": 0.5454,
+            "recall": 0.5156,
+            "f1": 0.5301,
+            "support": 62559
+          },
+          "1": {
+            "name": "BUY",
+            "precision": 0.5009,
+            "recall": 0.455,
+            "f1": 0.4768,
+            "support": 46207
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "SELL (-1)",
+            "HOLD (0)",
+            "BUY (1)"
+          ],
+          "matrix": [
+            [
+              19987,
+              11504,
+              6621
+            ],
+            [
+              15977,
+              32256,
+              14326
+            ],
+            [
+              9798,
+              15387,
+              21022
+            ]
+          ]
+        },
+        "distributions": {
+          "actual": {
+            "-1": 38112,
+            "0": 62559,
+            "1": 46207
+          },
+          "predicted": {
+            "-1": 45762,
+            "0": 59147,
+            "1": 41969
+          }
+        }
+      },
+      "validation": {
+        "model_name": "lightgbm",
+        "split": "val",
+        "sample_count": 23658,
+        "accuracy": 0.4483,
+        "balanced_accuracy": 0.367,
+        "macro_f1": 0.351,
+        "weighted_f1": 0.4123,
+        "per_class": {
+          "-1": {
+            "name": "SELL",
+            "precision": 0.2431,
+            "recall": 0.2422,
+            "f1": 0.2426,
+            "support": 4951
+          },
+          "0": {
+            "name": "HOLD",
+            "precision": 0.5296,
+            "recall": 0.7179,
+            "f1": 0.6095,
+            "support": 11732
+          },
+          "1": {
+            "name": "BUY",
+            "precision": 0.3484,
+            "recall": 0.1411,
+            "f1": 0.2008,
+            "support": 6975
+          }
+        },
+        "confusion_matrix": {
+          "labels": [
+            "SELL (-1)",
+            "HOLD (0)",
+            "BUY (1)"
+          ],
+          "matrix": [
+            [
+              1199,
+              3063,
+              689
+            ],
+            [
+              2159,
+              8422,
+              1151
+            ],
+            [
+              1574,
+              4417,
+              984
+            ]
+          ]
+        },
+        "distributions": {
+          "actual": {
+            "-1": 4951,
+            "0": 11732,
+            "1": 6975
+          },
+          "predicted": {
+            "-1": 4932,
+            "0": 15902,
+            "1": 2824
+          }
+        }
+      },
+      "overfitting_diagnostics": {
+        "train_val_macro_f1_delta": 0.1435,
+        "train_val_acc_delta": 0.0505,
+        "overfitting_risk": "MODERATE"
+      }
+    }
+  },
+  "model_selection": {
+    "selected_model": "lightgbm",
+    "selection_metric": "validation_macro_f1",
+    "comparison_table": [
+      {
+        "model_name": "dummy_most_frequent",
+        "val_macro_f1": 0.221,
+        "val_balanced_acc": 0.3333,
+        "val_accuracy": 0.4959,
+        "val_weighted_f1": 0.3288
+      },
+      {
+        "model_name": "logistic_regression",
+        "val_macro_f1": 0.3413,
+        "val_balanced_acc": 0.363,
+        "val_accuracy": 0.4545,
+        "val_weighted_f1": 0.4068
+      },
+      {
+        "model_name": "lightgbm",
+        "val_macro_f1": 0.351,
+        "val_balanced_acc": 0.367,
+        "val_accuracy": 0.4483,
+        "val_weighted_f1": 0.4123
+      }
+    ],
+    "rationale": "Selected 'lightgbm' as the primary baseline model. It achieved the highest validation Macro-F1 score (0.3510) and balanced accuracy (0.3670), outperforming both the majority-class reference and the linear logistic baseline across all minority directional classes.",
+    "frozen": true
+  },
+  "final_test": {
+    "model_name": "lightgbm",
+    "split": "test",
+    "sample_count": 19012,
+    "accuracy": 0.4275,
+    "balanced_accuracy": 0.3836,
+    "macro_f1": 0.381,
+    "weighted_f1": 0.4252,
+    "per_class": {
+      "-1": {
+        "name": "SELL",
+        "precision": 0.2706,
+        "recall": 0.3521,
+        "f1": 0.306,
+        "support": 4615
+      },
+      "0": {
+        "name": "HOLD",
+        "precision": 0.5574,
+        "recall": 0.5665,
+        "f1": 0.5619,
+        "support": 9454
+      },
+      "1": {
+        "name": "BUY",
+        "precision": 0.3376,
+        "recall": 0.232,
+        "f1": 0.275,
+        "support": 4943
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "SELL (-1)",
+        "HOLD (0)",
+        "BUY (1)"
+      ],
+      "matrix": [
+        [
+          1625,
+          2075,
+          915
+        ],
+        [
+          2762,
+          5356,
+          1336
+        ],
+        [
+          1618,
+          2178,
+          1147
+        ]
+      ]
+    },
+    "distributions": {
+      "actual": {
+        "-1": 4615,
+        "0": 9454,
+        "1": 4943
+      },
+      "predicted": {
+        "-1": 6005,
+        "0": 9609,
+        "1": 3398
+      }
+    }
+  }
+}

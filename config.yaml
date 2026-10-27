@@ -1,0 +1,77 @@
+# SwingBot Configuration File (Sprint 4.5.2)
+
+project:
+  name: "StockBot_Model"
+  version: "4.5.2"
+
+dataset:
+  labeled_data_dir: "data/labeled"
+  processed_data_dir: "data/processed"
+  reports_dir: "data/reports"
+  mock_data_dir: "data/mock"
+
+  warmup_policy: "KEEP"  # Approved Sprint 3 policy: KEEP all historical observations
+  forward_horizon_days: 5
+
+  purging:
+    enabled: true
+    horizon_sessions: 5
+
+  splits:
+    train:
+      start: "2010-01-01"
+      end: "2022-12-31"
+    val:
+      start: "2023-01-01"
+      end: "2024-12-31"
+    test:
+      start: "2025-01-01"
+      end: "2026-12-31"
+
+  identifiers:
+    - "symbol"
+    - "date"
+
+  targets:
+    - "forward_return_5d"
+    - "signal"
+
+  features:
+    # Returns (6)
+    - "ret_1d"
+    - "ret_5d"
+    - "ret_10d"
+    - "ret_20d"
+    - "ret_60d"
+    - "ret_120d"
+    # Momentum (4)
+    - "mom_5d"
+    - "mom_10d"
+    - "mom_20d"
+    - "mom_60d"
+    # Volatility (4)
+    - "realised_vol_10d"
+    - "realised_vol_20d"
+    - "realised_vol_60d"
+    - "vol_ratio_20d_60d"
+    # Volume (3)
+    - "vol_ma_30d"
+    - "volume_z_score_30d"
+    - "volume_spike_flag"
+    # Price Position (4)
+    - "high_52w"
+    - "low_52w"
+    - "dist_52w_high"
+    - "dist_52w_low"
+    # Market Event (1)
+    - "crash_flag"
+    # Calendar (4)
+    - "month"
+    - "quarter"
+    - "month_sin"
+    - "month_cos"
+    # Benchmark / Alpha (4)
+    - "market_return"
+    - "market_volatility"
+    - "excess_return"
+    - "beta_60d"

@@ -1,0 +1,85 @@
+{
+  "status": "PASSED",
+  "ready_for_baseline_ml": true,
+  "checks": {
+    "symbol_coverage": {
+      "passed": true,
+      "expected_count": 49,
+      "actual_count": 49,
+      "missing_symbols": []
+    },
+    "no_mock_data": {
+      "passed": true
+    },
+    "no_duplicate_keys": {
+      "passed": true,
+      "duplicate_count": 0
+    },
+    "feature_contract": {
+      "passed": true,
+      "expected_count": 30,
+      "actual_count": 30,
+      "feature_list": [
+        "ret_1d",
+        "ret_5d",
+        "ret_10d",
+        "ret_20d",
+        "ret_60d",
+        "ret_120d",
+        "mom_5d",
+        "mom_10d",
+        "mom_20d",
+        "mom_60d",
+        "realised_vol_10d",
+        "realised_vol_20d",
+        "realised_vol_60d",
+        "vol_ratio_20d_60d",
+        "vol_ma_30d",
+        "volume_z_score_30d",
+        "volume_spike_flag",
+        "high_52w",
+        "low_52w",
+        "dist_52w_high",
+        "dist_52w_low",
+        "crash_flag",
+        "month",
+        "quarter",
+        "month_sin",
+        "month_cos",
+        "market_return",
+        "market_volatility",
+        "excess_return",
+        "beta_60d"
+      ]
+    },
+    "target_contract": {
+      "passed": true,
+      "buy_threshold_min": 0.020000013601149,
+      "sell_threshold_max": -0.0200008642528803,
+      "hold_threshold_range": [
+        -0.0199983615888496,
+        0.0199999953497034
+      ],
+      "signal_classes": [
+        -1,
+        0,
+        1
+      ],
+      "nan_targets": 0
+    },
+    "no_infinite_values": {
+      "passed": true,
+      "inf_count": 0
+    },
+    "forward_horizon_leakage": {
+      "passed": true,
+      "train_to_val_purged_rows": 240,
+      "val_to_test_purged_rows": 245,
+      "leakage_boundary_violations": []
+    },
+    "chronological_ordering": {
+      "passed": true
+    }
+  },
+  "issues": []
+}

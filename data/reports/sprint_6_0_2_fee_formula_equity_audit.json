@@ -1,0 +1,130 @@
+{
+  "audit_metadata": {
+    "sprint": "6.0.2",
+    "title": "Sprint 6.0.2 Source-Level Fee Formula & Equity Reconciliation Audit",
+    "auditor_role": "Lead Quantitative Research Engineer",
+    "date": "2026-10-28",
+    "verdict": "PASS WITH LIMITATIONS",
+    "evaluation_period": "2025-01-01 to 2026-07-22",
+    "trading_sessions": 388,
+    "completed_trades": 621,
+    "model_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+    "test_dataset_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381"
+  },
+  "formula_audit": {
+    "brokerage": {
+      "specification": "min(0.03% * turnover, Rs 20) per execution order",
+      "implementation": "min(20.0, turnover * 0.0003) for Buy AND min(20.0, turnover * 0.0003) for Sell",
+      "reporting": "In Sprint 6.0 report Section 3, estimated as 621 * Rs 20 (omitted sell-side leg in narrative table). In Sprint 6.0.1, identified as Rs 24,840.00.",
+      "status": "CONSISTENT_IN_ENGINE_DEFECT_IN_REPORT_TABLE"
+    },
+    "stt": {
+      "specification": "0.10% on Buy delivery turnover + 0.10% on Sell delivery turnover",
+      "implementation": "turnover * 0.001 on Buy leg + turnover * 0.001 on Sell leg",
+      "reporting": "Report approximated turnover base using invested capital. Recomputed independently to Rs 114,137.05.",
+      "status": "CONSISTENT_IN_ENGINE"
+    },
+    "stamp_duty": {
+      "specification": "0.015% on Buy turnover only; Rs 0 on Sell",
+      "implementation": "turnover * 0.00015 on Buy leg; 0.0 on Sell leg",
+      "reporting": "Report approximated turnover base. Recomputed independently to Rs 8,556.20.",
+      "status": "CONSISTENT_IN_ENGINE"
+    },
+    "exchange_charges": {
+      "specification": "0.00297% on turnover for both legs",
+      "implementation": "turnover * 0.0000297 on Buy + turnover * 0.0000297 on Sell",
+      "reporting": "Report approximated turnover base. Recomputed independently to Rs 3,390.06.",
+      "status": "CONSISTENT_IN_ENGINE"
+    },
+    "sebi_charges": {
+      "specification": "Rs 10 per Crore (0.0001%) on turnover for both legs",
+      "implementation": "turnover * 0.000001 on Buy + turnover * 0.000001 on Sell",
+      "reporting": "Report approximated turnover base. Recomputed independently to Rs 113.82.",
+      "status": "CONSISTENT_IN_ENGINE"
+    },
+    "gst": {
+      "specification": "18% on (Brokerage + Exchange Fees + SEBI Fees)",
+      "implementation": "(brokerage + exchange_fee + sebi_fee) * 0.18 on Buy and Sell legs",
+      "reporting": "Report narrative table calculated GST on one-leg brokerage only. Recomputed independently to Rs 5,101.93.",
+      "status": "CONSISTENT_IN_ENGINE_DEFECT_IN_REPORT_TABLE"
+    },
+    "slippage": {
+      "specification": "5 bps (0.05%) execution slippage on entry and exit",
+      "implementation": "exec_entry_price = raw_entry_open * 1.0005; exec_exit_price = raw_exit_open * 0.9995. Slippage tracked as turnover * 0.0005.",
+      "double_counting_audit": "PASS (Gross P&L is computed from raw prices, not execution prices, so subtracting total_costs which includes slippage deducts slippage exactly once, matching net cash change).",
+      "status": "CONSISTENT_AND_VERIFIED"
+    }
+  },
+  "independent_recomputation_results": {
+    "raw_buy_turnover_inr": 57042157.63,
+    "raw_sell_turnover_inr": 57094686.76,
+    "combined_two_way_turnover_inr": 114136844.39,
+    "average_one_way_turnover_inr": 57068422.2,
+    "reported_invested_capital_inr": 57152998.81,
+    "component_breakdown": {
+      "brokerage_inr": 24840.0,
+      "brokerage_share_pct": 11.6506,
+      "stt_inr": 114137.05,
+      "stt_share_pct": 53.5333,
+      "stamp_duty_inr": 8556.2,
+      "stamp_duty_share_pct": 4.0131,
+      "exchange_charges_inr": 3390.06,
+      "exchange_charges_share_pct": 1.59,
+      "sebi_charges_inr": 113.82,
+      "sebi_charges_share_pct": 0.0534,
+      "gst_inr": 5101.93,
+      "gst_share_pct": 2.3929,
+      "slippage_inr": 57068.46,
+      "slippage_share_pct": 26.7666,
+      "sum_of_components_inr": 213207.52,
+      "sum_of_shares_pct": 99.9999,
+      "total_friction_recorded_inr": 213207.51,
+      "component_sum_vs_recorded_diff_inr": 0.01
+    },
+    "per_trade_discrepancy_counts": {
+      "total_trades": 621,
+      "statutory_costs_mismatches": 0,
+      "statutory_costs_max_diff_inr": 0.0,
+      "total_costs_mismatches": 0,
+      "total_costs_max_diff_inr": 0.0,
+      "gross_pnl_mismatches_vs_csv_rounded_prices": 43,
+      "gross_pnl_max_diff_vs_csv_rounded_prices_inr": 0.23,
+      "gross_pnl_mismatches_vs_raw_source_prices": 0,
+      "gross_pnl_max_diff_vs_raw_source_prices_inr": 0.0
+    }
+  },
+  "portfolio_equity_and_liquidation_audit": {
+    "daily_mtm_solvency": {
+      "sessions_checked": 388,
+      "max_discrepancy_inr": 0.01,
+      "discrepancies_above_one_paisa": 0,
+      "minimum_cash_balance_inr": 211.26,
+      "negative_cash_sessions": 0,
+      "status": "PASS"
+    },
+    "reconciliation_of_ending_equity": {
+      "initial_capital_inr": 1000000.0,
+      "ending_equity_inr": 840519.64,
+      "equity_change_inr": -159480.36,
+      "trade_ledger_net_pnl_all_trades_inr": -160678.64,
+      "reported_variance_inr": 1198.28,
+      "open_positions_count": 8,
+      "open_positions_mtm_value_inr": 657180.9,
+      "open_positions_invested_cash_inr": 669727.01,
+      "unrealized_mtm_loss_inr": -12546.11,
+      "hypothetical_sell_friction_inr": 1198.38,
+      "ten_paise_explanation": {
+        "liquidation_component_rounding_diff_inr": 0.02,
+        "closed_trades_cash_rounding_accumulation_inr": 0.08,
+        "total_reconciliation_gap_inr": 0.1,
+        "verified": true
+      }
+    }
+  },
+  "test_independence_assessment": {
+    "sprint_6_0_1_tests": "Partially reused production IndianEquityCostModel class",
+    "sprint_6_0_2_tests": "Implemented tests/test_reconciliation_6_0_2.py with 100% independent calculation logic",
+    "tests_passed": 4,
+    "all_repository_tests_passed": 48
+  }
+}

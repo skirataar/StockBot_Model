@@ -1,0 +1,606 @@
+{
+  "metadata": {
+    "sprint": "5.1",
+    "title": "Model Integrity Audit, Feature Importance & Explainability",
+    "random_seed": 42
+  },
+  "checks": {
+    "check_1_feature_allowlist": {
+      "title": "Approved 30 Features Only (Strict Exclusion of Raw OHLCV, Identifiers, Targets)",
+      "status": "PASS",
+      "evidence": {
+        "model_features_count": 30,
+        "matches_approved_30": true,
+        "forbidden_columns_found": []
+      }
+    },
+    "check_2_target_definition": {
+      "title": "Approved Ternary Classification Target (-1 SELL, 0 HOLD, 1 BUY)",
+      "status": "PASS",
+      "evidence": {
+        "model_classes": [
+          -1,
+          0,
+          1
+        ],
+        "train_targets": [
+          -1,
+          0,
+          1
+        ],
+        "val_targets": [
+          -1,
+          0,
+          1
+        ],
+        "test_targets": [
+          -1,
+          0,
+          1
+        ]
+      }
+    },
+    "check_3_candidate_identity": {
+      "title": "Saved Model Matches Sprint 5.0 Selection Decision ('lightgbm')",
+      "status": "PASS",
+      "evidence": {
+        "selected_model_in_metrics": "lightgbm",
+        "artifact_path": "models/lightgbm.joblib",
+        "model_class": "<class 'lightgbm.sklearn.LGBMClassifier'>"
+      }
+    },
+    "check_4_train_only_preprocessing": {
+      "title": "Leakage-Safe Preprocessing (Imputer & Scaler Fitted on Training Only)",
+      "status": "PASS",
+      "evidence": {
+        "imputer_matches_train_medians": true,
+        "scaler_matches_train_means": true
+      }
+    },
+    "check_5_lightgbm_hyperparameters": {
+      "title": "LightGBM Hyperparameters, Class Weights & Random Seed Verification",
+      "status": "PASS",
+      "evidence": {
+        "n_estimators": 100,
+        "learning_rate": 0.05,
+        "max_depth": 6,
+        "num_leaves": 31,
+        "class_weight": "balanced",
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "random_state": 42
+      }
+    },
+    "check_6_zero_lookahead_fitting": {
+      "title": "Zero Look-Ahead: Validation and Test Excluded from Model Fitting",
+      "status": "PASS",
+      "evidence": {
+        "train_sample_count": 146878,
+        "val_sample_count": 23658,
+        "test_sample_count": 19012,
+        "fitted_samples_count": 30
+      }
+    },
+    "check_7_boundary_purging": {
+      "title": "Chronological Split & 5-Day Forward Label Horizon Purging",
+      "status": "PASS",
+      "evidence": {
+        "train_max_date": "2022-12-23 00:00:00",
+        "val_min_date": "2023-01-02 00:00:00",
+        "val_max_date": "2024-12-23 00:00:00",
+        "test_min_date": "2025-01-01 00:00:00",
+        "train_to_val_purged_rows": 240,
+        "val_to_test_purged_rows": 245
+      }
+    },
+    "check_8_metric_reproducibility": {
+      "title": "Exact Mathematical Metric Reproducibility from Frozen Model",
+      "status": "PASS",
+      "evidence": {
+        "train_acc_reported": 0.4988,
+        "train_acc_reproduced": 0.4988,
+        "train_macro_f1_reported": 0.4945,
+        "train_macro_f1_reproduced": 0.4945,
+        "val_acc_reported": 0.4483,
+        "val_acc_reproduced": 0.4483,
+        "val_macro_f1_reported": 0.351,
+        "val_macro_f1_reproduced": 0.351,
+        "val_bal_acc_reported": 0.367,
+        "val_bal_acc_reproduced": 0.367
+      }
+    },
+    "check_9_confusion_matrix_reconciliation": {
+      "title": "Confusion Matrix, Per-Class Support, and Precision/Recall Reconciliation",
+      "status": "PASS",
+      "evidence": {
+        "row_sums_equal_supports": true,
+        "column_sums_equal_predicted": true,
+        "diagonal_sum_matches_accuracy": true,
+        "confusion_matrix_shape": [
+          3,
+          3
+        ]
+      }
+    },
+    "check_10_holdout_preservation": {
+      "title": "Holdout Test Set Evaluated Once & Preserved Untouched",
+      "status": "PASS",
+      "evidence": {
+        "test_dataset_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+        "test_dataset_unmodified": true,
+        "lightgbm_joblib_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+        "lightgbm_joblib_unmodified": true,
+        "single_evaluation_documented": true
+      }
+    }
+  },
+  "feature_importance": [
+    {
+      "feature": "market_volatility",
+      "family": "Benchmark / Cross-Sectional",
+      "split_importance": 1518,
+      "split_pct": 16.867,
+      "gain_importance": 41427.08,
+      "gain_pct": 19.904,
+      "perm_macro_f1_decrease": -0.00036,
+      "perm_macro_f1_std": 0.00173,
+      "gain_rank": 1,
+      "split_rank": 1,
+      "perm_rank": 25
+    },
+    {
+      "feature": "realised_vol_60d",
+      "family": "Volatility",
+      "split_importance": 405,
+      "split_pct": 4.5,
+      "gain_importance": 22078.28,
+      "gain_pct": 10.608,
+      "perm_macro_f1_decrease": 0.01558,
+      "perm_macro_f1_std": 0.00128,
+      "gain_rank": 2,
+      "split_rank": 6,
+      "perm_rank": 1
+    },
+    {
+      "feature": "market_return",
+      "family": "Benchmark / Cross-Sectional",
+      "split_importance": 779,
+      "split_pct": 8.656,
+      "gain_importance": 19107.82,
+      "gain_pct": 9.18,
+      "perm_macro_f1_decrease": -0.00076,
+      "perm_macro_f1_std": 0.00126,
+      "gain_rank": 3,
+      "split_rank": 2,
+      "perm_rank": 29
+    },
+    {
+      "feature": "month",
+      "family": "Calendar",
+      "split_importance": 470,
+      "split_pct": 5.222,
+      "gain_importance": 11988.96,
+      "gain_pct": 5.76,
+      "perm_macro_f1_decrease": 0.00074,
+      "perm_macro_f1_std": 0.00106,
+      "gain_rank": 4,
+      "split_rank": 4,
+      "perm_rank": 14
+    },
+    {
+      "feature": "month_cos",
+      "family": "Calendar",
+      "split_importance": 404,
+      "split_pct": 4.489,
+      "gain_importance": 10892.41,
+      "gain_pct": 5.233,
+      "perm_macro_f1_decrease": 0.00281,
+      "perm_macro_f1_std": 0.00129,
+      "gain_rank": 5,
+      "split_rank": 7,
+      "perm_rank": 5
+    },
+    {
+      "feature": "dist_52w_high",
+      "family": "Price Position",
+      "split_importance": 398,
+      "split_pct": 4.422,
+      "gain_importance": 10037.12,
+      "gain_pct": 4.822,
+      "perm_macro_f1_decrease": 0.00416,
+      "perm_macro_f1_std": 0.00132,
+      "gain_rank": 6,
+      "split_rank": 8,
+      "perm_rank": 4
+    },
+    {
+      "feature": "beta_60d",
+      "family": "Benchmark / Cross-Sectional",
+      "split_importance": 517,
+      "split_pct": 5.744,
+      "gain_importance": 9524.63,
+      "gain_pct": 4.576,
+      "perm_macro_f1_decrease": 0.00253,
+      "perm_macro_f1_std": 0.00111,
+      "gain_rank": 7,
+      "split_rank": 3,
+      "perm_rank": 7
+    },
+    {
+      "feature": "month_sin",
+      "family": "Calendar",
+      "split_importance": 337,
+      "split_pct": 3.744,
+      "gain_importance": 8649.44,
+      "gain_pct": 4.156,
+      "perm_macro_f1_decrease": 0.00065,
+      "perm_macro_f1_std": 0.00086,
+      "gain_rank": 8,
+      "split_rank": 11,
+      "perm_rank": 16
+    },
+    {
+      "feature": "realised_vol_20d",
+      "family": "Volatility",
+      "split_importance": 289,
+      "split_pct": 3.211,
+      "gain_importance": 8239.32,
+      "gain_pct": 3.959,
+      "perm_macro_f1_decrease": 0.00036,
+      "perm_macro_f1_std": 0.00059,
+      "gain_rank": 9,
+      "split_rank": 14,
+      "perm_rank": 18
+    },
+    {
+      "feature": "ret_120d",
+      "family": "Returns",
+      "split_importance": 306,
+      "split_pct": 3.4,
+      "gain_importance": 7360.39,
+      "gain_pct": 3.536,
+      "perm_macro_f1_decrease": 0.00178,
+      "perm_macro_f1_std": 0.00083,
+      "gain_rank": 10,
+      "split_rank": 13,
+      "perm_rank": 10
+    },
+    {
+      "feature": "dist_52w_low",
+      "family": "Price Position",
+      "split_importance": 385,
+      "split_pct": 4.278,
+      "gain_importance": 6980.04,
+      "gain_pct": 3.354,
+      "perm_macro_f1_decrease": 0.00565,
+      "perm_macro_f1_std": 0.00099,
+      "gain_rank": 11,
+      "split_rank": 9,
+      "perm_rank": 2
+    },
+    {
+      "feature": "vol_ma_30d",
+      "family": "Volume",
+      "split_importance": 438,
+      "split_pct": 4.867,
+      "gain_importance": 6092.1,
+      "gain_pct": 2.927,
+      "perm_macro_f1_decrease": -0.00052,
+      "perm_macro_f1_std": 0.00113,
+      "gain_rank": 12,
+      "split_rank": 5,
+      "perm_rank": 26
+    },
+    {
+      "feature": "low_52w",
+      "family": "Price Position",
+      "split_importance": 366,
+      "split_pct": 4.067,
+      "gain_importance": 5606.84,
+      "gain_pct": 2.694,
+      "perm_macro_f1_decrease": 0.00506,
+      "perm_macro_f1_std": 0.00115,
+      "gain_rank": 13,
+      "split_rank": 10,
+      "perm_rank": 3
+    },
+    {
+      "feature": "high_52w",
+      "family": "Price Position",
+      "split_importance": 333,
+      "split_pct": 3.7,
+      "gain_importance": 5229.22,
+      "gain_pct": 2.512,
+      "perm_macro_f1_decrease": 0.00261,
+      "perm_macro_f1_std": 0.00128,
+      "gain_rank": 14,
+      "split_rank": 12,
+      "perm_rank": 6
+    },
+    {
+      "feature": "realised_vol_10d",
+      "family": "Volatility",
+      "split_importance": 192,
+      "split_pct": 2.133,
+      "gain_importance": 4041.26,
+      "gain_pct": 1.942,
+      "perm_macro_f1_decrease": 0.00229,
+      "perm_macro_f1_std": 0.00068,
+      "gain_rank": 15,
+      "split_rank": 17,
+      "perm_rank": 8
+    },
+    {
+      "feature": "vol_ratio_20d_60d",
+      "family": "Volatility",
+      "split_importance": 258,
+      "split_pct": 2.867,
+      "gain_importance": 4013.19,
+      "gain_pct": 1.928,
+      "perm_macro_f1_decrease": 0.00202,
+      "perm_macro_f1_std": 0.00047,
+      "gain_rank": 16,
+      "split_rank": 15,
+      "perm_rank": 9
+    },
+    {
+      "feature": "ret_20d",
+      "family": "Returns",
+      "split_importance": 209,
+      "split_pct": 2.322,
+      "gain_importance": 3741.64,
+      "gain_pct": 1.798,
+      "perm_macro_f1_decrease": -0.00097,
+      "perm_macro_f1_std": 0.00062,
+      "gain_rank": 17,
+      "split_rank": 16,
+      "perm_rank": 30
+    },
+    {
+      "feature": "ret_60d",
+      "family": "Returns",
+      "split_importance": 190,
+      "split_pct": 2.111,
+      "gain_importance": 3573.89,
+      "gain_pct": 1.717,
+      "perm_macro_f1_decrease": 0.00096,
+      "perm_macro_f1_std": 0.00048,
+      "gain_rank": 18,
+      "split_rank": 18,
+      "perm_rank": 13
+    },
+    {
+      "feature": "mom_5d",
+      "family": "Momentum",
+      "split_importance": 172,
+      "split_pct": 1.911,
+      "gain_importance": 3106.57,
+      "gain_pct": 1.493,
+      "perm_macro_f1_decrease": 0.00152,
+      "perm_macro_f1_std": 0.00093,
+      "gain_rank": 19,
+      "split_rank": 19,
+      "perm_rank": 11
+    },
+    {
+      "feature": "mom_60d",
+      "family": "Momentum",
+      "split_importance": 164,
+      "split_pct": 1.822,
+      "gain_importance": 2881.26,
+      "gain_pct": 1.384,
+      "perm_macro_f1_decrease": -0.00028,
+      "perm_macro_f1_std": 0.00052,
+      "gain_rank": 20,
+      "split_rank": 20,
+      "perm_rank": 24
+    },
+    {
+      "feature": "ret_5d",
+      "family": "Returns",
+      "split_importance": 149,
+      "split_pct": 1.656,
+      "gain_importance": 2582.25,
+      "gain_pct": 1.241,
+      "perm_macro_f1_decrease": 0.00064,
+      "perm_macro_f1_std": 0.00074,
+      "gain_rank": 21,
+      "split_rank": 23,
+      "perm_rank": 17
+    },
+    {
+      "feature": "mom_20d",
+      "family": "Momentum",
+      "split_importance": 154,
+      "split_pct": 1.711,
+      "gain_importance": 2469.64,
+      "gain_pct": 1.187,
+      "perm_macro_f1_decrease": 0.00099,
+      "perm_macro_f1_std": 0.00048,
+      "gain_rank": 22,
+      "split_rank": 21,
+      "perm_rank": 12
+    },
+    {
+      "feature": "ret_10d",
+      "family": "Returns",
+      "split_importance": 150,
+      "split_pct": 1.667,
+      "gain_importance": 2270.99,
+      "gain_pct": 1.091,
+      "perm_macro_f1_decrease": 0.00072,
+      "perm_macro_f1_std": 0.00027,
+      "gain_rank": 23,
+      "split_rank": 22,
+      "perm_rank": 15
+    },
+    {
+      "feature": "mom_10d",
+      "family": "Momentum",
+      "split_importance": 127,
+      "split_pct": 1.411,
+      "gain_importance": 2096.08,
+      "gain_pct": 1.007,
+      "perm_macro_f1_decrease": -0.00053,
+      "perm_macro_f1_std": 0.0004,
+      "gain_rank": 24,
+      "split_rank": 24,
+      "perm_rank": 27
+    },
+    {
+      "feature": "volume_z_score_30d",
+      "family": "Volume",
+      "split_importance": 105,
+      "split_pct": 1.167,
+      "gain_importance": 1398.69,
+      "gain_pct": 0.672,
+      "perm_macro_f1_decrease": -0.00019,
+      "perm_macro_f1_std": 0.00046,
+      "gain_rank": 25,
+      "split_rank": 25,
+      "perm_rank": 23
+    },
+    {
+      "feature": "excess_return",
+      "family": "Benchmark / Cross-Sectional",
+      "split_importance": 93,
+      "split_pct": 1.033,
+      "gain_importance": 1267.59,
+      "gain_pct": 0.609,
+      "perm_macro_f1_decrease": -0.00067,
+      "perm_macro_f1_std": 0.00088,
+      "gain_rank": 26,
+      "split_rank": 26,
+      "perm_rank": 28
+    },
+    {
+      "feature": "ret_1d",
+      "family": "Returns",
+      "split_importance": 65,
+      "split_pct": 0.722,
+      "gain_importance": 755.74,
+      "gain_pct": 0.363,
+      "perm_macro_f1_decrease": 0.00029,
+      "perm_macro_f1_std": 0.00042,
+      "gain_rank": 27,
+      "split_rank": 27,
+      "perm_rank": 20
+    },
+    {
+      "feature": "quarter",
+      "family": "Calendar",
+      "split_importance": 19,
+      "split_pct": 0.211,
+      "gain_importance": 640.7,
+      "gain_pct": 0.308,
+      "perm_macro_f1_decrease": 0.00015,
+      "perm_macro_f1_std": 0.00028,
+      "gain_rank": 28,
+      "split_rank": 28,
+      "perm_rank": 21
+    },
+    {
+      "feature": "volume_spike_flag",
+      "family": "Volume",
+      "split_importance": 6,
+      "split_pct": 0.067,
+      "gain_importance": 61.43,
+      "gain_pct": 0.03,
+      "perm_macro_f1_decrease": 0.00035,
+      "perm_macro_f1_std": 0.0001,
+      "gain_rank": 29,
+      "split_rank": 29,
+      "perm_rank": 19
+    },
+    {
+      "feature": "crash_flag",
+      "family": "Market Event",
+      "split_importance": 2,
+      "split_pct": 0.022,
+      "gain_importance": 23.55,
+      "gain_pct": 0.011,
+      "perm_macro_f1_decrease": 3e-05,
+      "perm_macro_f1_std": 7e-05,
+      "gain_rank": 30,
+      "split_rank": 30,
+      "perm_rank": 22
+    }
+  ],
+  "family_importance": [
+    {
+      "family": "Benchmark / Cross-Sectional",
+      "feature_count": 4,
+      "gain_importance": 71327.12,
+      "gain_pct": 34.27,
+      "split_importance": 2907,
+      "split_pct": 32.3,
+      "perm_macro_f1_decrease": 0.00074
+    },
+    {
+      "family": "Volatility",
+      "feature_count": 4,
+      "gain_importance": 38372.049999999996,
+      "gain_pct": 18.44,
+      "split_importance": 1144,
+      "split_pct": 12.71,
+      "perm_macro_f1_decrease": 0.02025
+    },
+    {
+      "family": "Calendar",
+      "feature_count": 4,
+      "gain_importance": 32171.51,
+      "gain_pct": 15.46,
+      "split_importance": 1230,
+      "split_pct": 13.67,
+      "perm_macro_f1_decrease": 0.00435
+    },
+    {
+      "family": "Price Position",
+      "feature_count": 4,
+      "gain_importance": 27853.22,
+      "gain_pct": 13.38,
+      "split_importance": 1482,
+      "split_pct": 16.47,
+      "perm_macro_f1_decrease": 0.01748
+    },
+    {
+      "family": "Returns",
+      "feature_count": 6,
+      "gain_importance": 20284.9,
+      "gain_pct": 9.75,
+      "split_importance": 1069,
+      "split_pct": 11.88,
+      "perm_macro_f1_decrease": 0.00342
+    },
+    {
+      "family": "Momentum",
+      "feature_count": 4,
+      "gain_importance": 10553.55,
+      "gain_pct": 5.07,
+      "split_importance": 617,
+      "split_pct": 6.86,
+      "perm_macro_f1_decrease": 0.0017
+    },
+    {
+      "family": "Volume",
+      "feature_count": 3,
+      "gain_importance": 7552.22,
+      "gain_pct": 3.63,
+      "split_importance": 549,
+      "split_pct": 6.1,
+      "perm_macro_f1_decrease": -0.00036
+    },
+    {
+      "family": "Market Event",
+      "feature_count": 1,
+      "gain_importance": 23.55,
+      "gain_pct": 0.01,
+      "split_importance": 2,
+      "split_pct": 0.02,
+      "perm_macro_f1_decrease": 3e-05
+    }
+  ],
+  "explainability": {},
+  "verdict": "PASS",
+  "baseline_val_macro_f1": 0.351
+}

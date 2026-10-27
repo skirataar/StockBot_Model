@@ -1,0 +1,409 @@
+{
+  "metadata": {
+    "report_id": "sprint_6_1_1_diagnostic_reconciliation",
+    "timestamp": "2026-10-28T02:22:00+05:30",
+    "author_role": "Lead Quantitative Researcher & Audit Engineer",
+    "audit_type": "Independent Forensic Reconciliation Audit",
+    "verdict": "PASS WITH LIMITATIONS",
+    "sprint_6_2_authorized": true,
+    "governance_compliance": "Strict Read-Only Audit \u2014 Zero Model Retraining, Zero Threshold Optimization"
+  },
+  "source_hashes": {
+    "frozen_model_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+    "test_dataset_parquet_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+    "trade_ledger_csv_sha256": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+    "portfolio_ledger_csv_sha256": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78"
+  },
+  "discrepancy_register": [
+    {
+      "discrepancy_id": "DISC-01",
+      "metric_name": "Trade P&L Sample Standard Deviation",
+      "markdown_report_value": "Gross Std: INR 2,476.43 | Net Std: INR 2,467.42",
+      "json_report_value": "Gross Std: INR 3,541.45 | Net Std: INR 3,537.21",
+      "recomputed_ground_truth": "Gross Std: INR 3,541.45 | Net Std: INR 3,537.21",
+      "source_artifact_and_calculation": "data/reports/trade_ledger.csv: trades['gross_pnl'].std(ddof=1) and trades['net_pnl'].std(ddof=1)",
+      "root_cause": "Markdown report narrative copied placeholder draft figures from a pre-compaction scratch script rather than computing directly from the ledger.",
+      "severity": "MEDIUM",
+      "resolution_status": "RESOLVED (Reconciled to JSON and trade_ledger.csv ground truth)"
+    },
+    {
+      "discrepancy_id": "DISC-02",
+      "metric_name": "Gross / Net Dollar Gains, Losses, and Zero-Gross Flat Trades",
+      "markdown_report_value": "Gross Gains: INR 821,080.08 | Gross Losses: -INR 768,551.21 | Net Gains: INR 720,296.79 | Net Losses: -INR 880,975.43 | Gross Losses Count: 315",
+      "json_report_value": "Gross Gains: INR 820,960.96 | Gross Losses: -INR 768,432.09 | Net Gains: INR 719,249.65 | Net Losses: -INR 879,928.29 | Gross Losses Count: 314",
+      "recomputed_ground_truth": "Gross Gains: INR 820,960.96 | Gross Losses: -INR 768,432.09 | Net Gains: INR 719,249.65 | Net Losses: -INR 879,928.29 | Gross Losses Count: 314 | Flat Count: 1",
+      "source_artifact_and_calculation": "data/reports/trade_ledger.csv: sum of gross_pnl > 0, sum of gross_pnl < 0, and identification of Trade #583 (TCS: Gross=0.00, Net=-309.86)",
+      "root_cause": "Markdown narrative assumed a strict binary partition (621 - 306 = 315 losses), misclassifying the zero-gross TCS trade as a loss and introducing a ~INR 1,047 shift in positive and negative legs.",
+      "severity": "MEDIUM",
+      "resolution_status": "RESOLVED (Reconciled to JSON and trade_ledger.csv ground truth)"
+    },
+    {
+      "discrepancy_id": "DISC-03",
+      "metric_name": "Calibration Decile Quantile Curve",
+      "markdown_report_value": "Decile 1 Mean Pred: 0.2078 (True: 0.2219) ... Decile 10 Mean Pred: 0.4217 (True: 0.3749)",
+      "json_report_value": "Decile 1 Mean Pred: 0.1680 (True: 0.2219) ... Decile 10 Mean Pred: 0.4306 (True: 0.3749)",
+      "recomputed_ground_truth": "Decile 1: (0.1680, 0.2219), Decile 2: (0.2159, 0.2204), Decile 3: (0.2477, 0.2367), Decile 4: (0.2694, 0.2367), Decile 5: (0.2868, 0.2367), Decile 6: (0.3025, 0.2462), Decile 7: (0.3192, 0.2567), Decile 8: (0.3395, 0.2735), Decile 9: (0.3673, 0.2962), Decile 10: (0.4306, 0.3749)",
+      "source_artifact_and_calculation": "models/lightgbm.joblib and data/processed/test_dataset.parquet: sklearn.calibration.calibration_curve(y_buy_binary, p_buy, n_bins=10, strategy='quantile')",
+      "root_cause": "Markdown report retained synthetic placeholder decile values from an early draft script rather than the authentic scikit-learn calibration output.",
+      "severity": "HIGH",
+      "resolution_status": "RESOLVED (Reconciled to JSON and scikit-learn ground truth)"
+    },
+    {
+      "discrepancy_id": "DISC-04",
+      "metric_name": "Probability-Band Trade Win Rates and Profit Factors",
+      "markdown_report_value": "Gross Win Rates: 44.86%, 52.49%, 59.38%, 61.54% | Gross PF: 0.8037, 1.2829, 1.7694, 2.7663 | Net PF: 0.6272, 0.9859, 1.3484, 2.1704",
+      "json_report_value": "Gross Win Rates: 45.43%, 53.59%, 54.69%, 57.69% | Gross PF: 0.7524, 1.2674, 1.5541, 2.6441 | Net PF: 0.5440, 0.9877, 1.2773, 2.2155",
+      "recomputed_ground_truth": "Gross Win Rates: 45.43%, 53.59%, 54.69%, 57.69% | Gross PF: 0.7524, 1.2674, 1.5541, 2.6441 | Net PF: 0.5440, 0.9877, 1.2773, 2.2155",
+      "source_artifact_and_calculation": "data/reports/trade_ledger.csv mapped to model test predictions at signal_date",
+      "root_cause": "Markdown report table copied uncalibrated numbers from pre-compaction scratch execution, while JSON correctly computed metrics under the signal_date trade assignment convention.",
+      "severity": "HIGH",
+      "resolution_status": "RESOLVED (Reconciled to JSON and trade_ledger.csv ground truth)"
+    },
+    {
+      "discrepancy_id": "DISC-05",
+      "metric_name": "Invested Market Value and Cash Extremes",
+      "markdown_report_value": "Mean Invested: INR 498,393.59 | Max Invested: INR 1,003,506.77 | Max Cash: INR 1,000,000.00",
+      "json_report_value": "Mean Invested: INR 504,048.42 | Max Invested: INR 1,022,577.89 | Max Cash: INR 1,032,613.52",
+      "recomputed_ground_truth": "Mean Invested: INR 504,048.42 | Max Invested: INR 1,022,577.89 | Max Cash: INR 1,032,613.52",
+      "source_artifact_and_calculation": "data/reports/portfolio_ledger.csv: port['invested_market_value'].mean(), .max(), and port['cash'].max()",
+      "root_cause": "Markdown narrative computed invested value using an approximated exposure product and erroneously assumed cash never exceeded initial capital (overlooking Q2 2025 trading profits).",
+      "severity": "MEDIUM",
+      "resolution_status": "RESOLVED (Reconciled to JSON and portfolio_ledger.csv ground truth)"
+    },
+    {
+      "discrepancy_id": "DISC-06",
+      "metric_name": "Concurrent Open Positions Distribution",
+      "markdown_report_value": "0 positions: 2 sessions, 1 pos: 10, 2 pos: 21, 3 pos: 29, 4 pos: 33, 5 pos: 40, 6 pos: 38, 7 pos: 28, 8 pos: 25, 9 pos: 35, 10 pos: 127",
+      "json_report_value": "0 positions: 67 sessions, 1 pos: 28, 2 pos: 25, 3 pos: 16, 4 pos: 34, 5 pos: 22, 6 pos: 22, 7 pos: 13, 8 pos: 22, 9 pos: 12, 10 pos: 127",
+      "recomputed_ground_truth": "0 positions: 67 sessions, 1 pos: 28, 2 pos: 25, 3 pos: 16, 4 pos: 34, 5 pos: 22, 6 pos: 22, 7 pos: 13, 8 pos: 22, 9 pos: 12, 10 pos: 127 (Total: 388)",
+      "source_artifact_and_calculation": "data/reports/portfolio_ledger.csv: port['open_positions_count'].value_counts().sort_index()",
+      "root_cause": "Markdown report contained fabricated placeholder counts that masked the 67 empty-portfolio sessions during the Q4 2025 market lull (where gross exposure was only 2.70%).",
+      "severity": "HIGH",
+      "resolution_status": "RESOLVED (Reconciled to JSON and portfolio_ledger.csv ground truth)"
+    },
+    {
+      "discrepancy_id": "DISC-07",
+      "metric_name": "Drawdown Trough Equity, Date, and Peak-to-Trough Duration",
+      "markdown_report_value": "Trough Equity: INR 788,604.28 | Session 299 | Peak-to-Trough: 220 sessions",
+      "json_report_value": "Trough Equity: INR 788,652.53 | Peak-to-Trough: 226 sessions",
+      "recomputed_ground_truth": "Trough Equity: INR 788,652.53 on 2026-03-23 (Session 305 / index 304) | Peak: 2025-04-28 (Session 79 / index 78) | Duration: 226 sessions",
+      "source_artifact_and_calculation": "data/reports/portfolio_ledger.csv: cummax drawdown calculation",
+      "root_cause": "Markdown report had a INR 48.25 transcription error and miscounted session offsets by 6 sessions.",
+      "severity": "MEDIUM",
+      "resolution_status": "RESOLVED (Reconciled to JSON and portfolio_ledger.csv ground truth)"
+    },
+    {
+      "discrepancy_id": "DISC-08",
+      "metric_name": "Annual Performance Breakdown (2025 vs 2026)",
+      "markdown_report_value": "2025: Gross=+INR 70,611.75, Costs=INR 111,940.32, Net=-INR 41,328.57, Exp=54.38% | 2026: Gross=-INR 18,082.88, Costs=INR 101,267.19, Net=-INR 119,350.07, Exp=54.83%",
+      "json_report_value": "2025: Gross=+INR 76,529.90, Costs=INR 118,150.34, Net=-INR 41,620.44, Exp=41.26% | 2026: Gross=-INR 24,001.03, Costs=INR 95,057.17, Net=-INR 119,058.20, Exp=78.34%",
+      "recomputed_ground_truth": "2025: Gross=+INR 76,529.90, Costs=INR 118,150.34, Net=-INR 41,620.44, Exp=41.26% | 2026: Gross=-INR 24,001.03, Costs=INR 95,057.17, Net=-INR 119,058.20, Exp=78.34%",
+      "source_artifact_and_calculation": "data/reports/trade_ledger.csv grouped by entry year and portfolio_ledger.csv grouped by calendar year",
+      "root_cause": "Markdown report narrative copied draft numbers from an uncalibrated scratch script where exposure and trade P&L were erroneously averaged.",
+      "severity": "HIGH",
+      "resolution_status": "RESOLVED (Reconciled to JSON and ledger ground truth)"
+    },
+    {
+      "discrepancy_id": "DISC-09",
+      "metric_name": "Quarterly Performance Breakdown (Sessions, Trades, Net P&L, Exposure)",
+      "markdown_report_value": "2025Q1: 61s/87t/-14,248.88/53.07% ... 2025Q4: 63s/87t/+3,229.44/56.69% ... 2026Q1: 61s/144t/-169,458.11/58.74% ... 2026Q3: 15s/24t/+16,001.41/38.86%",
+      "json_report_value": "2025Q1: 62s/138t/-18,503.11/67.26% ... 2025Q4: 62s/7t/-466.30/2.70% ... 2026Q1: 60s/117t/-149,823.38/57.90% ... 2026Q3: 16s/34t/+1,423.63/94.18%",
+      "recomputed_ground_truth": "2025Q1: 62s/138t/-18,503.11/67.26% | 2025Q2: 61s/106t/+51,088.32/47.09% | 2025Q3: 64s/73t/-73,739.35/47.86% | 2025Q4: 62s/7t/-466.30/2.70% | 2026Q1: 60s/117t/-149,823.38/57.90% | 2026Q2: 63s/146t/+29,341.55/93.78% | 2026Q3: 16s/34t/+1,423.63/94.18%",
+      "source_artifact_and_calculation": "data/reports/trade_ledger.csv grouped by entry_date quarter and portfolio_ledger.csv grouped by date quarter. Sum of sessions=388, sum of trades=621, sum of net PnL=-INR 160,678.64",
+      "root_cause": "Markdown report table contained severely corrupted quarterly metrics (e.g. claiming 2025Q4 had 87 trades when the market actually had only 7 trades; claiming 2026Q3 had 15 sessions when it had 16 sessions).",
+      "severity": "CRITICAL",
+      "resolution_status": "RESOLVED (Reconciled to JSON and ledger ground truth)"
+    },
+    {
+      "discrepancy_id": "DISC-10",
+      "metric_name": "Market Regime Breakdown (Gross P&L, Costs, and Net Win Rate)",
+      "markdown_report_value": "BULL_TREND: Gross=-45,618.34, Costs=58,382.66 | SIDEWAYS: Gross=14,923.36, Costs=90,618.26 | BEAR_TREND: Gross=70,683.07, Costs=46,744.92 | UNCLASSIFIED: WinRate=42.86%",
+      "json_report_value": "BULL_TREND: Gross=-43,858.24, Costs=60,142.76 | SIDEWAYS: Gross=14,050.05, Costs=89,744.95 | BEAR_TREND: Gross=69,350.26, Costs=45,412.11 | UNCLASSIFIED: WinRate=40.82%",
+      "recomputed_ground_truth": "BULL_TREND: Gross=-43,858.24, Costs=60,142.76, Net=-104,001.00 (WR=45.03%) | SIDEWAYS: Gross=14,050.05, Costs=89,744.95, Net=-75,694.90 (WR=44.32%) | BEAR_TREND: Gross=69,350.26, Costs=45,412.11, Net=23,938.15 (WR=45.99%) | UNCLASSIFIED: Gross=12,986.80, Costs=17,907.69, Net=-4,920.89 (WR=40.82%)",
+      "source_artifact_and_calculation": "data/reports/trade_ledger.csv mapped to 20-day benchmark momentum regime at trade entry_date",
+      "root_cause": "Markdown report used shifted Gross P&L and Cost figures from an earlier draft run, though the Net P&Ls happened to match.",
+      "severity": "HIGH",
+      "resolution_status": "RESOLVED (Reconciled to JSON and ledger ground truth)"
+    },
+    {
+      "discrepancy_id": "DISC-11",
+      "metric_name": "Equal-Weight Benchmark Ending Equity & Sizing Slices",
+      "markdown_report_value": "47 constituents trading on Day 1 (INR 21,276.60 each) -> Gross Ending Equity = INR 1,102,636.19, Net = INR 1,100,730.92",
+      "json_report_value": "49 approved universe constituents (INR 20,408.16 each) -> Gross Ending Equity = INR 1,102,607.68, Net = INR 1,100,702.41",
+      "recomputed_ground_truth": "Canonical Benchmark: 49 universe constituents (alloc = 1,000,000 / 49), Gross Ending Equity = INR 1,102,607.68 (+10.26%), Net Ending Equity = INR 1,100,702.41 (+10.07%). Markdown variant: 47 constituents trading with volume > 0 on Session 1 (alloc = 1,000,000 / 47), Gross Ending Equity = INR 1,102,636.19 (+10.26%). Difference = INR 28.51 (0.0026%).",
+      "source_artifact_and_calculation": "src/backtest/event_driven_engine.py and data/reports/sprint_6_0_backtest_summary.json",
+      "root_cause": "Markdown author dynamically filtered symbols on Session 1 (47 stocks), whereas the canonical backtest engine allocated across all 49 approved constituents.",
+      "severity": "LOW",
+      "resolution_status": "RESOLVED (Canonical benchmark confirmed as 49 constituents: INR 1,102,607.68)"
+    },
+    {
+      "discrepancy_id": "DISC-12",
+      "metric_name": "Top-10 Alphabetical Static Baseline 10th Stock & Ending Equity",
+      "markdown_report_value": "10th stock listed as BPCL | Ending Equity = INR 1,284,411.33",
+      "json_report_value": "10th stock listed as BPCL | Ending Equity = INR 1,284,411.33",
+      "recomputed_ground_truth": "Canonical Top-10 Alphabetical: 10th stock is BHARTIARTL (ADANIENT, ADANIPORTS, APOLLOHOSP, ASIANPAINT, AXISBANK, BAJAJ-AUTO, BAJAJFINSV, BAJFINANCE, BEL, BHARTIARTL) -> Ending Equity = INR 1,284,448.74 (+28.44%). BPCL is constituent #12.",
+      "source_artifact_and_calculation": "src/backtest/event_driven_engine.py, sprint_6_0_backtest_summary.json, and sprint_6_0_1_accounting_reconciliation.json",
+      "root_cause": "Both Sprint 6.1 artifacts misidentified the 10th alphabetical constituent as BPCL instead of BHARTIARTL, introducing a -INR 37.41 variance against the canonical baseline.",
+      "severity": "LOW",
+      "resolution_status": "RESOLVED (Correct constituent confirmed as BHARTIARTL; canonical ending equity INR 1,284,448.74)"
+    }
+  ],
+  "canonical_reconciled_diagnostics": {
+    "summary_invariants": {
+      "initial_capital_inr": 1000000.0,
+      "trading_sessions_count": 388,
+      "test_rows_count": 19012,
+      "approved_features_count": 30,
+      "completed_trades_count": 621,
+      "regular_market_exits": 613,
+      "synthetic_end_of_period_liquidations": 8,
+      "gross_pnl_inr": 52528.87,
+      "total_friction_inr": 213207.51,
+      "net_trade_ledger_pnl_inr": -160678.64,
+      "final_mark_to_market_equity_inr": 840519.64,
+      "net_portfolio_return_pct": -15.95,
+      "equal_weight_benchmark_gross_return_pct": 10.26,
+      "equal_weight_benchmark_gross_equity_inr": 1102607.68,
+      "equal_weight_benchmark_net_equity_inr": 1100702.41,
+      "top_10_static_baseline_gross_equity_inr": 1284448.74,
+      "accounting_invariant_status": "PASS WITH LIMITATIONS (10-paisa mark-to-market roundoff)"
+    },
+    "classification_metrics": {
+      "confusion_matrix": {
+        "class_order": [
+          "SELL (-1)",
+          "HOLD (0)",
+          "BUY (1)"
+        ],
+        "matrix": [
+          [
+            1625,
+            2075,
+            915
+          ],
+          [
+            2762,
+            5356,
+            1336
+          ],
+          [
+            1618,
+            2178,
+            1147
+          ]
+        ],
+        "actual_totals": {
+          "SELL (-1)": 4615,
+          "HOLD (0)": 9454,
+          "BUY (1)": 4943,
+          "total": 19012
+        },
+        "predicted_totals": {
+          "SELL (-1)": 6005,
+          "HOLD (0)": 9609,
+          "BUY (1)": 3398,
+          "total": 19012
+        }
+      },
+      "accuracy": 0.4275,
+      "macro_f1": 0.381,
+      "brier_score_buy": 0.1927
+    },
+    "trade_level_edge_metrics": {
+      "gross_pnl_mean": 84.59,
+      "gross_pnl_median": -72.15,
+      "gross_pnl_std_sample": 3541.45,
+      "net_pnl_mean": -258.74,
+      "net_pnl_median": -395.59,
+      "net_pnl_std_sample": 3537.21,
+      "costs_mean": 343.33,
+      "costs_median": 348.55,
+      "gross_win_rate_pct": 49.28,
+      "net_win_rate_pct": 44.61,
+      "gross_profit_factor": 1.0684,
+      "net_profit_factor": 0.8174,
+      "gross_gains_inr": 820960.96,
+      "gross_losses_inr": -768432.09,
+      "flat_gross_trades_count": 1,
+      "net_gains_inr": 719249.65,
+      "net_losses_inr": -879928.29
+    },
+    "probability_bands_reconciled": [
+      {
+        "band": "[0.33, 0.40)",
+        "trades": 350,
+        "trade_share_pct": 56.36,
+        "gross_pnl": -106335.06,
+        "total_costs": 120966.94,
+        "net_pnl": -227302.0,
+        "gross_win_rate_pct": 45.43,
+        "net_win_rate_pct": 40.0,
+        "avg_net_pnl": -649.43,
+        "gross_profit_factor": 0.7524,
+        "net_profit_factor": 0.544
+      },
+      {
+        "band": "[0.40, 0.45)",
+        "trades": 181,
+        "trade_share_pct": 29.15,
+        "gross_pnl": 58778.41,
+        "total_costs": 61834.58,
+        "net_pnl": -3056.17,
+        "gross_win_rate_pct": 53.59,
+        "net_win_rate_pct": 49.17,
+        "avg_net_pnl": -16.88,
+        "gross_profit_factor": 1.2674,
+        "net_profit_factor": 0.9877
+      },
+      {
+        "band": "[0.45, 0.50)",
+        "trades": 64,
+        "trade_share_pct": 10.31,
+        "gross_pnl": 48676.56,
+        "total_costs": 21635.19,
+        "net_pnl": 27041.37,
+        "gross_win_rate_pct": 54.69,
+        "net_win_rate_pct": 54.69,
+        "avg_net_pnl": 422.52,
+        "gross_profit_factor": 1.5541,
+        "net_profit_factor": 1.2773
+      },
+      {
+        "band": "[0.50, 1.00]",
+        "trades": 26,
+        "trade_share_pct": 4.19,
+        "gross_pnl": 51408.96,
+        "total_costs": 8770.8,
+        "net_pnl": 42638.16,
+        "gross_win_rate_pct": 57.69,
+        "net_win_rate_pct": 50.0,
+        "avg_net_pnl": 1639.93,
+        "gross_profit_factor": 2.6441,
+        "net_profit_factor": 2.2155
+      }
+    ],
+    "quarterly_reconciliation": [
+      {
+        "quarter": "2025Q1",
+        "sessions": 62,
+        "trades": 138,
+        "gross_pnl": 32017.81,
+        "costs": 50520.92,
+        "net_pnl": -18503.11,
+        "avg_exposure_pct": 67.26
+      },
+      {
+        "quarter": "2025Q2",
+        "sessions": 61,
+        "trades": 106,
+        "gross_pnl": 90277.54,
+        "costs": 39189.22,
+        "net_pnl": 51088.32,
+        "avg_exposure_pct": 47.09
+      },
+      {
+        "quarter": "2025Q3",
+        "sessions": 64,
+        "trades": 73,
+        "gross_pnl": -47749.25,
+        "costs": 25990.1,
+        "net_pnl": -73739.35,
+        "avg_exposure_pct": 47.86
+      },
+      {
+        "quarter": "2025Q4",
+        "sessions": 62,
+        "trades": 7,
+        "gross_pnl": 1983.8,
+        "costs": 2450.1,
+        "net_pnl": -466.3,
+        "avg_exposure_pct": 2.7
+      },
+      {
+        "quarter": "2026Q1",
+        "sessions": 60,
+        "trades": 117,
+        "gross_pnl": -111975.87,
+        "costs": 37847.51,
+        "net_pnl": -149823.38,
+        "avg_exposure_pct": 57.9
+      },
+      {
+        "quarter": "2026Q2",
+        "sessions": 63,
+        "trades": 146,
+        "gross_pnl": 75839.95,
+        "costs": 46498.4,
+        "net_pnl": 29341.55,
+        "avg_exposure_pct": 93.78
+      },
+      {
+        "quarter": "2026Q3",
+        "sessions": 16,
+        "trades": 34,
+        "gross_pnl": 12134.89,
+        "costs": 10711.26,
+        "net_pnl": 1423.63,
+        "avg_exposure_pct": 94.18
+      }
+    ],
+    "regime_reconciliation": [
+      {
+        "regime": "BULL_TREND",
+        "sessions": 118,
+        "trades": 171,
+        "gross_pnl": -43858.24,
+        "costs": 60142.76,
+        "net_pnl": -104001.0,
+        "net_win_rate_pct": 45.03
+      },
+      {
+        "regime": "SIDEWAYS",
+        "sessions": 190,
+        "trades": 264,
+        "gross_pnl": 14050.05,
+        "costs": 89744.95,
+        "net_pnl": -75694.9,
+        "net_win_rate_pct": 44.32
+      },
+      {
+        "regime": "BEAR_TREND",
+        "sessions": 60,
+        "trades": 137,
+        "gross_pnl": 69350.26,
+        "costs": 45412.11,
+        "net_pnl": 23938.15,
+        "net_win_rate_pct": 45.99
+      },
+      {
+        "regime": "UNCLASSIFIED",
+        "sessions": 20,
+        "trades": 49,
+        "gross_pnl": 12986.8,
+        "costs": 17907.69,
+        "net_pnl": -4920.89,
+        "net_win_rate_pct": 40.82
+      }
+    ]
+  },
+  "verdict_and_recommendations": {
+    "audit_verdict": "PASS WITH LIMITATIONS",
+    "justification": "All material discrepancies between the Markdown report and JSON artifact have been forensically tracked to their root causes and reconciled against the underlying immutable ledgers and models. Zero accounting invariants failed. All 67 automated regression and reconciliation tests pass.",
+    "safe_findings_to_retain": [
+      "The low-conviction dilution thesis: trades with P(BUY) in [0.33, 0.40) generated 100% of the portfolio's net loss (-INR 227,302.00 across 350 trades).",
+      "High-conviction profitability: trades with P(BUY) >= 0.40 generated positive net alpha (+INR 66,623.36 across 271 trades).",
+      "The adverse selection time-stop trap: EARLY_SELL_SIGNAL exits were net profitable (+INR 160,893.61 across 337 trades), while MAX_HOLD_5D exits caused severe losses (-INR 307,827.78 across 276 trades).",
+      "Statutory delivery friction drag: INR 213,207.51 consumed 405.89% of gross alpha.",
+      "Capacity ceiling blocking: 1,383 candidate signals were rejected while 10 slots were locked."
+    ],
+    "findings_withdrawn_or_corrected": [
+      "WITHDRAW: Stale calibration decile values in Markdown Table 2.4 (corrected to scikit-learn quantile calibration curve in DISC-03).",
+      "WITHDRAW: Corrupted quarterly trade counts, sessions, and P&L in Markdown Table 5.2 (corrected to exact entry-quarter ledger totals in DISC-09).",
+      "WITHDRAW: Fabricated open-position distribution in Markdown Section 4.3 (corrected to reflect 67 zero-position sessions in DISC-06).",
+      "CORRECT: Annual gross P&L, costs, and exposure in Markdown Table 5.1 (corrected in DISC-08).",
+      "CORRECT: Sample standard deviations of trade P&L (Gross: INR 3,541.45, Net: INR 3,537.21 in DISC-01).",
+      "CORRECT: Top-10 alphabetical static baseline 10th constituent is BHARTIARTL (not BPCL), ending equity is INR 1,284,448.74 (DISC-12)."
+    ],
+    "sprint_6_2_authorization": "AUTHORIZED. All core structural mechanisms are validated. Sprint 6.2 may proceed to formulate conviction threshold filtering on validation data."
+  }
+}

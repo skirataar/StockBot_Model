@@ -1,0 +1,179 @@
+{
+  "metadata": {
+    "sprint": "5.1.1",
+    "title": "Explainability Report Reconciliation",
+    "status": "PASS"
+  },
+  "discrepancies": [
+    {
+      "id": "DISC-001",
+      "topic": "Volatility Family Gain Share",
+      "narrative_reported_value": "26.33%",
+      "table_reported_value": "18.44%",
+      "canonical_reconciled_value": "18.44%",
+      "source_artifact": "data/reports/feature_importance.csv",
+      "method": "Sum of gain_importance for ['realised_vol_60d', 'realised_vol_20d', 'realised_vol_10d', 'vol_ratio_20d_60d'] (38,372.05) divided by total gain (208,138.12) = 18.4359%",
+      "resolution": "RESOLVED: Narrative 26.33% was a placeholder from an exploratory pre-run draft. The canonical value supported by the saved model and CSV is 18.44% (Gain: 38,372.05)."
+    },
+    {
+      "id": "DISC-002",
+      "topic": "Benchmark / Cross-Sectional Family Gain Share",
+      "narrative_reported_value": "35.91%",
+      "table_reported_value": "34.27%",
+      "canonical_reconciled_value": "34.27%",
+      "source_artifact": "data/reports/feature_importance.csv",
+      "method": "Sum of gain_importance for ['market_volatility', 'market_return', 'beta_60d', 'excess_return'] (71,327.12) divided by total gain (208,138.12) = 34.2691%",
+      "resolution": "RESOLVED: Narrative 35.91% was a preliminary draft figure. The canonical value supported by the saved model and CSV is 34.27% (Gain: 71,327.12)."
+    },
+    {
+      "id": "DISC-003",
+      "topic": "Price Position Family Gain Share",
+      "narrative_reported_value": "12.39%",
+      "table_reported_value": "13.38%",
+      "canonical_reconciled_value": "13.38%",
+      "source_artifact": "data/reports/feature_importance.csv",
+      "method": "Sum of gain_importance for ['dist_52w_high', 'dist_52w_low', 'low_52w', 'high_52w'] (27,853.22) divided by total gain (208,138.12) = 13.3821%",
+      "resolution": "RESOLVED: Narrative 12.39% reconciled to canonical 13.38% (Gain: 27,853.22)."
+    },
+    {
+      "id": "DISC-004",
+      "topic": "Calendar Family Gain Share",
+      "narrative_reported_value": "15.53%",
+      "table_reported_value": "15.46%",
+      "canonical_reconciled_value": "15.46%",
+      "source_artifact": "data/reports/feature_importance.csv",
+      "method": "Sum of gain_importance for ['month', 'month_cos', 'month_sin', 'quarter'] (32,171.51) divided by total gain (208,138.12) = 15.4568%",
+      "resolution": "RESOLVED: Narrative 15.53% reconciled to canonical 15.46% (Gain: 32,171.51)."
+    },
+    {
+      "id": "DISC-005",
+      "topic": "Volume Family Gain Share",
+      "narrative_reported_value": "1.68%",
+      "table_reported_value": "3.63%",
+      "canonical_reconciled_value": "3.63%",
+      "source_artifact": "data/reports/feature_importance.csv",
+      "method": "Sum of gain_importance for ['vol_ma_30d', 'volume_z_score_30d', 'volume_spike_flag'] (7,552.22) divided by total gain (208,138.12) = 3.6285%",
+      "resolution": "RESOLVED: Narrative 1.68% reconciled to canonical 3.63% (Gain: 7,552.22)."
+    },
+    {
+      "id": "DISC-006",
+      "topic": "market_volatility Permutation Macro-F1 Drop",
+      "narrative_reported_value": "+0.00078",
+      "table_reported_value": "-0.00036",
+      "canonical_reconciled_value": "-0.00036 (\u00b10.00173)",
+      "source_artifact": "data/reports/feature_importance.csv",
+      "method": "Canonical 10-repeat validation permutation test using frozen LightGBM with seed=42",
+      "resolution": "RESOLVED: The canonical saved artifact data/reports/feature_importance.csv records -0.00036 (std: 0.00173). Narrative +0.00078 stemmed from a preliminary scratch run and is superseded by the canonical artifact."
+    },
+    {
+      "id": "DISC-007",
+      "topic": "Feature-Family Permutation Sum Interpretation",
+      "narrative_reported_value": "Reported as sum of drops without methodological caveat",
+      "table_reported_value": "Sum of individual drops",
+      "canonical_reconciled_value": "Sum of marginal 1D drops (Accounting metric, NOT joint family impact)",
+      "source_artifact": "src/models/model_audit_and_explainability.py",
+      "method": "Mathematical definition analysis of permutation importance",
+      "resolution": "RESOLVED: Clarified that summing single-feature permutation drops is sub-additive / super-additive compared to joint family permutation. It must not be interpreted as independent causal family contribution."
+    },
+    {
+      "id": "DISC-008",
+      "topic": "Correlated-Feature Substitution Claim",
+      "narrative_reported_value": "Asserted as proven factual explanation ('This reflects collinear redundancy rather than model failure')",
+      "table_reported_value": "Diagnostic observation",
+      "canonical_reconciled_value": "Plausible diagnostic hypothesis (unproven without joint ablation experiments)",
+      "source_artifact": "data/reports/sprint_5_1_integrity_and_explainability_report.md",
+      "method": "Epistemic classification: separating measured data from causal inference",
+      "resolution": "RESOLVED: Reclassified correlated substitution from an asserted fact to a plausible diagnostic hypothesis. No claims of statistical significance without formal hypothesis testing."
+    }
+  ],
+  "family_reconciliation": [
+    {
+      "family": "Benchmark / Cross-Sectional",
+      "feature_count": 4,
+      "gain_importance": 71327.12,
+      "split_importance": 2907,
+      "perm_macro_f1_decrease": 0.00074,
+      "gain_pct": 34.27,
+      "split_pct": 32.3,
+      "perm_macro_f1_sum": 0.00074
+    },
+    {
+      "family": "Volatility",
+      "feature_count": 4,
+      "gain_importance": 38372.049999999996,
+      "split_importance": 1144,
+      "perm_macro_f1_decrease": 0.02025,
+      "gain_pct": 18.44,
+      "split_pct": 12.71,
+      "perm_macro_f1_sum": 0.02025
+    },
+    {
+      "family": "Calendar",
+      "feature_count": 4,
+      "gain_importance": 32171.51,
+      "split_importance": 1230,
+      "perm_macro_f1_decrease": 0.004350000000000001,
+      "gain_pct": 15.46,
+      "split_pct": 13.67,
+      "perm_macro_f1_sum": 0.00435
+    },
+    {
+      "family": "Price Position",
+      "feature_count": 4,
+      "gain_importance": 27853.22,
+      "split_importance": 1482,
+      "perm_macro_f1_decrease": 0.01748,
+      "gain_pct": 13.38,
+      "split_pct": 16.47,
+      "perm_macro_f1_sum": 0.01748
+    },
+    {
+      "family": "Returns",
+      "feature_count": 6,
+      "gain_importance": 20284.9,
+      "split_importance": 1069,
+      "perm_macro_f1_decrease": 0.00342,
+      "gain_pct": 9.75,
+      "split_pct": 11.88,
+      "perm_macro_f1_sum": 0.00342
+    },
+    {
+      "family": "Momentum",
+      "feature_count": 4,
+      "gain_importance": 10553.55,
+      "split_importance": 617,
+      "perm_macro_f1_decrease": 0.0017000000000000001,
+      "gain_pct": 5.07,
+      "split_pct": 6.86,
+      "perm_macro_f1_sum": 0.0017
+    },
+    {
+      "family": "Volume",
+      "feature_count": 3,
+      "gain_importance": 7552.22,
+      "split_importance": 549,
+      "perm_macro_f1_decrease": -0.00035999999999999997,
+      "gain_pct": 3.63,
+      "split_pct": 6.1,
+      "perm_macro_f1_sum": -0.00036
+    },
+    {
+      "family": "Market Event",
+      "feature_count": 1,
+      "gain_importance": 23.55,
+      "split_importance": 2,
+      "perm_macro_f1_decrease": 3e-05,
+      "gain_pct": 0.01,
+      "split_pct": 0.02,
+      "perm_macro_f1_sum": 3e-05
+    }
+  ],
+  "preservation": {
+    "model_path": "models/lightgbm.joblib",
+    "model_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+    "model_preserved": true,
+    "test_path": "data/processed/test_dataset.parquet",
+    "test_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+    "test_preserved": true
+  }
+}

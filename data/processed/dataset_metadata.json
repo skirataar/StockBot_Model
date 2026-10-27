@@ -1,0 +1,143 @@
+{
+  "dataset_name": "SwingBot_49_Stock_ML_Dataset",
+  "version": "4.5.2",
+  "feature_count": 30,
+  "target_count": 2,
+  "sample_count": 190033,
+  "stock_count": 49,
+  "stocks": [
+    "ADANIENT",
+    "ADANIPORTS",
+    "APOLLOHOSP",
+    "ASIANPAINT",
+    "AXISBANK",
+    "BAJAJ-AUTO",
+    "BAJAJFINSV",
+    "BAJFINANCE",
+    "BEL",
+    "BHARTIARTL",
+    "CIPLA",
+    "COALINDIA",
+    "DRREDDY",
+    "EICHERMOT",
+    "ETERNAL",
+    "GRASIM",
+    "HCLTECH",
+    "HDFCBANK",
+    "HDFCLIFE",
+    "HEROMOTOCO",
+    "HINDALCO",
+    "HINDUNILVR",
+    "ICICIBANK",
+    "INDUSINDBK",
+    "INFY",
+    "ITC",
+    "JIOFIN",
+    "JSWSTEEL",
+    "KOTAKBANK",
+    "LT",
+    "M&M",
+    "MARUTI",
+    "NESTLEIND",
+    "NTPC",
+    "ONGC",
+    "POWERGRID",
+    "RELIANCE",
+    "SBILIFE",
+    "SBIN",
+    "SHRIRAMFIN",
+    "SUNPHARMA",
+    "TATACONSUM",
+    "TATASTEEL",
+    "TCS",
+    "TECHM",
+    "TITAN",
+    "TRENT",
+    "ULTRACEMCO",
+    "WIPRO"
+  ],
+  "date_ranges": {
+    "overall": {
+      "start": "2010-01-04",
+      "end": "2026-07-22"
+    },
+    "splits": {
+      "train": {
+        "start": "2010-01-04",
+        "end": "2022-12-23"
+      },
+      "val": {
+        "start": "2023-01-02",
+        "end": "2024-12-23"
+      },
+      "test": {
+        "start": "2025-01-01",
+        "end": "2026-07-22"
+      }
+    }
+  },
+  "split_sizes": {
+    "train": 146878,
+    "val": 23658,
+    "test": 19012
+  },
+  "warmup_policy": "KEEP",
+  "warmup_report": {
+    "policy": "KEEP",
+    "initial_rows": 190033,
+    "initial_stocks": 49,
+    "rows_removed": 0,
+    "rows_with_nan_features": 58441,
+    "remaining_rows": 190033,
+    "remaining_stocks": 49
+  },
+  "purging_report": {
+    "train_to_val_purged": 240,
+    "val_to_test_purged": 245,
+    "zero_leakage_verified": true
+  },
+  "target_types": {
+    "forward_return_5d": "regression",
+    "signal": "classification (BUY: 1, HOLD: 0, SELL: -1)"
+  },
+  "feature_columns": [
+    "ret_1d",
+    "ret_5d",
+    "ret_10d",
+    "ret_20d",
+    "ret_60d",
+    "ret_120d",
+    "mom_5d",
+    "mom_10d",
+    "mom_20d",
+    "mom_60d",
+    "realised_vol_10d",
+    "realised_vol_20d",
+    "realised_vol_60d",
+    "vol_ratio_20d_60d",
+    "vol_ma_30d",
+    "volume_z_score_30d",
+    "volume_spike_flag",
+    "high_52w",
+    "low_52w",
+    "dist_52w_high",
+    "dist_52w_low",
+    "crash_flag",
+    "month",
+    "quarter",
+    "month_sin",
+    "month_cos",
+    "market_return",
+    "market_volatility",
+    "excess_return",
+    "beta_60d"
+  ],
+  "target_columns": [
+    "forward_return_5d",
+    "signal"
+  ],
+  "identifier_columns": [
+    "symbol",
+    "date"
+  ]
+}

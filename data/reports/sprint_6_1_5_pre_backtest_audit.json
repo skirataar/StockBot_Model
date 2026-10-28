@@ -1,0 +1,120 @@
+{
+  "sprint_id": "SPRINT-6-1-5",
+  "sprint_name": "Independent Pre-Backtest Engineering and Statistical Audit",
+  "timestamp": "2026-10-28T21:35:00+05:30",
+  "governance_decision": "BLOCKED — PRE-BACKTEST AUDIT ISSUES REMAIN",
+  "auditor_role": "Lead Quantitative Research Engineer & Research Governance Auditor",
+  "audit_type": "READ_ONLY_ENGINEERING_AND_MATHEMATICAL_VERIFICATION",
+  "historical_backtest_executed": false,
+  "validation_dataset_loaded": false,
+  "test_dataset_loaded": false,
+  "production_code_modified": false,
+  "frozen_protocol_modified": false,
+  "preflight_and_post_audit_hashes": {
+    "data/reports/sprint_6_2_preregistered_protocol.json": {
+      "expected": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+      "actual": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+      "status": "MATCH"
+    },
+    "models/lightgbm.joblib": {
+      "expected": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "actual": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "status": "MATCH"
+    },
+    "data/processed/validation_dataset.parquet": {
+      "expected": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "actual": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "status": "MATCH"
+    },
+    "data/processed/training_dataset.parquet": {
+      "expected": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "actual": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "status": "MATCH"
+    },
+    "data/processed/test_dataset.parquet": {
+      "expected": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "actual": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "status": "MATCH"
+    },
+    "data/reports/trade_ledger.csv": {
+      "expected": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "actual": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "status": "MATCH"
+    },
+    "data/reports/portfolio_ledger.csv": {
+      "expected": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "actual": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "status": "MATCH"
+    }
+  },
+  "audit_findings_summary": {
+    "total_blockers_identified": 2,
+    "critical_blockers": 2,
+    "blockers": [
+      {
+        "id": "BLK-04-ENGINE-TARGET-ALLOC-NAME-ERROR",
+        "domain": "BACKTEST_ENGINE_IMPLEMENTATION",
+        "severity": "CRITICAL",
+        "file": "src/backtest/event_driven_engine.py",
+        "line": 610,
+        "description": "run_simulation() crashes with NameError: name 'target_alloc' is not defined when processing any eligible candidate BUY signal because the target_alloc sizing assignment was omitted during Sprint 6.1.4 edits.",
+        "impact": "EventDrivenBacktestEngine cannot execute any backtest with entries without raising NameError.",
+        "remediation_requirement": "Re-introduce 'target_alloc = min(cash, current_equity * self.max_single_stock_pct)' in the candidate entry loop in Sprint 6.1.6."
+      },
+      {
+        "id": "BLK-05-PROTOCOL-DSR-HURDLE-MISCALIBRATION",
+        "domain": "RESEARCH_PROTOCOL_SPECIFICATION",
+        "severity": "CRITICAL",
+        "file": "data/reports/sprint_6_2_preregistered_protocol.json",
+        "lines": "308-309",
+        "description": "Protocol specifies SR_star = sqrt(2 * ln(K)) without multiplying by the cross-sectional standard deviation of candidate trial Sharpe ratios as required by Bailey & Lopez de Prado (2014). In sample T=490, this sets an insurmountable hurdle requiring an Annualized Net Sharpe Ratio > 3.54 to achieve p < 0.05, guaranteeing 100% candidate rejection under Trigger R8.",
+        "impact": "Every candidate configuration evaluated in Sprint 6.2 will trigger rejection under R8 regardless of true performance.",
+        "remediation_requirement": "Amend protocol under formal research governance in Sprint 6.1.6 to compute SR_star using the empirical cross-sectional standard deviation of the K=16 validation trial Sharpe ratios."
+      }
+    ]
+  },
+  "mathematical_audit_summary": {
+    "scope_a_dsr": {
+      "implementation_status": "CONFORMS_TO_PROTOCOL_BUT_PROTOCOL_SPECIFICATION_DEFECTIVE",
+      "null_benchmark_formula_in_protocol": "SR_star = sqrt(2 * ln(K))",
+      "actual_evt_formula_bailey_lopez_de_prado": "SR_star = V[{SR_k}]^0.5 * ((1 - gamma) * Phi_inv(1 - 1/K) + gamma * Phi_inv(1 - 1/(K*e)))",
+      "required_annualized_sharpe_to_pass_current_formula": 3.536,
+      "verdict": "BLOCKED"
+    },
+    "scope_b_hac": {
+      "implementation_status": "VERIFIED_ACCURATE",
+      "bartlett_weights_verified": true,
+      "autocovariances_verified": true,
+      "distinction_hac_variance_vs_sharpe_se_documented": true,
+      "verdict": "PASSED"
+    },
+    "scope_c_holm_bonferroni": {
+      "implementation_status": "VERIFIED_ACCURATE",
+      "step_down_verified": true,
+      "monotonicity_constraint_verified": true,
+      "tie_breaking_deterministic": true,
+      "verdict": "PASSED"
+    },
+    "scope_d_engine_lifecycle": {
+      "threshold_logic": "VERIFIED",
+      "entry_pacing_logic": "VERIFIED",
+      "atr_stop_timing_and_gap_handling": "VERIFIED",
+      "execution_loop_integrity": "FAILED_DUE_TO_NAME_ERROR_TARGET_ALLOC",
+      "verdict": "BLOCKED"
+    },
+    "scope_e_configuration_conformance": {
+      "all_16_candidates_match_protocol": true,
+      "baseline_cfg_base_isolated": true,
+      "verdict": "PASSED"
+    }
+  },
+  "tests_executed_during_audit": [
+    "Hash verification script for all 7 immutable artifacts (PASSED)",
+    "Independent DSR numerical verification across 6 test scenarios (PASSED)",
+    "Independent Newey-West HAC reference calculation comparison (PASSED)",
+    "Independent Holm-Bonferroni step-down monotonicity verification (PASSED)",
+    "Protocol candidate grid mapping verification across all 16 candidates (PASSED)",
+    "End-to-end synthetic simulation execution test (FAILED — revealed NameError: target_alloc)"
+  ],
+  "next_authorized_action": "Sprint 6.1.6 — Remediation of Engine Target Alloc Defect and Protocol DSR Amendment"
+}

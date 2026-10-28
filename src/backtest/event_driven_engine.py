@@ -38,6 +38,12 @@ import numpy as np
 import pandas as pd
 
 from src.ml.dataset_builder import APPROVED_FEATURES
+from src.utils.statistical_tooling import (
+    deflated_sharpe_ratio,
+    holm_bonferroni_correction,
+    newey_west_hac_sharpe,
+)
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -188,9 +194,95 @@ class DailyPortfolioRecord:
     open_positions_count: int
 
 
+@dataclass
+class StrategyConfig:
+    """
+    Configuration specification for parameterized backtest executions in Sprint 6.2.
+
+    Parameters:
+      config_id: Identifier from preregistered protocol (e.g. 'CFG-01'..'CFG-16', 'CFG-BASE').
+      prob_buy_threshold: Probability threshold theta in [0.0, 1.0] for BUY qualification.
+                          If None, preserves baseline argmax (pred == 1) behavior.
+      exit_rule: Exit mechanism ('fixed_5d', '1.5x_ATR', '2.0x_ATR', '2.5x_ATR').
+      max_daily_entries: Maximum number of filled BUY entries permitted per trading session.
+                         If None, unconstrained (subject to max concurrent positions = 10).
+    """
+    config_id: Optional[str] = "CFG-BASE"
+    prob_buy_threshold: Optional[float] = None
+    exit_rule: str = "fixed_5d"
+    max_daily_entries: Optional[int] = None
+
+    def __post_init__(self) -> None:
+        if self.config_id is not None and not isinstance(self.config_id, str):
+            raise TypeError("config_id must be a string or None.")
+
+        if self.prob_buy_threshold is not None:
+            if not isinstance(self.prob_buy_threshold, (int, float)):
+                raise TypeError("prob_buy_threshold must be a float or None.")
+            val = float(self.prob_buy_threshold)
+            if np.isnan(val) or not (0.0 <= val <= 1.0):
+                raise ValueError(f"prob_buy_threshold must be in [0.0, 1.0], got {self.prob_buy_threshold}")
+            self.prob_buy_threshold = val
+
+        allowed_exit_rules = {"fixed_5d", "1.5x_ATR", "2.0x_ATR", "2.5x_ATR"}
+        if self.exit_rule not in allowed_exit_rules:
+            raise ValueError(f"Invalid exit_rule '{self.exit_rule}'. Allowed: {sorted(allowed_exit_rules)}")
+
+        if self.max_daily_entries is not None:
+            if isinstance(self.max_daily_entries, str):
+                if self.max_daily_entries.lower() in ("unconstrained", "none"):
+                    self.max_daily_entries = None
+                else:
+                    try:
+                        self.max_daily_entries = int(self.max_daily_entries)
+                    except ValueError:
+                        raise ValueError(f"Invalid max_daily_entries string: '{self.max_daily_entries}'")
+            if self.max_daily_entries is not None:
+                if not isinstance(self.max_daily_entries, int) or self.max_daily_entries < 1:
+                    raise ValueError(f"max_daily_entries must be a positive integer or None, got {self.max_daily_entries}")
+
+    @classmethod
+    def from_protocol_dict(cls, d: Dict[str, Any]) -> "StrategyConfig":
+        """Constructs a StrategyConfig from a dictionary in sprint_6_2_preregistered_protocol.json."""
+        pacing = d.get("pacing")
+        if pacing is not None and str(pacing).lower() in ("unconstrained", "none"):
+            pacing_val = None
+        elif pacing is not None:
+            pacing_val = int(pacing)
+        else:
+            pacing_val = None
+
+        cfg_id = d.get("config_id", "CUSTOM")
+        threshold = d.get("threshold")
+        if cfg_id == "CFG-BASE":
+            threshold = None
+
+        return cls(
+            config_id=cfg_id,
+            prob_buy_threshold=float(threshold) if threshold is not None else None,
+            exit_rule=d.get("exit_rule", "fixed_5d"),
+            max_daily_entries=pacing_val,
+        )
+
+    @classmethod
+    def from_protocol_file(cls, protocol_path: Union[str, Path], config_id: str) -> "StrategyConfig":
+        """Loads a specific configuration from the preregistered protocol JSON."""
+        with open(protocol_path, "r") as f:
+            proto = json.load(f)
+        grid = proto.get("candidate_grid", {})
+        if config_id == "CFG-BASE":
+            ref = grid.get("reference_baseline", {})
+            return cls.from_protocol_dict(ref)
+        for cfg in grid.get("configurations", []):
+            if cfg.get("config_id") == config_id:
+                return cls.from_protocol_dict(cfg)
+        raise KeyError(f"Configuration '{config_id}' not found in candidate grid of {protocol_path}")
+
+
 # ==============================================================================
 # 3. Event-Driven Backtesting Engine
 # ==============================================================================
+
 
 class EventDrivenBacktestEngine:
     """
@@ -228,9 +320,48 @@ class EventDrivenBacktestEngine:
         # Loaded resources
         self.model: Optional[Any] = None
         self.price_dict: Dict[str, pd.DataFrame] = {}
+        self.atr_dict: Dict[str, pd.Series] = {}
         self.trade_ledger: List[TradeRecord] = []
         self.portfolio_ledger: List[DailyPortfolioRecord] = []
         self.rejected_orders: List[Dict[str, Any]] = []
+
+    @staticmethod
+    def compute_atr_series(df: pd.DataFrame, period: int = 14) -> pd.Series:
+        """
+        Computes 14-period Simple Moving Average ATR matching protocol specification:
+          TR_t = max(High_t - Low_t, |High_t - Close_{t-1}|, |Low_t - Close_{t-1}|)
+          ATR_{14, t} = (1/14) * sum_{i=0}^{13} TR_{t-i}
+        Returns pd.Series indexed identically to df.
+        Returns NaN during warm-up (< 14 periods) or when data is missing.
+        """
+        if len(df) == 0:
+            return pd.Series(dtype=float)
+
+        high = df["High"].astype(float)
+        low = df["Low"].astype(float)
+        close = df["Close"].astype(float)
+        prev_close = close.shift(1)
+
+        tr1 = high - low
+        tr2 = (high - prev_close).abs()
+        tr3 = (low - prev_close).abs()
+
+        tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+        # First bar has no prev_close; TR_0 is high - low
+        tr.iloc[0] = tr1.iloc[0]
+
+        # 14-period rolling simple moving average
+        atr = tr.rolling(window=period, min_periods=period).mean()
+        return atr
+
+    def get_symbol_atr(self, sym: str) -> pd.Series:
+        """Returns cached 14-period ATR series or computes on-demand if price series exists."""
+        if sym not in self.atr_dict:
+            if sym in self.price_dict:
+                self.atr_dict[sym] = self.compute_atr_series(self.price_dict[sym], period=14)
+            else:
+                raise KeyError(f"Symbol '{sym}' not found in loaded price series.")
+        return self.atr_dict[sym]
 
     def load_resources(self) -> None:
         """Loads the frozen LightGBM model and price series for all 49 constituents."""
@@ -247,44 +378,94 @@ class EventDrivenBacktestEngine:
             sym = p.name.replace("_labeled.csv", "")
             df = pd.read_csv(p, usecols=["Date", "Open", "High", "Low", "Close", "Adj Close", "Volume"])
             df["Date"] = pd.to_datetime(df["Date"])
-            self.price_dict[sym] = df.set_index("Date").sort_index()
+            df_sorted = df.set_index("Date").sort_index()
+            self.price_dict[sym] = df_sorted
+            self.atr_dict[sym] = self.compute_atr_series(df_sorted, period=14)
 
-        logger.info(f"Successfully loaded {len(self.price_dict)} stock price series.")
+        logger.info(f"Successfully loaded {len(self.price_dict)} stock price series and initialized ATR caches.")
 
     def run_simulation(
         self,
-        dataset_split: str = "test",  # "test" | "validation" | "all"
+        dataset_split: Union[str, pd.DataFrame] = "test",  # "test" | "validation" | "training" | DataFrame
+        strategy_config: Optional[StrategyConfig] = None,
+        prob_buy_threshold: Optional[float] = None,
+        max_daily_entries: Optional[int] = None,
+        exit_rule: Optional[str] = None,
+        expected_max_sharpe: Optional[float] = None,
+        custom_df: Optional[pd.DataFrame] = None,
     ) -> Dict[str, Any]:
         """
         Runs the chronological event-driven backtesting simulation.
+        Supports parameterized strategy configuration (Sprint 6.1.4).
+        Supports synthetic in-memory DataFrame fixtures (Sprint 6.1.6).
         """
-        if self.model is None or not self.price_dict:
+        if (self.model is None or not self.price_dict) and not isinstance(dataset_split, pd.DataFrame) and custom_df is None:
             self.load_resources()
 
+        # Resolve configuration (strategy_config takes precedence)
+        if strategy_config is not None:
+            cfg = strategy_config
+        else:
+            is_baseline = (
+                prob_buy_threshold is None
+                and max_daily_entries is None
+                and (exit_rule is None or exit_rule == "fixed_5d")
+            )
+            cfg = StrategyConfig(
+                config_id="CFG-BASE" if is_baseline else "CUSTOM",
+                prob_buy_threshold=prob_buy_threshold,
+                exit_rule=exit_rule if exit_rule is not None else "fixed_5d",
+                max_daily_entries=max_daily_entries,
+            )
+
+        # Parse ATR multiplier
+        if cfg.exit_rule == "1.5x_ATR":
+            atr_multiplier: Optional[float] = 1.5
+        elif cfg.exit_rule == "2.0x_ATR":
+            atr_multiplier = 2.0
+        elif cfg.exit_rule == "2.5x_ATR":
+            atr_multiplier = 2.5
+        else:
+            atr_multiplier = None
+
         # Load dataset
-        if dataset_split == "test":
+        if isinstance(dataset_split, pd.DataFrame):
+            df_data = dataset_split.copy()
+            split_name = "synthetic"
+        elif custom_df is not None:
+            df_data = custom_df.copy()
+            split_name = "synthetic"
+        elif dataset_split == "test":
             data_file = self.processed_data_dir / "test_dataset.parquet"
+            logger.info(f"Loading {dataset_split} dataset from {data_file} (Config: {cfg.config_id})...")
+            df_data = pd.read_parquet(data_file)
+            split_name = dataset_split
         elif dataset_split == "validation":
             data_file = self.processed_data_dir / "validation_dataset.parquet"
+            logger.info(f"Loading {dataset_split} dataset from {data_file} (Config: {cfg.config_id})...")
+            df_data = pd.read_parquet(data_file)
+            split_name = dataset_split
         elif dataset_split == "training":
             data_file = self.processed_data_dir / "training_dataset.parquet"
+            logger.info(f"Loading {dataset_split} dataset from {data_file} (Config: {cfg.config_id})...")
+            df_data = pd.read_parquet(data_file)
+            split_name = dataset_split
         else:
             raise ValueError(f"Unknown dataset_split: {dataset_split}")
 
-        logger.info(f"Loading {dataset_split} dataset from {data_file}...")
-        df_data = pd.read_parquet(data_file)
         df_data["date"] = pd.to_datetime(df_data["date"])
 
-        # Generate model predictions
-        logger.info("Generating model predictions and class probabilities...")
-        X = df_data[APPROVED_FEATURES]
-        preds = self.model.predict(X)
-        probs = self.model.predict_proba(X)
-        classes = list(self.model.classes_)
-        buy_class_idx = classes.index(1)
+        # Generate model predictions if not already provided in synthetic data
+        if "predicted_signal" not in df_data.columns or "prob_buy" not in df_data.columns:
+            logger.info("Generating model predictions and class probabilities...")
+            X = df_data[APPROVED_FEATURES]
+            preds = self.model.predict(X)
+            probs = self.model.predict_proba(X)
+            classes = list(self.model.classes_)
+            buy_class_idx = classes.index(1)
 
-        df_data["predicted_signal"] = preds
-        df_data["prob_buy"] = probs[:, buy_class_idx]
+            df_data["predicted_signal"] = preds
+            df_data["prob_buy"] = probs[:, buy_class_idx]
 
         # Fast lookup mapping: (date, symbol) -> (signal, prob_buy)
         signal_lookup: Dict[Tuple[pd.Timestamp, str], Tuple[int, float]] = {}
@@ -292,6 +473,18 @@ class EventDrivenBacktestEngine:
             signal_lookup[(r["date"], r["symbol"])] = (int(r["predicted_signal"]), float(r["prob_buy"]))
 
         trading_dates = sorted(list(df_data["date"].unique()))
+        if not trading_dates:
+            logger.warning("No trading sessions found in dataset.")
+            return {
+                "split": split_name,
+                "config": asdict(cfg),
+                "strategy_metrics": {},
+                "buy_and_hold_benchmark": {},
+                "non_ml_baseline": {},
+                "trade_count": 0,
+                "rejected_orders_count": 0,
+            }
+
         logger.info(
             f"Beginning event-driven backtest across {len(trading_dates)} trading sessions "
             f"({trading_dates[0].strftime('%Y-%m-%d')} to {trading_dates[-1].strftime('%Y-%m-%d')})..."
@@ -314,8 +507,8 @@ class EventDrivenBacktestEngine:
             # ------------------------------------------------------------------
             exits_to_execute = []
             for sym, pos in list(open_positions.items()):
-                # Exit if held for 5 full trading sessions or early exit staged
-                if pos["holding_sessions"] >= 5 or pos.get("early_exit_staged", False):
+                # Exit if held for 5 full trading sessions or exit staged
+                if pos.get("early_exit_staged", False) or pos["holding_sessions"] >= 5:
                     exits_to_execute.append(sym)
 
             for sym in exits_to_execute:
@@ -346,7 +539,9 @@ class EventDrivenBacktestEngine:
                 gross_ret_pct = (gross_pnl / (pos["qty"] * pos["raw_entry_open"])) * 100.0 if pos["raw_entry_open"] > 0 else 0.0
                 net_ret_pct = (net_pnl / invested_cap) * 100.0 if invested_cap > 0 else 0.0
 
-                exit_reason = "EARLY_SELL_SIGNAL" if pos.get("early_exit_staged", False) else "MAX_HOLD_5D"
+                exit_reason = pos.get("staged_exit_reason")
+                if exit_reason is None:
+                    exit_reason = "EARLY_SELL_SIGNAL" if pos.get("early_exit_staged", False) else "MAX_HOLD_5D"
 
                 self.trade_ledger.append(TradeRecord(
                     symbol=sym,
@@ -380,7 +575,16 @@ class EventDrivenBacktestEngine:
                 for sym in self.price_dict.keys():
                     if (prev_dt, sym) in signal_lookup:
                         sig, p_buy = signal_lookup[(prev_dt, sym)]
-                        if sig == 1 and sym not in open_positions:
+
+                        if np.isnan(p_buy) or p_buy < 0.0 or p_buy > 1.0:
+                            raise ValueError(f"Malformed prob_buy={p_buy} for {sym} at {prev_dt}")
+
+                        if cfg.prob_buy_threshold is None:
+                            is_eligible = (sig == 1)
+                        else:
+                            is_eligible = (p_buy >= cfg.prob_buy_threshold)
+
+                        if is_eligible and sym not in open_positions:
                             buy_candidates.append((sym, p_buy))
 
                 # Deterministic priority ranking: highest p_buy first, tie-break alphabetical
@@ -388,6 +592,7 @@ class EventDrivenBacktestEngine:
 
                 # Calculate available position slots
                 available_slots = self.max_positions - len(open_positions)
+                daily_entries_count = 0
 
                 # Current portfolio equity at start of day
                 current_equity = cash + sum(
@@ -405,8 +610,15 @@ class EventDrivenBacktestEngine:
                         })
                         continue
 
-                    # Sizing: max 10% of portfolio equity
-                    target_alloc = min(cash, current_equity * self.max_single_stock_pct)
+                    if cfg.max_daily_entries is not None and daily_entries_count >= cfg.max_daily_entries:
+                        self.rejected_orders.append({
+                            "date": dt.strftime("%Y-%m-%d"),
+                            "symbol": sym,
+                            "signal_date": prev_dt.strftime("%Y-%m-%d"),
+                            "reason": "DAILY_ENTRY_PACING_LIMIT_REACHED",
+                        })
+                        continue
+
                     df_p = self.price_dict[sym]
 
                     if dt in df_p.index and df_p.loc[dt, "Volume"] > 0:
@@ -419,6 +631,9 @@ class EventDrivenBacktestEngine:
                             "reason": "ZERO_VOLUME_OR_MARKET_HALT",
                         })
                         continue
+
+                    # Sizing: max 10% of portfolio equity constrained by available cash
+                    target_alloc = min(cash, current_equity * self.max_single_stock_pct)
 
                     # Exec price with slippage (add slippage on buy)
                     exec_entry_price = raw_entry_open * (1.0 + self.slippage_rate)
@@ -449,8 +664,11 @@ class EventDrivenBacktestEngine:
                             "buy_breakdown": buy_breakdown,
                             "holding_sessions": 0,
                             "early_exit_staged": False,
+                            "peak_close": raw_entry_open,
+                            "staged_exit_reason": None,
                         }
                         available_slots -= 1
+                        daily_entries_count += 1
                     else:
                         self.rejected_orders.append({
                             "date": dt.strftime("%Y-%m-%d"),
@@ -469,11 +687,42 @@ class EventDrivenBacktestEngine:
                 close_p = float(df_p.loc[dt, "Close"]) if dt in df_p.index else float(pos["raw_entry_open"])
                 invested_val += pos["qty"] * close_p
 
-                # Inspect signal generated at dt close for early exit staging
-                if (dt, sym) in signal_lookup:
+                # Update peak close since entry
+                if "peak_close" not in pos:
+                    pos["peak_close"] = close_p
+                else:
+                    pos["peak_close"] = max(pos["peak_close"], close_p)
+
+                # Determine exit conditions for next session morning execution
+                # Deterministic Precedence:
+                # 1. ATR Trailing Stop (risk management stop)
+                # 2. Early SELL Signal (model forecast deterioration)
+                # 3. Max Holding 5 Sessions (calendar expiration)
+                staged_reason = None
+
+                # 1. ATR Trailing Stop evaluation
+                if atr_multiplier is not None:
+                    atr_s = self.get_symbol_atr(sym)
+                    current_atr = float(atr_s.loc[dt]) if (atr_s is not None and dt in atr_s.index) else np.nan
+                    if not np.isnan(current_atr) and current_atr > 0.0:
+                        stop_level = pos["peak_close"] - (atr_multiplier * current_atr)
+                        pos["atr_stop_level"] = stop_level
+                        if close_p <= stop_level:
+                            staged_reason = "ATR_TRAILING_STOP"
+
+                # 2. Early SELL signal evaluation
+                if staged_reason is None and (dt, sym) in signal_lookup:
                     sig_val, _ = signal_lookup[(dt, sym)]
                     if sig_val == -1:
-                        pos["early_exit_staged"] = True
+                        staged_reason = "EARLY_SELL_SIGNAL"
+
+                # 3. 5-session calendar limit
+                if staged_reason is None and pos["holding_sessions"] >= 5:
+                    staged_reason = "MAX_HOLD_5D"
+
+                if staged_reason is not None:
+                    pos["staged_exit_reason"] = staged_reason
+                    pos["early_exit_staged"] = True
 
             portfolio_equity = cash + invested_val
             if portfolio_equity > peak_equity:
@@ -532,15 +781,16 @@ class EventDrivenBacktestEngine:
             ))
 
         # Compute comprehensive statistics
-        metrics = self.calculate_performance_metrics(dataset_split)
+        metrics = self.calculate_performance_metrics(split_name, expected_max_sharpe=expected_max_sharpe)
         bnh_metrics = self.compute_buy_and_hold_benchmark(trading_dates)
-        non_ml_metrics = self.compute_non_ml_baseline(trading_dates)
+        non_ml_baseline_metrics = self.compute_non_ml_baseline(trading_dates)
 
         return {
-            "split": dataset_split,
+            "split": split_name,
+            "config": asdict(cfg),
             "strategy_metrics": metrics,
             "buy_and_hold_benchmark": bnh_metrics,
-            "non_ml_baseline": non_ml_metrics,
+            "non_ml_baseline": non_ml_baseline_metrics,
             "trade_count": len(self.trade_ledger),
             "rejected_orders_count": len(self.rejected_orders),
         }
@@ -652,7 +902,11 @@ class EventDrivenBacktestEngine:
     # 5. Performance Metrics Compilation
     # ==========================================================================
 
-    def calculate_performance_metrics(self, split_name: str) -> Dict[str, Any]:
+    def calculate_performance_metrics(
+        self,
+        split_name: str,
+        expected_max_sharpe: Optional[float] = None,
+    ) -> Dict[str, Any]:
         """Calculates institutional portfolio performance metrics from the ledgers."""
         if not self.portfolio_ledger:
             raise ValueError("No portfolio ledger available! Run simulation first.")
@@ -725,6 +979,32 @@ class EventDrivenBacktestEngine:
                 "ending_equity": round(yr_end, 2),
             })
 
+        # Sprint 6.1.4: Deflated Sharpe Ratio & HAC Diagnostics
+        dsr_metrics = None
+        hac_metrics = None
+        if len(daily_rets) >= 2:
+            try:
+                dsr_metrics = deflated_sharpe_ratio(
+                    daily_rets,
+                    trial_count_K=16,
+                    risk_free_rate_annual=self.risk_free_rate,
+                    sessions_per_year=252,
+                    expected_max_sharpe=expected_max_sharpe,
+                )
+            except Exception as e:
+                logger.warning(f"Failed to compute DSR in metrics: {e}")
+
+        if len(daily_rets) >= 7:
+            try:
+                hac_metrics = newey_west_hac_sharpe(
+                    daily_rets,
+                    risk_free_rate_annual=self.risk_free_rate,
+                    sessions_per_year=252,
+                    max_lags=5,
+                )
+            except Exception as e:
+                logger.warning(f"Failed to compute HAC in metrics: {e}")
+
         return {
             "split": split_name,
             "initial_capital": self.initial_capital,
@@ -751,6 +1031,8 @@ class EventDrivenBacktestEngine:
             "avg_gross_exposure_pct": round(avg_gross_exposure, 2),
             "avg_open_positions_count": round(avg_open_positions, 2),
             "annual_breakdown": annual_summary,
+            "deflated_sharpe_ratio": dsr_metrics,
+            "hac_diagnostics": hac_metrics,
         }
 
     # ==========================================================================

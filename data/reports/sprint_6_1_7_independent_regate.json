@@ -1,0 +1,112 @@
+{
+  "sprint_id": "SPRINT-6-1-7",
+  "sprint_name": "Independent Re-Gate Audit and Statistical Authorization Review",
+  "timestamp": "2026-10-29T01:50:00+05:30",
+  "author_role": "Independent Quantitative Research Auditor, Statistical Methodology Reviewer, and Research Governance Authority",
+  "requested_repo_path": "/home/skirataar/Website/StockBot_Model",
+  "resolved_repo_path": "/home/skirataar/StockBot/StockBot_Model",
+  "repository_discrepancy_reported": true,
+  "git_root": "/home/skirataar/StockBot/StockBot_Model",
+  "git_remote_url": "https://github.com/skirataar/StockBot_Model.git",
+  "governance_decision": "BLOCKED — PRE-BACKTEST AUDIT ISSUES REMAIN",
+  "audit_compliance_declarations": {
+    "historical_backtests_executed": false,
+    "validation_dataset_loaded_or_evaluated": false,
+    "test_dataset_loaded_or_evaluated": false,
+    "historical_candidate_performance_inspected": false,
+    "frozen_model_retrained_or_modified": false,
+    "historical_ledgers_modified": false,
+    "production_source_code_modified": false,
+    "protocol_modified_during_audit": false
+  },
+  "blocker_audit_status": {
+    "BLK-04-ENGINE-TARGET-ALLOC-NAME-ERROR": {
+      "status": "PASS",
+      "findings": "Verified that target_alloc is correctly defined in scope before share sizing (line 636). Sizing enforces 10% single-stock allocation cap and available cash constraint. Remaining cash is updated dynamically after each fill. Post-fee solvency checks prevent negative cash. Pacing slot counting and position limits correctly reject without consuming slots. Synthetic DataFrame execution support and empty trading dates guard confirmed working without altering normal execution path.",
+      "tests_verified": "10/10 synthetic engine integration tests passed."
+    },
+    "BLK-05-PROTOCOL-DSR-HURDLE-MISCALIBRATION": {
+      "status": "FAIL_BLOCKED",
+      "findings": "While protocol v1.1.0 corrected the fatal unscaled sqrt(2*ln(16)) hurdle to incorporate cross-sectional dispersion sigma_SR, independent mathematical verification against Bailey & Lopez de Prado (2014) Equation 1 reveals three critical unresolved methodological issues: (1) Omission of the trial mean term E[{SR_n}] without explicit justification; (2) An unsupported heuristic correlation scaling formula (sigma_SR * sqrt(1 - rho_bar) * EVT) that contradicts the cited paper's effective-trials framework; and (3) Incomplete engine integration where individual runs still default to the old sqrt(2*ln(K)) formula.",
+      "unresolved_defects": [
+        "DEF-01: Omission of E[{SR_n}] in SR* = E[{SR_n}] + sigma_SR * EVT(K). Omitting the mean implicitly assumes the candidate trial cohort is centered at zero, which miscalibrates the hurdle if validation trials have positive (under-penalizing) or negative (over-penalizing) mean Sharpe.",
+        "DEF-02: Theoretical inconsistency of the diagnostic correlation formula SR*_corr = sigma_SR * sqrt(1 - rho_bar) * EVT. Bailey & Lopez de Prado (2014) and Lopez de Prado (2018) require adjusting the effective number of trials N_eff via clustering/eigenvalues, not direct multiplication by sqrt(1 - rho_bar).",
+        "DEF-03: Lack of an orchestrated multi-trial calculation workflow in engine/tooling. Single simulation runs in event_driven_engine.py still default to the invalid sqrt(2*ln(16)) benchmark."
+      ]
+    }
+  },
+  "artifact_integrity_hashes": {
+    "models/lightgbm.joblib": {
+      "expected_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "actual_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "status": "MATCH"
+    },
+    "data/processed/training_dataset.parquet": {
+      "expected_sha256": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "actual_sha256": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "status": "MATCH"
+    },
+    "data/processed/validation_dataset.parquet": {
+      "expected_sha256": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "actual_sha256": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "status": "MATCH"
+    },
+    "data/processed/test_dataset.parquet": {
+      "expected_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "actual_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "status": "MATCH"
+    },
+    "data/reports/trade_ledger.csv": {
+      "expected_sha256": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "actual_sha256": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "status": "MATCH"
+    },
+    "data/reports/portfolio_ledger.csv": {
+      "expected_sha256": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "actual_sha256": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "status": "MATCH"
+    },
+    "data/reports/sprint_6_2_preregistered_protocol_v1_0_0_frozen.json": {
+      "expected_sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+      "actual_sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+      "status": "MATCH"
+    },
+    "data/reports/sprint_6_2_preregistered_protocol.json": {
+      "expected_sha256": "40de4d4cb60cffaa7e4e54fc9602e15019cd5ccdd3f5017ac48cc2ec560ac19a",
+      "actual_sha256": "40de4d4cb60cffaa7e4e54fc9602e15019cd5ccdd3f5017ac48cc2ec560ac19a",
+      "status": "MATCH"
+    }
+  },
+  "test_execution_audit": {
+    "command_executed": "python3 -m pytest -v tests/test_sprint_6_1_6_remediation.py",
+    "total_tests": 25,
+    "tests_passed": 25,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "execution_time_seconds": 0.93,
+    "isolated_from_historical_data": true,
+    "historical_backtests_run": 0
+  },
+  "mathematical_investigation_summary": {
+    "evt_factor_k16": 1.800454,
+    "evt_factor_k17": 1.828094,
+    "time_scaling_factor_t490": 1.39301,
+    "mean_term_investigation": {
+      "cited_paper_equation": "Bailey & Lopez de Prado (2014) Equation 1: E[max SR_n] ~ E[{SR_n}] + sqrt(V[{SR_n}]) * EVT(N)",
+      "omitted_in_protocol_v1_1_0": true,
+      "methodological_consequence": "Omitting E[{SR_n}] assumes a pure zero-skill null across all candidate trials. If the 16 validation runs have mean Sharpe mu_SR > 0, the hurdle is underestimated by mu_SR, permitting false positives. If mu_SR < 0 due to friction, the hurdle is overestimated.",
+      "numerical_example": "For mu_SR = 0.55, sigma_SR = 0.10, Candidate SR = 0.75: Protocol hurdle SR* = 0.1800 (p = 0.2136), while Eq 1 hurdle SR* = 0.7300 (p = 0.4889), a p-value discrepancy of 0.2753."
+    },
+    "correlation_adjustment_investigation": {
+      "protocol_formula": "SR*_corr = sigma_SR * sqrt(1 - rho_bar) * EVT(K)",
+      "theoretical_validity": "UNSUPPORTED HEURISTIC. In Lopez de Prado (2018), correlation is handled by estimating effective number of independent trials N_eff <= N via clustering or eigenvalue participation ratio, then evaluating EVT(N_eff). Direct multiplication by sqrt(1 - rho_bar) is not derived in the literature."
+    }
+  },
+  "required_actions_before_sprint_6_2": [
+    "Commission Sprint 6.1.8 (Formal Protocol Amendment v1.2.0 & Cross-Sectional Evaluation Harness).",
+    "Resolve whether SR* under DSR tests against the pure zero-skill null (E[SR]=0) or the empirical trial cohort mean (E[{SR_n}] = mu_SR), and document the explicit statistical hypothesis in the protocol.",
+    "Formally specify the effective trial count methodology (clustering / eigenvalue participation ratio) or explicitly retire the heuristic sqrt(1 - rho_bar) formula in favor of the conservative K=16 upper bound.",
+    "Implement an automated multi-trial evaluation harness script that executes the 16 validation runs, computes cross-sectional moments, and applies the amended DSR and Holm-Bonferroni corrections.",
+    "Subject Protocol v1.2.0 and the harness to final re-gate authorization before executing Sprint 6.2 validation backtests."
+  ]
+}

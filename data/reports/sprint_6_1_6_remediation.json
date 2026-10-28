@@ -1,0 +1,165 @@
+{
+  "sprint_id": "SPRINT-6-1-6",
+  "sprint_name": "Engine Remediation and Preregistered Statistical Protocol Amendment",
+  "timestamp": "2026-10-28T21:55:00+05:30",
+  "author_role": "Senior Quantitative Research Engineer, Statistical Methods Reviewer, and Research Governance Auditor",
+  "workspace_root": "/home/skirataar/StockBot/StockBot_Model",
+  "requested_repo_path": "/home/skirataar/Website/StockBot_Model",
+  "resolved_repo_path": "/home/skirataar/StockBot/StockBot_Model",
+  "governance_decision": "REMEDIATION COMPLETE — READY FOR INDEPENDENT RE-GATE REVIEW",
+  "audit_compliance_declarations": {
+    "historical_backtests_executed": false,
+    "validation_dataset_loaded_or_evaluated": false,
+    "test_dataset_loaded_or_evaluated": false,
+    "historical_strategy_performance_inspected": false,
+    "frozen_model_modified": false,
+    "historical_ledgers_modified": false,
+    "production_source_files_modified": [
+      "src/backtest/event_driven_engine.py"
+    ],
+    "protocol_files_amended": [
+      "data/reports/sprint_6_2_preregistered_protocol.json"
+    ],
+    "prior_protocol_preserved": "data/reports/sprint_6_2_preregistered_protocol_v1_0_0_frozen.json",
+    "unrelated_production_files_modified": false
+  },
+  "blocker_resolution_summary": {
+    "BLK-04-ENGINE-TARGET-ALLOC-NAME-ERROR": {
+      "status": "RESOLVED",
+      "component": "src/backtest/event_driven_engine.py",
+      "lines_modified": [605, 610],
+      "defect_description": "run_simulation() crashed with NameError: name 'target_alloc' is not defined in Step B morning entry execution loop.",
+      "remediation": "Restored target_alloc = min(cash, current_equity * self.max_single_stock_pct) before share sizing calculation, preserving single-stock allocation cap (10%) and cash constraints.",
+      "verification": "Verified via 10 isolated in-memory synthetic end-to-end integration tests without runtime error."
+    },
+    "BLK-05-PROTOCOL-DSR-HURDLE-MISCALIBRATION": {
+      "status": "RESOLVED_VIA_AMENDMENT",
+      "component": "data/reports/sprint_6_2_preregistered_protocol.json",
+      "protocol_version_transition": "1.0.0-FROZEN -> 1.1.0-AMENDED",
+      "prior_formula": "SR_star = sqrt(2 * ln(K))",
+      "amended_formula": "SR_star_ann = sigma_SR * ((1 - gamma) * Phi_inv(1 - 1/K) + gamma * Phi_inv(1 - 1/(K * e)))",
+      "defect_description": "v1.0.0 hardcoded standard normal asymptotic extreme SR* = sqrt(2 * ln(16)) = 2.3548 without cross-sectional standard deviation sigma_SR of trial Sharpe ratios, requiring Annualized Net Sharpe > 3.54 to achieve p < 0.05 in sample T=490, guaranteeing 100% candidate rejection under Trigger R8.",
+      "remediation": "Formally amended protocol to Bailey & Lopez de Prado (2014) formulation incorporating empirical cross-sectional dispersion sigma_SR across the K=16 validation trials. Documented conservative independent trial bound (K=16, EVT=1.8005) vs correlation diagnostics.",
+      "verification": "Verified via 15 independent synthetic numerical and edge-case statistical tests."
+    }
+  },
+  "artifact_hashes": {
+    "src/backtest/event_driven_engine.py": {
+      "pre_change_sha256": "9b5f0a5d4e607cb26a06e404908d839edf8c06cb67ca9d2178442571d860539a",
+      "post_change_sha256": "30d5b11a69d9f2b91580fdd4c9b42eee8e7df865a8ac7138fa059740a7cb41d0",
+      "status": "AUTHORIZED_MODIFIED"
+    },
+    "src/utils/statistical_tooling.py": {
+      "pre_change_sha256": "9e2dc17045e7533a1b70fe3e4ea3cb0cca18ff2addcbefccda418fddc3656e96",
+      "post_change_sha256": "9e2dc17045e7533a1b70fe3e4ea3cb0cca18ff2addcbefccda418fddc3656e96",
+      "status": "UNCHANGED_IMMUTABLE_MATCH"
+    },
+    "data/reports/sprint_6_2_preregistered_protocol.json": {
+      "pre_change_sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+      "post_change_sha256": "40de4d4cb60cffaa7e4e54fc9602e15019cd5ccdd3f5017ac48cc2ec560ac19a",
+      "status": "AUTHORIZED_AMENDED"
+    },
+    "data/reports/sprint_6_2_preregistered_protocol_v1_0_0_frozen.json": {
+      "canonical_sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+      "status": "PRESERVED_CANONICAL_V1_0_0"
+    },
+    "models/lightgbm.joblib": {
+      "canonical_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "post_change_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "status": "IMMUTABLE_MATCH"
+    },
+    "data/processed/training_dataset.parquet": {
+      "canonical_sha256": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "post_change_sha256": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "status": "IMMUTABLE_MATCH"
+    },
+    "data/processed/validation_dataset.parquet": {
+      "canonical_sha256": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "post_change_sha256": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "status": "IMMUTABLE_MATCH"
+    },
+    "data/processed/test_dataset.parquet": {
+      "canonical_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "post_change_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "status": "IMMUTABLE_MATCH"
+    },
+    "data/reports/trade_ledger.csv": {
+      "canonical_sha256": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "post_change_sha256": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "status": "IMMUTABLE_MATCH"
+    },
+    "data/reports/portfolio_ledger.csv": {
+      "canonical_sha256": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "post_change_sha256": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "status": "IMMUTABLE_MATCH"
+    }
+  },
+  "test_execution_audit": {
+    "test_command": "python3 -m pytest -v tests/test_sprint_6_1_6_remediation.py",
+    "tests_run": 25,
+    "tests_passed": 25,
+    "tests_failed": 0,
+    "tests_skipped": 0,
+    "execution_time_seconds": 2.52,
+    "suite_breakdown": {
+      "ScopeA_EngineTargetAllocRegression": {
+        "tests_passed": 10,
+        "scenarios": [
+          "Single eligible BUY candidate execution",
+          "Multiple candidate deterministic priority sorting (prob_buy desc, symbol asc)",
+          "Zero share quantity rejection (INSUFFICIENT_CASH_FOR_ONE_SHARE)",
+          "Insufficient available cash rejection (INSUFFICIENT_CASH_AFTER_EXACT_FEE_CALCULATION)",
+          "Single-stock allocation cap (10%) enforcement",
+          "Daily entry pacing limit enforcement with rejected orders non-consumption",
+          "Transaction cost model and cash accounting mathematical reconciliation",
+          "Empty candidate session graceful handling",
+          "No-eligible candidate session clean pass-through",
+          "End-to-end synthetic lifecycle with EOD ATR trailing stop and liquidation"
+        ]
+      },
+      "ScopeB_AmendedDSRAndStatisticalTooling": {
+        "tests_passed": 15,
+        "scenarios": [
+          "Zero-mean synthetic return series DSR behavior",
+          "Positive-mean synthetic return series significance under amended hurdle",
+          "Negative-mean synthetic return series rejection",
+          "Skewed return series Mertens variance expansion",
+          "Heavy-tailed return series kurtosis contribution",
+          "Constant return series zero-variance exception handling",
+          "Too-short sample size (T < 2) validation exception",
+          "NaN and infinite return input validation exceptions",
+          "Daily vs annualized Sharpe time-scale mathematical consistency",
+          "DSR CDF and p-value upper-tail survival function interpretation",
+          "Bailey & Lopez de Prado (2014) EVT factor calculation (1.8005 for K=16)",
+          "Trial count sensitivity comparison (K=16 vs K=17)",
+          "Dependence and correlation conservative upper bound verification",
+          "Holm-Bonferroni step-down monotonicity and tie-breaking enforcement",
+          "Newey-West HAC Bartlett weighting and long-run variance reference match"
+        ]
+      }
+    },
+    "regression_suite_verification": {
+      "tests/test_sprint_6_1_4_engine_parameterization.py": {
+        "tests_passed": 23,
+        "tests_failed": 0
+      },
+      "tests/test_sprint_6_1_3_protocol_normalization.py": {
+        "tests_passed": 14,
+        "tests_failed": 0
+      },
+      "tests/test_sprint_6_1_2_holdout_integrity.py": {
+        "tests_passed": 9,
+        "tests_failed": 0
+      },
+      "total_tests_across_isolated_suites": 71,
+      "total_tests_passed": 71,
+      "total_tests_failed": 0
+    }
+  },
+  "remaining_governance_limitations": [
+    "This sprint remediated code and amended protocol specifications only; it DOES NOT authorize live trading or claim statistical edge.",
+    "Sprint 6.2 validation backtests cannot begin until an independent re-gate review formally evaluates the amended protocol and remediation.",
+    "Real dataset backtests remain strictly prohibited until authorized."
+  ],
+  "next_recommended_action": "Sprint 6.1.7 — Independent Re-Gate Audit & Authorization Review for Sprint 6.2 Validation Experiments"
+}

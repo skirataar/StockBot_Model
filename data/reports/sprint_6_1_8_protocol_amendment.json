@@ -1,0 +1,127 @@
+{
+  "sprint_metadata": {
+    "sprint_id": "SPRINT-6.1.8",
+    "title": "Formal Statistical Protocol Amendment v1.2.0 & Cross-Sectional Evaluation Harness",
+    "author_role": "Senior Quantitative Researcher, Statistical Reviewer & Research Governance Auditor",
+    "timestamp": "2026-10-29T02:35:00+05:30",
+    "repository_root_canonical": "/home/skirataar/StockBot/StockBot_Model",
+    "requested_path_discrepancy": {
+      "requested_path": "/home/skirataar/Website/StockBot_Model",
+      "canonical_path": "/home/skirataar/StockBot/StockBot_Model",
+      "resolution": "Requested path non-existent; active canonical Git repository confirmed at /home/skirataar/StockBot/StockBot_Model"
+    },
+    "governance_decision": "REMEDIATION COMPLETE — READY FOR INDEPENDENT RE-GATE REVIEW",
+    "sprint_6_2_authorization_status": "WITHHELD — REQUIRES INDEPENDENT RE-GATE APPROVAL"
+  },
+  "defects_remediated": [
+    {
+      "defect_id": "DEF-01-DSR-TRIAL-MEAN-SPECIFICATION",
+      "status": "RESOLVED",
+      "component": "data/reports/sprint_6_2_preregistered_protocol.json, src/utils/statistical_tooling.py, src/backtest/cross_sectional_evaluation.py",
+      "summary": "Formally aligned DSR expected-maximum Sharpe benchmark with Bailey & Lopez de Prado (2014) Eq. 1: SR_star_ann = max(0.0, mu_SR) + sigma_SR * EVT(K). Enforces a zero-skill floor max(0, mu_SR) while preventing false-positive discovery for average strategies when the cohort exhibits positive drift."
+    },
+    {
+      "defect_id": "DEF-02-CORRELATION-HEURISTIC-REMOVAL",
+      "status": "RESOLVED",
+      "component": "data/reports/sprint_6_2_preregistered_protocol.json, src/utils/statistical_tooling.py, src/backtest/cross_sectional_evaluation.py",
+      "summary": "Completely removed unverified sqrt(1 - rho_bar) correlation heuristic. Adopted fixed K=16 discrete candidate trials as the primary binding multiple-testing hurdle. Introduced literature-grounded participation ratio effective trial count N_eff = K^2 / sum(rho_ij^2) as an audited secondary diagnostic."
+    },
+    {
+      "defect_id": "DEF-03-STATISTICAL-FALLBACK-ELIMINATION",
+      "status": "RESOLVED",
+      "component": "src/utils/statistical_tooling.py, src/backtest/event_driven_engine.py, src/backtest/cross_sectional_evaluation.py",
+      "summary": "Eliminated obsolete sqrt(2*ln(K)) fallback from deflated_sharpe_ratio() and event-driven engine. Single runs without cross-sectional hurdle now cleanly return status PENDING_CROSS_SECTIONAL_EVALUATION with NaN p-values. Implemented deterministic CrossSectionalEvaluator harness to orchestrate the 16 candidate validation evaluations."
+    }
+  ],
+  "artifact_hashes": {
+    "protected_artifacts": {
+      "frozen_model": {
+        "path": "models/lightgbm.joblib",
+        "expected_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+        "post_sprint_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+        "match": true
+      },
+      "training_dataset": {
+        "path": "data/processed/training_dataset.parquet",
+        "expected_sha256": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+        "post_sprint_sha256": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+        "match": true
+      },
+      "validation_dataset": {
+        "path": "data/processed/validation_dataset.parquet",
+        "expected_sha256": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+        "post_sprint_sha256": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+        "match": true
+      },
+      "test_dataset": {
+        "path": "data/processed/test_dataset.parquet",
+        "expected_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+        "post_sprint_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+        "match": true
+      },
+      "trade_ledger": {
+        "path": "data/reports/trade_ledger.csv",
+        "expected_sha256": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+        "post_sprint_sha256": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+        "match": true
+      },
+      "portfolio_ledger": {
+        "path": "data/reports/portfolio_ledger.csv",
+        "expected_sha256": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+        "post_sprint_sha256": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+        "match": true
+      },
+      "preserved_protocol_v1_0_0": {
+        "path": "data/reports/sprint_6_2_preregistered_protocol_v1_0_0_frozen.json",
+        "expected_sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+        "post_sprint_sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+        "match": true
+      }
+    },
+    "versioned_and_created_artifacts": {
+      "amended_protocol_v1_2_0": {
+        "path": "data/reports/sprint_6_2_preregistered_protocol_v1_2_0.json",
+        "sha256": "0384d6a1b9ac7738a92e295fd94bfac113a9a99ce2f399f11ffa5d66164223cb"
+      },
+      "active_protocol": {
+        "path": "data/reports/sprint_6_2_preregistered_protocol.json",
+        "sha256": "0384d6a1b9ac7738a92e295fd94bfac113a9a99ce2f399f11ffa5d66164223cb"
+      },
+      "cross_sectional_evaluation_harness": {
+        "path": "src/backtest/cross_sectional_evaluation.py",
+        "sha256": "8017860e4e0c245928eee4e1c44317036136b2121665734ecfb913795a375b6c"
+      },
+      "statistical_tooling": {
+        "path": "src/utils/statistical_tooling.py",
+        "sha256": "8819d31a1ded2e09dd22be2269730fd22eca05244cc0a79a8f4487b9dbf30b0e"
+      },
+      "synthetic_test_suite": {
+        "path": "tests/test_sprint_6_1_8_cross_sectional_evaluation.py",
+        "sha256": "550bf92fc5824480dd070f8d70e4330a767bb1c4f2159324f9989c5283ec4870"
+      }
+    }
+  },
+  "test_execution_audit": {
+    "sprint_6_1_8_synthetic_suite": {
+      "command": "python3 -m pytest -v tests/test_sprint_6_1_8_cross_sectional_evaluation.py",
+      "passed": 23,
+      "failed": 0,
+      "duration_seconds": 1.08,
+      "dataset_access": "NONE_SYNTHETIC_ONLY"
+    },
+    "repository_full_regression_suite": {
+      "command": "python3 -m pytest -v tests/test_sprint_6_1_8_cross_sectional_evaluation.py tests/test_sprint_6_1_6_remediation.py tests/test_sprint_6_1_4_engine_parameterization.py tests/test_sprint_6_1_3_protocol_normalization.py tests/test_sprint_6_1_2_holdout_integrity.py",
+      "passed": 94,
+      "failed": 0,
+      "duration_seconds": 3.76,
+      "dataset_access": "NONE_SYNTHETIC_ONLY"
+    }
+  },
+  "research_integrity_declaration": {
+    "validation_dataset_accessed": false,
+    "test_dataset_accessed": false,
+    "historical_backtests_executed": false,
+    "parameter_optimization_conducted": false,
+    "profitability_claims_made": false
+  }
+}

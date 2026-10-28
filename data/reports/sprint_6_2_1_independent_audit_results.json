@@ -1,0 +1,1974 @@
+{
+  "audit_metadata": {
+    "sprint_id": "SPRINT-6.2.1",
+    "title": "Independent Validation Results and Accounting Audit",
+    "auditor_role": "Independent Quantitative Research Auditor & Financial-Accounting Verification Engineer",
+    "audit_timestamp_utc": "2026-10-28T21:48:31.144967+00:00",
+    "canonical_repository": "/home/skirataar/StockBot/StockBot_Model",
+    "git_commit": "8450e91288c82c4e68c2aacd076c96141a973f96",
+    "audit_mode": "SOURCE_VERIFIED_READ_ONLY_AUDIT",
+    "executive_verdict": "PASS WITH LIMITATIONS \u2014 NO CANDIDATE QUALIFIED; NON-MATERIAL ISSUES REMAIN"
+  },
+  "baseline_integrity_audit": {
+    "models/lightgbm.joblib": {
+      "expected": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "actual": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "status": "MATCH"
+    },
+    "data/processed/training_dataset.parquet": {
+      "expected": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "actual": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "status": "MATCH"
+    },
+    "data/processed/validation_dataset.parquet": {
+      "expected": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "actual": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "status": "MATCH"
+    },
+    "data/processed/test_dataset.parquet": {
+      "expected": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "actual": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "status": "MATCH"
+    },
+    "data/reports/trade_ledger.csv": {
+      "expected": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "actual": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "status": "MATCH"
+    },
+    "data/reports/portfolio_ledger.csv": {
+      "expected": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "actual": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "status": "MATCH"
+    },
+    "data/reports/sprint_6_2_preregistered_protocol_v1_0_0_frozen.json": {
+      "expected": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+      "actual": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+      "status": "MATCH"
+    },
+    "data/reports/sprint_6_2_preregistered_protocol.json": {
+      "expected": "0384d6a1b9ac7738a92e295fd94bfac113a9a99ce2f399f11ffa5d66164223cb",
+      "actual": "0384d6a1b9ac7738a92e295fd94bfac113a9a99ce2f399f11ffa5d66164223cb",
+      "status": "MATCH"
+    },
+    "data/reports/sprint_6_2_preregistered_protocol_v1_2_0.json": {
+      "expected": "0384d6a1b9ac7738a92e295fd94bfac113a9a99ce2f399f11ffa5d66164223cb",
+      "actual": "0384d6a1b9ac7738a92e295fd94bfac113a9a99ce2f399f11ffa5d66164223cb",
+      "status": "MATCH"
+    }
+  },
+  "implementation_code_audit": {
+    "src/backtest/event_driven_engine.py": {
+      "expected": "30d5b11a69d9f2b91580fdd4c9b42eee8e7df865a8ac7138fa059740a7cb41d0",
+      "actual": "30d5b11a69d9f2b91580fdd4c9b42eee8e7df865a8ac7138fa059740a7cb41d0",
+      "status": "MATCH"
+    },
+    "src/backtest/cross_sectional_evaluation.py": {
+      "expected": "8017860e4e0c245928eee4e1c44317036136b2121665734ecfb913795a375b6c",
+      "actual": "8017860e4e0c245928eee4e1c44317036136b2121665734ecfb913795a375b6c",
+      "status": "MATCH"
+    },
+    "src/utils/statistical_tooling.py": {
+      "expected": "8819d31a1ded2e09dd22be2269730fd22eca05244cc0a79a8f4487b9dbf30b0e",
+      "actual": "8819d31a1ded2e09dd22be2269730fd22eca05244cc0a79a8f4487b9dbf30b0e",
+      "status": "MATCH"
+    }
+  },
+  "input_artifacts_audit": {
+    "data/reports/sprint_6_2_validation_report.md": {
+      "exists": true,
+      "size_bytes": 15844,
+      "sha256": "d65236266720b789aa81dc610fac34f58c0f01fdda7600dc59deefef530b1ea5"
+    },
+    "data/reports/sprint_6_2_validation_results.json": {
+      "exists": true,
+      "size_bytes": 98622,
+      "sha256": "e9456cc453a7c5a39251cc4ecad7630e501d6cfac5a50b8a1adef6e44ac1c3f0"
+    },
+    "data/reports/sprint_6_2_candidate_metrics.csv": {
+      "exists": true,
+      "size_bytes": 4286,
+      "sha256": "df1054977e6cea46d8330f72866e57a5308d2418c7bd41785373cc9b502f2482"
+    },
+    "data/reports/sprint_6_2_trade_ledger_validation.csv": {
+      "exists": true,
+      "size_bytes": 772705,
+      "sha256": "3f421e71dfbe4b5fb4511de233b973fabd17c97069bba1fbac58e2152189bb28"
+    },
+    "data/reports/sprint_6_2_portfolio_ledger_validation.csv": {
+      "exists": true,
+      "size_bytes": 561731,
+      "sha256": "18ce9e07d4fa7fa9d078361e8943f89a71ed2196804fa2972a63d175010973d9"
+    },
+    "data/reports/sprint_6_2_cross_sectional_results.json": {
+      "exists": true,
+      "size_bytes": 16451,
+      "sha256": "3973ac915809fa678ff08a5cfb4be9068cf8d58627a4cbae47af5acad34b249f"
+    },
+    "data/reports/sprint_6_2_execution_manifest.json": {
+      "exists": true,
+      "size_bytes": 16569,
+      "sha256": "5c5bbe2159d38dc7f28e4ec102680516cc4ed23615df9cdb3811153f21f28d57"
+    },
+    "data/reports/sprint_6_2_pre_execution_manifest.json": {
+      "exists": true,
+      "size_bytes": 6056,
+      "sha256": "7b61a1e69da7d5cf2cd393836190155c9dd05ea440216d1fbe003b3ab0ae8fdf"
+    },
+    "data/reports/sprint_6_2_hash_manifest.json": {
+      "exists": true,
+      "size_bytes": 1925,
+      "sha256": "94ceb796a88efee2ad8250bf2a0afd25a585d1a9876c9759ba8bf71e9f92ab64"
+    }
+  },
+  "findings": [
+    {
+      "finding_id": "FND-01-TERMINAL-LIQUIDATION-FRICTION-TIMING",
+      "severity": "LOW / INFORMATIONAL",
+      "artifact": "data/reports/sprint_6_2/candidate_ledgers/*_portfolio_ledger.csv vs *_trade_ledger.csv",
+      "expected_behavior": "Starting Capital + Net P&L in trade ledger equals Ending Equity in portfolio ledger.",
+      "observed_behavior": "Ending Equity is Rs. 783.13 to Rs. 2,234.85 higher than Starting Capital + Trade Ledger Net P&L.",
+      "numerical_evidence": "For CFG-01: Discrepancy = Rs. 2,056.23; calculated terminal sell friction on 10 open positions = Rs. 2,056.20 (Residual = Rs. 0.03). For CFG-BASE: Discrepancy = Rs. 2,234.85; calculated terminal sell friction on 10 open positions = Rs. 2,234.74 (Residual = Rs. 0.11). For CFG-16: Discrepancy = Rs. 1,258.45; calculated terminal sell friction on 6 open positions = Rs. 1,258.43 (Residual = Rs. 0.02).",
+      "root_cause": "The portfolio ledger records gross mark-to-market equity at session Close on date T (portfolio_equity = cash + sum(qty * Close)), whereas the synthetic trade ledger liquidation at the end of the backtest deducts hypothetical terminal sell friction (statutory exit taxes, exchange fees, brokerage, and exit slippage). The numerical bridge is exact down to two-decimal rounding.",
+      "affects_acceptance_decisions": false,
+      "required_remediation": "None. Documented institutional NAV mark-to-market reporting convention."
+    },
+    {
+      "finding_id": "FND-02-BENCHMARK-GROSS-BUY-AND-HOLD-CONVENTION",
+      "severity": "LOW / METHODOLOGY NOTE",
+      "artifact": "src/backtest/event_driven_engine.py:802 (compute_buy_and_hold_benchmark)",
+      "expected_behavior": "Strategy and benchmark returns measured on perfectly symmetric friction conventions.",
+      "observed_behavior": "Benchmark models frictionless gross buy-and-hold (+59.22%), while strategy models full delivery friction and 5 bps slippage.",
+      "numerical_evidence": "Strategy candidates achieved cumulative net returns of +10.81% to +24.50%. Passive buy-and-hold achieved +59.22%. The performance deficit is 34.72 to 48.41 percentage points. Subtracting standard delivery friction (~0.25% one-time) from the benchmark leaves +58.85%, still far exceeding all candidates.",
+      "root_cause": "The baseline engine calculates passive benchmark return from raw Close price ratios without trade friction simulation.",
+      "affects_acceptance_decisions": false,
+      "required_remediation": "None for validation rejection; record as methodology limitation for future research stages."
+    },
+    {
+      "finding_id": "FND-03-DSR-HURDLE-SURPLUS-NON-SIGNIFICANCE",
+      "severity": "LOW / INFORMATIONAL",
+      "artifact": "data/reports/sprint_6_2_cross_sectional_results.json",
+      "expected_behavior": "Strategy with Sharpe > Hurdle is statistically evaluated for sampling variance under multiple testing.",
+      "observed_behavior": "CFG-16 achieved Sharpe 1.0283 > Hurdle 0.9698 (+0.0585 surplus), but DSR p-value was 0.4631 (non-significant).",
+      "numerical_evidence": "Mertens variance V = 0.7662 with skewness gamma_3 = 4.19 and kurtosis gamma_4 = 36.88. Over T = 486 sessions, z-score is only 0.0927, yielding DSR = 0.5369 and p = 0.4631.",
+      "root_cause": "Excess return kurtosis and sample size widen the standard error of the Sharpe ratio; a marginal surplus (+0.0585) is insufficient to reject the null hypothesis of selection bias.",
+      "affects_acceptance_decisions": false,
+      "required_remediation": "None. Protocol correctly classified CFG-16 as non-significant."
+    }
+  ],
+  "numerical_bridges": {
+    "CFG-01": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1198811.21,
+      "final_cash": 13961.26,
+      "final_holdings_mtm": 1184849.95,
+      "trade_ledger_net_pnl": 196754.98000000004,
+      "trade_ledger_gross_pnl": 549853.8099999999,
+      "trade_ledger_friction": 353098.82999999996,
+      "starting_plus_net_pnl": 1196754.98,
+      "discrepancy_amount": 2056.2299999999814,
+      "liquidation_positions_count": 10,
+      "terminal_sell_friction_on_open_positions": 2056.2,
+      "reconciliation_residual": 0.03,
+      "bridge_exact_match": true
+    },
+    "CFG-02": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1161181.08,
+      "final_cash": 16129.42,
+      "final_holdings_mtm": 1145051.67,
+      "trade_ledger_net_pnl": 159186.04,
+      "trade_ledger_gross_pnl": 367869.94,
+      "trade_ledger_friction": 208683.90000000002,
+      "starting_plus_net_pnl": 1159186.04,
+      "discrepancy_amount": 1995.0400000000373,
+      "liquidation_positions_count": 10,
+      "terminal_sell_friction_on_open_positions": 1995.05,
+      "reconciliation_residual": -0.01,
+      "bridge_exact_match": true
+    },
+    "CFG-03": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1237031.09,
+      "final_cash": 17693.92,
+      "final_holdings_mtm": 1219337.18,
+      "trade_ledger_net_pnl": 234921.72999999998,
+      "trade_ledger_gross_pnl": 381689.67999999993,
+      "trade_ledger_friction": 146767.95,
+      "starting_plus_net_pnl": 1234921.73,
+      "discrepancy_amount": 2109.3600000001024,
+      "liquidation_positions_count": 10,
+      "terminal_sell_friction_on_open_positions": 2109.17,
+      "reconciliation_residual": 0.19,
+      "bridge_exact_match": true
+    },
+    "CFG-04": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1108058.63,
+      "final_cash": 23638.64,
+      "final_holdings_mtm": 1084419.98,
+      "trade_ledger_net_pnl": 106156.66,
+      "trade_ledger_gross_pnl": 194263.26,
+      "trade_ledger_friction": 88106.6,
+      "starting_plus_net_pnl": 1106156.66,
+      "discrepancy_amount": 1901.969999999972,
+      "liquidation_positions_count": 10,
+      "terminal_sell_friction_on_open_positions": 1901.93,
+      "reconciliation_residual": 0.04,
+      "bridge_exact_match": true
+    },
+    "CFG-05": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1220669.93,
+      "final_cash": 140149.7,
+      "final_holdings_mtm": 1080520.22,
+      "trade_ledger_net_pnl": 218797.56999999998,
+      "trade_ledger_gross_pnl": 265741.42000000004,
+      "trade_ledger_friction": 46943.85,
+      "starting_plus_net_pnl": 1218797.57,
+      "discrepancy_amount": 1872.3599999998696,
+      "liquidation_positions_count": 9,
+      "terminal_sell_friction_on_open_positions": 1872.32,
+      "reconciliation_residual": 0.04,
+      "bridge_exact_match": true
+    },
+    "CFG-06": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1231763.71,
+      "final_cash": 504768.26,
+      "final_holdings_mtm": 726995.45,
+      "trade_ledger_net_pnl": 230505.26999999996,
+      "trade_ledger_gross_pnl": 250521.17000000004,
+      "trade_ledger_friction": 20015.9,
+      "starting_plus_net_pnl": 1230505.27,
+      "discrepancy_amount": 1258.4399999999441,
+      "liquidation_positions_count": 6,
+      "terminal_sell_friction_on_open_positions": 1258.43,
+      "reconciliation_residual": 0.01,
+      "bridge_exact_match": true
+    },
+    "CFG-07": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1138636.57,
+      "final_cash": 690344.86,
+      "final_holdings_mtm": 448291.7,
+      "trade_ledger_net_pnl": 137853.44,
+      "trade_ledger_gross_pnl": 147684.84999999998,
+      "trade_ledger_friction": 9831.41,
+      "starting_plus_net_pnl": 1137853.44,
+      "discrepancy_amount": 783.1300000001211,
+      "liquidation_positions_count": 4,
+      "terminal_sell_friction_on_open_positions": 783.08,
+      "reconciliation_residual": 0.05,
+      "bridge_exact_match": true
+    },
+    "CFG-08": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1223236.25,
+      "final_cash": 19832.43,
+      "final_holdings_mtm": 1203403.81,
+      "trade_ledger_net_pnl": 221151.43,
+      "trade_ledger_gross_pnl": 375807.30000000005,
+      "trade_ledger_friction": 154655.87,
+      "starting_plus_net_pnl": 1221151.43,
+      "discrepancy_amount": 2084.820000000065,
+      "liquidation_positions_count": 10,
+      "terminal_sell_friction_on_open_positions": 2084.69,
+      "reconciliation_residual": 0.13,
+      "bridge_exact_match": true
+    },
+    "CFG-09": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1240241.74,
+      "final_cash": 16895.93,
+      "final_holdings_mtm": 1223345.8,
+      "trade_ledger_net_pnl": 238126.41,
+      "trade_ledger_gross_pnl": 389038.36,
+      "trade_ledger_friction": 150911.95,
+      "starting_plus_net_pnl": 1238126.41,
+      "discrepancy_amount": 2115.3300000000745,
+      "liquidation_positions_count": 10,
+      "terminal_sell_friction_on_open_positions": 2115.34,
+      "reconciliation_residual": -0.01,
+      "bridge_exact_match": true
+    },
+    "CFG-10": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1244982.49,
+      "final_cash": 19438.29,
+      "final_holdings_mtm": 1225544.21,
+      "trade_ledger_net_pnl": 242863.55,
+      "trade_ledger_gross_pnl": 392259.22,
+      "trade_ledger_friction": 149395.66999999998,
+      "starting_plus_net_pnl": 1242863.55,
+      "discrepancy_amount": 2118.939999999944,
+      "liquidation_positions_count": 10,
+      "terminal_sell_friction_on_open_positions": 2118.71,
+      "reconciliation_residual": 0.23,
+      "bridge_exact_match": true
+    },
+    "CFG-11": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1185632.95,
+      "final_cash": 371122.88,
+      "final_holdings_mtm": 814510.07,
+      "trade_ledger_net_pnl": 184216.44,
+      "trade_ledger_gross_pnl": 291072.48,
+      "trade_ledger_friction": 106856.04,
+      "starting_plus_net_pnl": 1184216.44,
+      "discrepancy_amount": 1416.5100000000093,
+      "liquidation_positions_count": 7,
+      "terminal_sell_friction_on_open_positions": 1416.47,
+      "reconciliation_residual": 0.04,
+      "bridge_exact_match": true
+    },
+    "CFG-12": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1229240.72,
+      "final_cash": 17646.12,
+      "final_holdings_mtm": 1211594.6,
+      "trade_ledger_net_pnl": 227143.31,
+      "trade_ledger_gross_pnl": 352786.97,
+      "trade_ledger_friction": 125643.66,
+      "starting_plus_net_pnl": 1227143.31,
+      "discrepancy_amount": 2097.409999999916,
+      "liquidation_positions_count": 10,
+      "terminal_sell_friction_on_open_positions": 2097.28,
+      "reconciliation_residual": 0.13,
+      "bridge_exact_match": true
+    },
+    "CFG-13": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1114130.97,
+      "final_cash": 15120.9,
+      "final_holdings_mtm": 1099010.06,
+      "trade_ledger_net_pnl": 112206.43999999997,
+      "trade_ledger_gross_pnl": 204217.52000000002,
+      "trade_ledger_friction": 92011.08,
+      "starting_plus_net_pnl": 1112206.44,
+      "discrepancy_amount": 1924.530000000028,
+      "liquidation_positions_count": 10,
+      "terminal_sell_friction_on_open_positions": 1924.34,
+      "reconciliation_residual": 0.19,
+      "bridge_exact_match": true
+    },
+    "CFG-14": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1224520.35,
+      "final_cash": 139089.94,
+      "final_holdings_mtm": 1085430.4,
+      "trade_ledger_net_pnl": 222640.41999999998,
+      "trade_ledger_gross_pnl": 270843.86999999994,
+      "trade_ledger_friction": 48203.45,
+      "starting_plus_net_pnl": 1222640.42,
+      "discrepancy_amount": 1879.9300000001676,
+      "liquidation_positions_count": 9,
+      "terminal_sell_friction_on_open_positions": 1879.87,
+      "reconciliation_residual": 0.06,
+      "bridge_exact_match": true
+    },
+    "CFG-15": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1144470.0,
+      "final_cash": 583594.75,
+      "final_holdings_mtm": 560875.25,
+      "trade_ledger_net_pnl": 143490.37,
+      "trade_ledger_gross_pnl": 181901.8,
+      "trade_ledger_friction": 38411.43,
+      "starting_plus_net_pnl": 1143490.37,
+      "discrepancy_amount": 979.6299999998882,
+      "liquidation_positions_count": 5,
+      "terminal_sell_friction_on_open_positions": 979.64,
+      "reconciliation_residual": -0.01,
+      "bridge_exact_match": true
+    },
+    "CFG-16": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1232717.42,
+      "final_cash": 505721.96,
+      "final_holdings_mtm": 726995.45,
+      "trade_ledger_net_pnl": 231458.97000000003,
+      "trade_ledger_gross_pnl": 251885.07,
+      "trade_ledger_friction": 20426.1,
+      "starting_plus_net_pnl": 1231458.97,
+      "discrepancy_amount": 1258.4499999999534,
+      "liquidation_positions_count": 6,
+      "terminal_sell_friction_on_open_positions": 1258.43,
+      "reconciliation_residual": 0.02,
+      "bridge_exact_match": true
+    },
+    "CFG-BASE": {
+      "initial_capital": 1000000.0,
+      "final_equity": 1318255.83,
+      "final_cash": 17188.91,
+      "final_holdings_mtm": 1301066.93,
+      "trade_ledger_net_pnl": 316020.98000000004,
+      "trade_ledger_gross_pnl": 638763.4700000001,
+      "trade_ledger_friction": 322742.49,
+      "starting_plus_net_pnl": 1316020.98,
+      "discrepancy_amount": 2234.850000000093,
+      "liquidation_positions_count": 10,
+      "terminal_sell_friction_on_open_positions": 2234.74,
+      "reconciliation_residual": 0.11,
+      "bridge_exact_match": true
+    }
+  },
+  "cost_breakdowns": [
+    {
+      "candidate_id": "CFG-01",
+      "brokerage": 33920.0,
+      "stt": 194333.18,
+      "stamp_duty": 14533.7,
+      "exchange_fee": 5771.75,
+      "sebi_fee": 194.0,
+      "gst": 7179.28,
+      "slippage": 97166.5,
+      "total_friction": 353098.83
+    },
+    {
+      "candidate_id": "CFG-02",
+      "brokerage": 20960.0,
+      "stt": 114185.64,
+      "stamp_duty": 8536.29,
+      "exchange_fee": 3391.18,
+      "sebi_fee": 114.61,
+      "gst": 4403.82,
+      "slippage": 57092.88,
+      "total_friction": 208683.9
+    },
+    {
+      "candidate_id": "CFG-03",
+      "brokerage": 13960.0,
+      "stt": 80884.8,
+      "stamp_duty": 6037.77,
+      "exchange_fee": 2402.22,
+      "sebi_fee": 80.92,
+      "gst": 2959.78,
+      "slippage": 40442.61,
+      "total_friction": 146767.95
+    },
+    {
+      "candidate_id": "CFG-04",
+      "brokerage": 8880.0,
+      "stt": 48188.59,
+      "stamp_duty": 3599.54,
+      "exchange_fee": 1431.25,
+      "sebi_fee": 47.94,
+      "gst": 1864.69,
+      "slippage": 24094.29,
+      "total_friction": 88106.6
+    },
+    {
+      "candidate_id": "CFG-05",
+      "brokerage": 4520.0,
+      "stt": 25837.52,
+      "stamp_duty": 1917.88,
+      "exchange_fee": 767.3,
+      "sebi_fee": 25.75,
+      "gst": 956.38,
+      "slippage": 12918.84,
+      "total_friction": 46943.85
+    },
+    {
+      "candidate_id": "CFG-06",
+      "brokerage": 1880.0,
+      "stt": 11057.59,
+      "stamp_duty": 810.52,
+      "exchange_fee": 328.42,
+      "sebi_fee": 11.02,
+      "gst": 399.48,
+      "slippage": 5528.8,
+      "total_friction": 20015.9
+    },
+    {
+      "candidate_id": "CFG-07",
+      "brokerage": 960.0,
+      "stt": 5405.64,
+      "stamp_duty": 394.32,
+      "exchange_fee": 160.5,
+      "sebi_fee": 5.35,
+      "gst": 202.67,
+      "slippage": 2702.81,
+      "total_friction": 9831.41
+    },
+    {
+      "candidate_id": "CFG-08",
+      "brokerage": 14840.0,
+      "stt": 85135.68,
+      "stamp_duty": 6356.98,
+      "exchange_fee": 2528.54,
+      "sebi_fee": 85.2,
+      "gst": 3141.66,
+      "slippage": 42567.97,
+      "total_friction": 154655.87
+    },
+    {
+      "candidate_id": "CFG-09",
+      "brokerage": 14400.0,
+      "stt": 83134.88,
+      "stamp_duty": 6205.92,
+      "exchange_fee": 2468.98,
+      "sebi_fee": 83.16,
+      "gst": 3051.46,
+      "slippage": 41567.47,
+      "total_friction": 150911.95
+    },
+    {
+      "candidate_id": "CFG-10",
+      "brokerage": 14240.0,
+      "stt": 82311.05,
+      "stamp_duty": 6143.95,
+      "exchange_fee": 2444.57,
+      "sebi_fee": 82.42,
+      "gst": 3018.13,
+      "slippage": 41155.67,
+      "total_friction": 149395.67
+    },
+    {
+      "candidate_id": "CFG-11",
+      "brokerage": 10600.0,
+      "stt": 58570.25,
+      "stamp_duty": 4370.89,
+      "exchange_fee": 1739.48,
+      "sebi_fee": 58.47,
+      "gst": 2231.69,
+      "slippage": 29285.14,
+      "total_friction": 106856.04
+    },
+    {
+      "candidate_id": "CFG-12",
+      "brokerage": 12000.0,
+      "stt": 69208.25,
+      "stamp_duty": 5164.15,
+      "exchange_fee": 2055.43,
+      "sebi_fee": 69.12,
+      "gst": 2542.47,
+      "slippage": 34604.14,
+      "total_friction": 125643.66
+    },
+    {
+      "candidate_id": "CFG-13",
+      "brokerage": 9280.0,
+      "stt": 50319.37,
+      "stamp_duty": 3758.67,
+      "exchange_fee": 1494.4,
+      "sebi_fee": 50.05,
+      "gst": 1948.33,
+      "slippage": 25159.72,
+      "total_friction": 92011.08
+    },
+    {
+      "candidate_id": "CFG-14",
+      "brokerage": 4640.0,
+      "stt": 26531.69,
+      "stamp_duty": 1969.56,
+      "exchange_fee": 787.95,
+      "sebi_fee": 26.41,
+      "gst": 981.88,
+      "slippage": 13265.87,
+      "total_friction": 48203.45
+    },
+    {
+      "candidate_id": "CFG-15",
+      "brokerage": 3840.0,
+      "stt": 21036.02,
+      "stamp_duty": 1564.04,
+      "exchange_fee": 624.84,
+      "sebi_fee": 20.95,
+      "gst": 807.48,
+      "slippage": 10518.05,
+      "total_friction": 38411.43
+    },
+    {
+      "candidate_id": "CFG-16",
+      "brokerage": 1920.0,
+      "stt": 11282.95,
+      "stamp_duty": 827.32,
+      "exchange_fee": 335.11,
+      "sebi_fee": 11.24,
+      "gst": 407.94,
+      "slippage": 5641.48,
+      "total_friction": 20426.1
+    },
+    {
+      "candidate_id": "CFG-BASE",
+      "brokerage": 28440.0,
+      "stt": 179509.99,
+      "stamp_duty": 13415.19,
+      "exchange_fee": 5331.42,
+      "sebi_fee": 179.38,
+      "gst": 6110.97,
+      "slippage": 89755.13,
+      "total_friction": 322742.49
+    }
+  ],
+  "reconciliation_summary": [
+    {
+      "candidate_id": "CFG-01",
+      "initial_capital": 1000000.0,
+      "final_cash": 13961.26,
+      "final_holdings_mtm": 1184849.95,
+      "final_equity": 1198811.21,
+      "gross_trading_pnl": 549853.81,
+      "total_friction": 353098.83,
+      "net_trade_ledger_pnl": 196754.98,
+      "portfolio_equity_change": 198811.21,
+      "cumulative_net_return_pct": 19.88,
+      "cagr_pct": 9.86,
+      "annualized_volatility_pct": 16.55,
+      "annualized_sharpe": 0.23,
+      "max_drawdown_pct": 12.8,
+      "total_trades": 848,
+      "trades_2023": 378,
+      "trades_2024": 470,
+      "win_rate_pct": 52.36,
+      "profit_factor": 1.53,
+      "min_cash_observed": 139.11,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 2056.23,
+      "terminal_sell_friction": 2056.2,
+      "residual_rounding": 0.03
+    },
+    {
+      "candidate_id": "CFG-02",
+      "initial_capital": 1000000.0,
+      "final_cash": 16129.42,
+      "final_holdings_mtm": 1145051.67,
+      "final_equity": 1161181.08,
+      "gross_trading_pnl": 367869.94,
+      "total_friction": 208683.9,
+      "net_trade_ledger_pnl": 159186.04,
+      "portfolio_equity_change": 161181.08,
+      "cumulative_net_return_pct": 16.12,
+      "cagr_pct": 8.06,
+      "annualized_volatility_pct": 14.52,
+      "annualized_sharpe": 0.14,
+      "max_drawdown_pct": 11.27,
+      "total_trades": 524,
+      "trades_2023": 210,
+      "trades_2024": 314,
+      "win_rate_pct": 50.38,
+      "profit_factor": 1.6,
+      "min_cash_observed": 148.2,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 1995.04,
+      "terminal_sell_friction": 1995.05,
+      "residual_rounding": -0.01
+    },
+    {
+      "candidate_id": "CFG-03",
+      "initial_capital": 1000000.0,
+      "final_cash": 17693.92,
+      "final_holdings_mtm": 1219337.18,
+      "final_equity": 1237031.09,
+      "gross_trading_pnl": 381689.68,
+      "total_friction": 146767.95,
+      "net_trade_ledger_pnl": 234921.73,
+      "portfolio_equity_change": 237031.09,
+      "cumulative_net_return_pct": 23.7,
+      "cagr_pct": 11.66,
+      "annualized_volatility_pct": 13.12,
+      "annualized_sharpe": 0.43,
+      "max_drawdown_pct": 10.77,
+      "total_trades": 349,
+      "trades_2023": 128,
+      "trades_2024": 221,
+      "win_rate_pct": 52.72,
+      "profit_factor": 1.88,
+      "min_cash_observed": 49.78,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 2109.36,
+      "terminal_sell_friction": 2109.17,
+      "residual_rounding": 0.19
+    },
+    {
+      "candidate_id": "CFG-04",
+      "initial_capital": 1000000.0,
+      "final_cash": 23638.64,
+      "final_holdings_mtm": 1084419.98,
+      "final_equity": 1108058.63,
+      "gross_trading_pnl": 194263.26,
+      "total_friction": 88106.6,
+      "net_trade_ledger_pnl": 106156.66,
+      "portfolio_equity_change": 108058.63,
+      "cumulative_net_return_pct": 10.81,
+      "cagr_pct": 5.46,
+      "annualized_volatility_pct": 11.74,
+      "annualized_sharpe": -0.05,
+      "max_drawdown_pct": 11.16,
+      "total_trades": 222,
+      "trades_2023": 79,
+      "trades_2024": 143,
+      "win_rate_pct": 53.6,
+      "profit_factor": 1.61,
+      "min_cash_observed": 8289.49,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 1901.97,
+      "terminal_sell_friction": 1901.93,
+      "residual_rounding": 0.04
+    },
+    {
+      "candidate_id": "CFG-05",
+      "initial_capital": 1000000.0,
+      "final_cash": 140149.7,
+      "final_holdings_mtm": 1080520.22,
+      "final_equity": 1220669.93,
+      "gross_trading_pnl": 265741.42,
+      "total_friction": 46943.85,
+      "net_trade_ledger_pnl": 218797.57,
+      "portfolio_equity_change": 220669.93,
+      "cumulative_net_return_pct": 22.07,
+      "cagr_pct": 10.89,
+      "annualized_volatility_pct": 7.13,
+      "annualized_sharpe": 0.69,
+      "max_drawdown_pct": 3.89,
+      "total_trades": 113,
+      "trades_2023": 43,
+      "trades_2024": 70,
+      "win_rate_pct": 59.29,
+      "profit_factor": 2.87,
+      "min_cash_observed": 16195.08,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 1872.36,
+      "terminal_sell_friction": 1872.32,
+      "residual_rounding": 0.04
+    },
+    {
+      "candidate_id": "CFG-06",
+      "initial_capital": 1000000.0,
+      "final_cash": 504768.26,
+      "final_holdings_mtm": 726995.45,
+      "final_equity": 1231763.71,
+      "gross_trading_pnl": 250521.17,
+      "total_friction": 20015.9,
+      "net_trade_ledger_pnl": 230505.27,
+      "portfolio_equity_change": 231763.71,
+      "cumulative_net_return_pct": 23.18,
+      "cagr_pct": 11.41,
+      "annualized_volatility_pct": 4.81,
+      "annualized_sharpe": 1.13,
+      "max_drawdown_pct": 2.33,
+      "total_trades": 47,
+      "trades_2023": 18,
+      "trades_2024": 29,
+      "win_rate_pct": 65.96,
+      "profit_factor": 7.99,
+      "min_cash_observed": 241854.18,
+      "max_positions_observed": 8,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 1258.44,
+      "terminal_sell_friction": 1258.43,
+      "residual_rounding": 0.01
+    },
+    {
+      "candidate_id": "CFG-07",
+      "initial_capital": 1000000.0,
+      "final_cash": 690344.86,
+      "final_holdings_mtm": 448291.7,
+      "final_equity": 1138636.57,
+      "gross_trading_pnl": 147684.85,
+      "total_friction": 9831.41,
+      "net_trade_ledger_pnl": 137853.44,
+      "portfolio_equity_change": 138636.57,
+      "cumulative_net_return_pct": 13.86,
+      "cagr_pct": 6.96,
+      "annualized_volatility_pct": 3.13,
+      "annualized_sharpe": 0.31,
+      "max_drawdown_pct": 1.3,
+      "total_trades": 24,
+      "trades_2023": 9,
+      "trades_2024": 15,
+      "win_rate_pct": 66.67,
+      "profit_factor": 9.73,
+      "min_cash_observed": 661368.39,
+      "max_positions_observed": 4,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 783.13,
+      "terminal_sell_friction": 783.08,
+      "residual_rounding": 0.05
+    },
+    {
+      "candidate_id": "CFG-08",
+      "initial_capital": 1000000.0,
+      "final_cash": 19832.43,
+      "final_holdings_mtm": 1203403.81,
+      "final_equity": 1223236.25,
+      "gross_trading_pnl": 375807.3,
+      "total_friction": 154655.87,
+      "net_trade_ledger_pnl": 221151.43,
+      "portfolio_equity_change": 223236.25,
+      "cumulative_net_return_pct": 22.32,
+      "cagr_pct": 11.01,
+      "annualized_volatility_pct": 13.16,
+      "annualized_sharpe": 0.38,
+      "max_drawdown_pct": 10.74,
+      "total_trades": 371,
+      "trades_2023": 134,
+      "trades_2024": 237,
+      "win_rate_pct": 52.83,
+      "profit_factor": 1.7,
+      "min_cash_observed": 44.74,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 2084.82,
+      "terminal_sell_friction": 2084.69,
+      "residual_rounding": 0.13
+    },
+    {
+      "candidate_id": "CFG-09",
+      "initial_capital": 1000000.0,
+      "final_cash": 16895.93,
+      "final_holdings_mtm": 1223345.8,
+      "final_equity": 1240241.74,
+      "gross_trading_pnl": 389038.36,
+      "total_friction": 150911.95,
+      "net_trade_ledger_pnl": 238126.41,
+      "portfolio_equity_change": 240241.74,
+      "cumulative_net_return_pct": 24.02,
+      "cagr_pct": 11.81,
+      "annualized_volatility_pct": 13.14,
+      "annualized_sharpe": 0.44,
+      "max_drawdown_pct": 10.79,
+      "total_trades": 360,
+      "trades_2023": 130,
+      "trades_2024": 230,
+      "win_rate_pct": 54.17,
+      "profit_factor": 1.8,
+      "min_cash_observed": 45.21,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 2115.33,
+      "terminal_sell_friction": 2115.34,
+      "residual_rounding": -0.01
+    },
+    {
+      "candidate_id": "CFG-10",
+      "initial_capital": 1000000.0,
+      "final_cash": 19438.29,
+      "final_holdings_mtm": 1225544.21,
+      "final_equity": 1244982.49,
+      "gross_trading_pnl": 392259.22,
+      "total_friction": 149395.67,
+      "net_trade_ledger_pnl": 242863.55,
+      "portfolio_equity_change": 244982.49,
+      "cumulative_net_return_pct": 24.5,
+      "cagr_pct": 12.03,
+      "annualized_volatility_pct": 13.11,
+      "annualized_sharpe": 0.46,
+      "max_drawdown_pct": 10.75,
+      "total_trades": 356,
+      "trades_2023": 130,
+      "trades_2024": 226,
+      "win_rate_pct": 53.65,
+      "profit_factor": 1.82,
+      "min_cash_observed": 188.12,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 2118.94,
+      "terminal_sell_friction": 2118.71,
+      "residual_rounding": 0.23
+    },
+    {
+      "candidate_id": "CFG-11",
+      "initial_capital": 1000000.0,
+      "final_cash": 371122.88,
+      "final_holdings_mtm": 814510.07,
+      "final_equity": 1185632.95,
+      "gross_trading_pnl": 291072.48,
+      "total_friction": 106856.04,
+      "net_trade_ledger_pnl": 184216.44,
+      "portfolio_equity_change": 185632.95,
+      "cumulative_net_return_pct": 18.56,
+      "cagr_pct": 9.23,
+      "annualized_volatility_pct": 9.71,
+      "annualized_sharpe": 0.33,
+      "max_drawdown_pct": 6.79,
+      "total_trades": 265,
+      "trades_2023": 108,
+      "trades_2024": 157,
+      "win_rate_pct": 53.96,
+      "profit_factor": 1.91,
+      "min_cash_observed": 4147.48,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 1416.51,
+      "terminal_sell_friction": 1416.47,
+      "residual_rounding": 0.04
+    },
+    {
+      "candidate_id": "CFG-12",
+      "initial_capital": 1000000.0,
+      "final_cash": 17646.12,
+      "final_holdings_mtm": 1211594.6,
+      "final_equity": 1229240.72,
+      "gross_trading_pnl": 352786.97,
+      "total_friction": 125643.66,
+      "net_trade_ledger_pnl": 227143.31,
+      "portfolio_equity_change": 229240.72,
+      "cumulative_net_return_pct": 22.92,
+      "cagr_pct": 11.3,
+      "annualized_volatility_pct": 11.13,
+      "annualized_sharpe": 0.48,
+      "max_drawdown_pct": 8.21,
+      "total_trades": 300,
+      "trades_2023": 114,
+      "trades_2024": 186,
+      "win_rate_pct": 53.67,
+      "profit_factor": 1.93,
+      "min_cash_observed": 375.84,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 2097.41,
+      "terminal_sell_friction": 2097.28,
+      "residual_rounding": 0.13
+    },
+    {
+      "candidate_id": "CFG-13",
+      "initial_capital": 1000000.0,
+      "final_cash": 15120.9,
+      "final_holdings_mtm": 1099010.06,
+      "final_equity": 1114130.97,
+      "gross_trading_pnl": 204217.52,
+      "total_friction": 92011.08,
+      "net_trade_ledger_pnl": 112206.44,
+      "portfolio_equity_change": 114130.97,
+      "cumulative_net_return_pct": 11.41,
+      "cagr_pct": 5.76,
+      "annualized_volatility_pct": 11.72,
+      "annualized_sharpe": -0.02,
+      "max_drawdown_pct": 11.15,
+      "total_trades": 232,
+      "trades_2023": 81,
+      "trades_2024": 151,
+      "win_rate_pct": 54.31,
+      "profit_factor": 1.55,
+      "min_cash_observed": 132.25,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 1924.53,
+      "terminal_sell_friction": 1924.34,
+      "residual_rounding": 0.19
+    },
+    {
+      "candidate_id": "CFG-14",
+      "initial_capital": 1000000.0,
+      "final_cash": 139089.94,
+      "final_holdings_mtm": 1085430.4,
+      "final_equity": 1224520.35,
+      "gross_trading_pnl": 270843.87,
+      "total_friction": 48203.45,
+      "net_trade_ledger_pnl": 222640.42,
+      "portfolio_equity_change": 224520.35,
+      "cumulative_net_return_pct": 22.45,
+      "cagr_pct": 11.07,
+      "annualized_volatility_pct": 7.15,
+      "annualized_sharpe": 0.71,
+      "max_drawdown_pct": 3.88,
+      "total_trades": 116,
+      "trades_2023": 44,
+      "trades_2024": 72,
+      "win_rate_pct": 60.34,
+      "profit_factor": 2.63,
+      "min_cash_observed": 1556.37,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 1879.93,
+      "terminal_sell_friction": 1879.87,
+      "residual_rounding": 0.06
+    },
+    {
+      "candidate_id": "CFG-15",
+      "initial_capital": 1000000.0,
+      "final_cash": 583594.75,
+      "final_holdings_mtm": 560875.25,
+      "final_equity": 1144470.0,
+      "gross_trading_pnl": 181901.8,
+      "total_friction": 38411.43,
+      "net_trade_ledger_pnl": 143490.37,
+      "portfolio_equity_change": 144470.0,
+      "cumulative_net_return_pct": 14.45,
+      "cagr_pct": 7.25,
+      "annualized_volatility_pct": 5.89,
+      "annualized_sharpe": 0.21,
+      "max_drawdown_pct": 3.28,
+      "total_trades": 96,
+      "trades_2023": 39,
+      "trades_2024": 57,
+      "win_rate_pct": 59.38,
+      "profit_factor": 2.18,
+      "min_cash_observed": 470374.49,
+      "max_positions_observed": 6,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 979.63,
+      "terminal_sell_friction": 979.64,
+      "residual_rounding": -0.01
+    },
+    {
+      "candidate_id": "CFG-16",
+      "initial_capital": 1000000.0,
+      "final_cash": 505721.96,
+      "final_holdings_mtm": 726995.45,
+      "final_equity": 1232717.42,
+      "gross_trading_pnl": 251885.07,
+      "total_friction": 20426.1,
+      "net_trade_ledger_pnl": 231458.97,
+      "portfolio_equity_change": 232717.42,
+      "cumulative_net_return_pct": 23.27,
+      "cagr_pct": 11.46,
+      "annualized_volatility_pct": 4.81,
+      "annualized_sharpe": 1.13,
+      "max_drawdown_pct": 2.33,
+      "total_trades": 48,
+      "trades_2023": 18,
+      "trades_2024": 30,
+      "win_rate_pct": 66.67,
+      "profit_factor": 6.7,
+      "min_cash_observed": 228409.44,
+      "max_positions_observed": 8,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 1258.45,
+      "terminal_sell_friction": 1258.43,
+      "residual_rounding": 0.02
+    },
+    {
+      "candidate_id": "CFG-BASE",
+      "initial_capital": 1000000.0,
+      "final_cash": 17188.91,
+      "final_holdings_mtm": 1301066.93,
+      "final_equity": 1318255.83,
+      "gross_trading_pnl": 638763.47,
+      "total_friction": 322742.49,
+      "net_trade_ledger_pnl": 316020.98,
+      "portfolio_equity_change": 318255.83,
+      "cumulative_net_return_pct": 31.83,
+      "cagr_pct": 15.4,
+      "annualized_volatility_pct": 15.47,
+      "annualized_sharpe": 0.61,
+      "max_drawdown_pct": 10.42,
+      "total_trades": 711,
+      "trades_2023": 279,
+      "trades_2024": 432,
+      "win_rate_pct": 53.45,
+      "profit_factor": 1.66,
+      "min_cash_observed": 70.15,
+      "max_positions_observed": 10,
+      "solvency_ok": true,
+      "capacity_ok": true,
+      "dates_sorted": true,
+      "no_duplicate_dates": true,
+      "session_count": 486,
+      "discrepancy_vs_simple_pnl": 2234.85,
+      "terminal_sell_friction": 2234.74,
+      "residual_rounding": 0.11
+    }
+  ],
+  "benchmark_audit": {
+    "name": "NIFTY 50 Equal-Weight Buy & Hold",
+    "universe_size": 49,
+    "validation_period": "2023-01-02 to 2024-12-23",
+    "initial_capital": 1000000.0,
+    "final_equity": 1592186.81,
+    "cumulative_return_pct": 59.22,
+    "cagr_pct": 27.27,
+    "sharpe_ratio": 1.64,
+    "volatility_pct": 13.0,
+    "max_drawdown_pct": 13.02,
+    "friction_modeled": "None (Friction-free gross buy-and-hold)",
+    "comparability_assessment": "NON-MATERIAL LIMITATION: The benchmark is computed as a gross, frictionless buy-and-hold allocation without statutory delivery costs or execution slippage. In contrast, candidate strategies bear full statutory delivery friction (~0.25% per round trip), 5 bps slippage per leg, and cash drag from 10-position limits. However, the performance gap between the benchmark (+59.22%) and the best candidate (+24.50%) is 34.72 percentage points; deducting ~0.25% delivery friction from the benchmark would yield +58.85%, which still vastly exceeds all candidate strategies. Therefore, this difference in return convention does not alter any candidate rejection."
+  },
+  "statistical_audit": {
+    "trial_count_K": 16,
+    "cohort_mean_mu_sr": 0.4332163549233349,
+    "effective_baseline_mean": 0.4332163549233349,
+    "cohort_std_sigma_sr": 0.2980207718192029,
+    "evt_factor_16": 1.8004542393102163,
+    "expected_max_sharpe_hurdle": 0.9697891169477214,
+    "best_candidate_id": "CFG-16",
+    "best_candidate_annualized_sharpe": 1.0282939597665897,
+    "best_candidate_skewness": 4.189987847129077,
+    "best_candidate_kurtosis": 36.881332034992504,
+    "best_candidate_mertens_variance": 0.7662269338727573,
+    "best_candidate_z_score": 0.09272219601765277,
+    "best_candidate_dsr_statistic": 0.5369378684496946,
+    "best_candidate_p_value": 0.46306213155030534,
+    "is_dsr_significant": false,
+    "average_pairwise_correlation_rho_bar": 0.8032716356007387,
+    "effective_trial_count_N_eff": 1.4491059033193672,
+    "top_candidate_p_value_under_N_eff": 0.19445507983329613,
+    "statistical_reproducibility": "EXACT (Matches to double precision IEEE 754 across all metrics)"
+  },
+  "candidate_matrix": [
+    {
+      "candidate_id": "CFG-01",
+      "threshold": 0.35,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": 0.23
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 19.88,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 12.8
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 848
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 378,
+        "trades_2024": 470
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 1.53
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 64.22
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.8239
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-02",
+      "threshold": 0.38,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": 0.14
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 16.12,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 11.27
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 524
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 210,
+        "trades_2024": 314
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 1.6
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 56.73
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.8554
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-03",
+      "threshold": 0.4,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": 0.43
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 23.7,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 10.77
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 349
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 128,
+        "trades_2024": 221
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 1.88
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 38.45
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.7522
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-04",
+      "threshold": 0.42,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": -0.05
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 10.81,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 11.16
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 222
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 79,
+        "trades_2024": 143
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 1.61
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 45.35
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.9104
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R1_NON_POSITIVE_SHARPE",
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-05",
+      "threshold": 0.45,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": true,
+        "value": 0.69
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 22.07,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 3.89
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 113
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 43,
+        "trades_2024": 70
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 2.87
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 17.67
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.6785
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-06",
+      "threshold": 0.48,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": true,
+        "value": 1.13
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 23.18,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 2.33
+      },
+      "M4_trades_ge_100": {
+        "pass": false,
+        "value": 47
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": false,
+        "trades_2023": 18,
+        "trades_2024": 29
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 7.99
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 7.99
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.468
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R4_INSUFFICIENT_TOTAL_TRADES",
+        "R5_INSUFFICIENT_ANNUAL_TRADES",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-07",
+      "threshold": 0.5,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": 0.31
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 13.86,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 1.3
+      },
+      "M4_trades_ge_100": {
+        "pass": false,
+        "value": 24
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": false,
+        "trades_2023": 9,
+        "trades_2024": 15
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 9.73
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 6.66
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.8534
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R4_INSUFFICIENT_TOTAL_TRADES",
+        "R5_INSUFFICIENT_ANNUAL_TRADES",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-08",
+      "threshold": 0.4,
+      "exit_rule": "1.5x_ATR",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": 0.38
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 22.32,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 10.74
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 371
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 134,
+        "trades_2024": 237
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 1.7
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 41.15
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.772
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-09",
+      "threshold": 0.4,
+      "exit_rule": "2.0x_ATR",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": 0.44
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 24.02,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 10.79
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 360
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 130,
+        "trades_2024": 230
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 1.8
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 38.79
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.747
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-10",
+      "threshold": 0.4,
+      "exit_rule": "2.5x_ATR",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": 0.46
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 24.5,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 10.75
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 356
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 130,
+        "trades_2024": 226
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 1.82
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 38.09
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.7389
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-11",
+      "threshold": 0.4,
+      "exit_rule": "fixed_5d",
+      "pacing": "2",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": 0.33
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 18.56,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 6.79
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 265
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 108,
+        "trades_2024": 157
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 1.91
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 36.71
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.8031
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-12",
+      "threshold": 0.4,
+      "exit_rule": "fixed_5d",
+      "pacing": "3",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": 0.48
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 22.92,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 8.21
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 300
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 114,
+        "trades_2024": 186
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 1.93
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 35.61
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.7435
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-13",
+      "threshold": 0.42,
+      "exit_rule": "2.0x_ATR",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": -0.02
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 11.41,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 11.15
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 232
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 81,
+        "trades_2024": 151
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 1.55
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 45.06
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.905
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R1_NON_POSITIVE_SHARPE",
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-14",
+      "threshold": 0.45,
+      "exit_rule": "2.0x_ATR",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": true,
+        "value": 0.71
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 22.45,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 3.88
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 116
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 44,
+        "trades_2024": 72
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 2.63
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 17.8
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.6672
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-15",
+      "threshold": 0.45,
+      "exit_rule": "2.0x_ATR",
+      "pacing": "2",
+      "M1_sharpe_gt_0_50": {
+        "pass": false,
+        "value": 0.21
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 14.45,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 3.28
+      },
+      "M4_trades_ge_100": {
+        "pass": false,
+        "value": 96
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": false,
+        "trades_2023": 39,
+        "trades_2024": 57
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 2.18
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 21.12
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.8565
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R4_INSUFFICIENT_TOTAL_TRADES",
+        "R5_INSUFFICIENT_ANNUAL_TRADES",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-16",
+      "threshold": 0.48,
+      "exit_rule": "2.0x_ATR",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": true,
+        "value": 1.13
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 23.27,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 2.33
+      },
+      "M4_trades_ge_100": {
+        "pass": false,
+        "value": 48
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": false,
+        "trades_2023": 18,
+        "trades_2024": 30
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 6.7
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 8.11
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": 0.4631
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R4_INSUFFICIENT_TOTAL_TRADES",
+        "R5_INSUFFICIENT_ANNUAL_TRADES",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    },
+    {
+      "candidate_id": "CFG-BASE",
+      "threshold": "argmax",
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "M1_sharpe_gt_0_50": {
+        "pass": true,
+        "value": 0.61
+      },
+      "M2_benchmark_outperformance": {
+        "pass": false,
+        "value": 31.83,
+        "benchmark": 59.22
+      },
+      "M3_max_dd_le_15pct": {
+        "pass": true,
+        "value": 10.42
+      },
+      "M4_trades_ge_100": {
+        "pass": true,
+        "value": 711
+      },
+      "M5_annual_trades_ge_40": {
+        "pass": true,
+        "trades_2023": 279,
+        "trades_2024": 432
+      },
+      "M6_profit_factor_ge_1_15": {
+        "pass": true,
+        "value": 1.66
+      },
+      "M7_friction_le_100pct": {
+        "pass": true,
+        "friction_pct": 50.53
+      },
+      "M8_dsr_p_lt_0_05": {
+        "pass": false,
+        "p_value": null
+      },
+      "all_mandatory_passed": false,
+      "rejection_triggers": [
+        "R2_BENCHMARK_UNDERPERFORMANCE",
+        "R8_DSR_INSIGNIFICANT"
+      ],
+      "final_status": "REJECTED"
+    }
+  ],
+  "conclusion": {
+    "total_candidates_audited": 16,
+    "baseline_reference_audited": 1,
+    "accepted_candidates_count": 0,
+    "all_candidates_rejected": true,
+    "primary_rejection_triggers": [
+      "R2_BENCHMARK_UNDERPERFORMANCE (All 16 candidates failed to beat +59.22%)",
+      "R8_DSR_INSIGNIFICANT (All 16 candidates had DSR p-values >= 0.4631)"
+    ],
+    "verdict": "PASS WITH LIMITATIONS \u2014 NO CANDIDATE QUALIFIED; NON-MATERIAL ISSUES REMAIN",
+    "research_recommendation": "The Sprint 6.2 conclusion ('NO CANDIDATE PASSED ALL PREREGISTERED CRITERIA') is fully substantiated and audited. Zero candidate configurations may be frozen or deployed. The validation dataset has been exposed to candidate selection and cannot be treated as a fresh untouched holdout. Future research must focus on fundamental signal enhancement, feature engineering, and regime filtering before re-approaching holdouts."
+  }
+}

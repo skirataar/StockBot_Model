@@ -1,0 +1,22 @@
+{
+  "protected_artifacts": {
+    "models/lightgbm.joblib": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+    "data/processed/validation_dataset.parquet": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+    "data/processed/test_dataset.parquet": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+    "data/reports/trade_ledger.csv": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+    "data/reports/portfolio_ledger.csv": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+    "data/reports/sprint_6_2_preregistered_protocol.json": "0384d6a1b9ac7738a92e295fd94bfac113a9a99ce2f399f11ffa5d66164223cb",
+    "data/reports/sprint_6_2_preregistered_protocol_v1_2_0.json": "0384d6a1b9ac7738a92e295fd94bfac113a9a99ce2f399f11ffa5d66164223cb"
+  },
+  "generated_outputs": {
+    "data/reports/sprint_6_2_validation_results.json": "e9456cc453a7c5a39251cc4ecad7630e501d6cfac5a50b8a1adef6e44ac1c3f0",
+    "data/reports/sprint_6_2_candidate_metrics.csv": "df1054977e6cea46d8330f72866e57a5308d2418c7bd41785373cc9b502f2482",
+    "data/reports/sprint_6_2_trade_ledger_validation.csv": "3f421e71dfbe4b5fb4511de233b973fabd17c97069bba1fbac58e2152189bb28",
+    "data/reports/sprint_6_2_portfolio_ledger_validation.csv": "18ce9e07d4fa7fa9d078361e8943f89a71ed2196804fa2972a63d175010973d9",
+    "data/reports/sprint_6_2_cross_sectional_results.json": "3973ac915809fa678ff08a5cfb4be9068cf8d58627a4cbae47af5acad34b249f",
+    "data/reports/sprint_6_2_execution_manifest.json": "5c5bbe2159d38dc7f28e4ec102680516cc4ed23615df9cdb3811153f21f28d57",
+    "data/reports/sprint_6_2_pre_execution_manifest.json": "7b61a1e69da7d5cf2cd393836190155c9dd05ea440216d1fbe003b3ab0ae8fdf",
+    "data/reports/sprint_6_2_validation_report.md": "d65236266720b789aa81dc610fac34f58c0f01fdda7600dc59deefef530b1ea5"
+  },
+  "verification_status": "ALL_PROTECTED_ARTIFACTS_IMMUTABLE"
+}

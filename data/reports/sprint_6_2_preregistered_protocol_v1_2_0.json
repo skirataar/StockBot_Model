@@ -1,0 +1,534 @@
+{
+  "protocol_metadata": {
+    "protocol_id": "SPRINT-6-2-PREREGISTERED-PROTOCOL",
+    "version": "1.2.0-AMENDED",
+    "timestamp": "2026-10-29T02:30:00+05:30",
+    "author_role": "Senior Quantitative Research Engineer & Research Governance Auditor",
+    "target_sprint": "Sprint 6.2",
+    "status": "AMENDED_READY_FOR_RE_GATE_AUDIT",
+    "governance_ruling": "AMENDED_UNDER_SPRINT_6_1_8_GOVERNANCE_DECISION",
+    "purpose": "Formally amended, internally consistent preregistered experiment protocol for Sprint 6.2 validation-only parameter backtesting, resolving defects DEF-01, DEF-02, and DEF-03.",
+    "amendment_summary": {
+      "amendment_id": "AMD-6-1-8-01",
+      "defects_resolved": [
+        "DEF-01-DSR-TRIAL-MEAN-SPECIFICATION",
+        "DEF-02-CORRELATION-HEURISTIC-REMOVAL",
+        "DEF-03-STATISTICAL-FALLBACK-ELIMINATION"
+      ],
+      "rationale": "Formally specified the Bailey & Lopez de Prado (2014) Eq. 1 expected-maximum Sharpe hurdle incorporating cohort empirical mean with a zero-skill floor: SR_star = max(0.0, mu_SR) + sigma_SR * EVT(K). Removed the unverified sqrt(1 - rho_bar) correlation heuristic; adopted fixed K=16 as the binding primary multiple-testing hurdle and added literature-grounded participation ratio effective trial count N_eff = K^2 / sum(rho_ij^2) as an audited secondary diagnostic. Eliminated obsolete sqrt(2*ln(K)) engine fallback in favor of explicit pending status and implemented a deterministic multi-candidate evaluation harness (src/backtest/cross_sectional_evaluation.py). Defined fail-closed handling for zero or near-zero cross-sectional dispersion.",
+      "prior_frozen_protocol_v1_0_0": "data/reports/sprint_6_2_preregistered_protocol_v1_0_0_frozen.json",
+      "prior_frozen_protocol_v1_0_0_sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+      "prior_amended_protocol_v1_1_0_sha256": "40de4d4cb60cffaa7e4e54fc9602e15019cd5ccdd3f5017ac48cc2ec560ac19a"
+    },
+    "change_log": [
+      {
+        "version": "1.0.0-FROZEN",
+        "date": "2026-10-28T20:50:00+05:30",
+        "author": "Lead Quantitative Researcher & Research Governance Auditor",
+        "summary": "Initial normalized experiment protocol freeze (Sprint 6.1.3)."
+      },
+      {
+        "version": "1.1.0-AMENDED",
+        "date": "2026-10-28T21:45:00+05:30",
+        "author": "Senior Quantitative Research Engineer & Research Governance Auditor",
+        "summary": "Sprint 6.1.6 formal protocol amendment resolving BLK-05 (DSR expected-maximum hurdle miscalibration). Updated DSR specification, implementation status, and blocker resolution catalog."
+      },
+      {
+        "version": "1.2.0-AMENDED",
+        "date": "2026-10-29T02:30:00+05:30",
+        "author": "Senior Quantitative Researcher, Statistical Reviewer & Governance Auditor",
+        "summary": "Formal protocol amendment resolving DEF-01 (incorporation of cohort mean with zero-skill floor in Bailey & Lopez de Prado Eq. 1), DEF-02 (removal of heuristic sqrt(1-rho_bar) formula and introduction of participation ratio effective trial count N_eff diagnostic), DEF-03 (elimination of sqrt(2*ln(K)) fallback in favor of pending status and dedicated cross-sectional evaluation harness), and fail-closed handling of degenerate dispersion."
+      }
+    ]
+  },
+  "research_exposure_disclosure": {
+    "test_period": "2025-01-01 to 2026-07-22",
+    "classification": "RESEARCH-EXPOSED",
+    "disclosure_text": "The candidate hypotheses governing Sprint 6.2 (entry probability threshold filtering theta in [0.35, 0.50], ATR-based trailing stops, and entry pacing) were directly informed by post-hoc inspection of the 2025-2026 test-set backtest P&L in Sprint 6.1. The 2025-2026 test period is formally RESEARCH-EXPOSED for these hypotheses and CANNOT be treated as an untouched out-of-sample holdout. This protocol restricts all parameter selection and evaluation strictly to the 2023-2024 validation dataset."
+  },
+  "artifact_provenance_and_hashes": {
+    "model": {
+      "path": "models/lightgbm.joblib",
+      "expected_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "status": "FROZEN_IMMUTABLE"
+    },
+    "validation_dataset": {
+      "path": "data/processed/validation_dataset.parquet",
+      "expected_sha256": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "date_range": "2023-01-02 to 2024-12-23",
+      "rows": 23658,
+      "constituents_count": 49,
+      "status": "EXCLUSIVE_EVALUATION_TARGET"
+    },
+    "training_dataset": {
+      "path": "data/processed/training_dataset.parquet",
+      "expected_sha256": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "date_range": "2010-01-04 to 2022-12-23",
+      "rows": 146878,
+      "status": "PRESERVED_HISTORICAL"
+    },
+    "test_dataset": {
+      "path": "data/processed/test_dataset.parquet",
+      "expected_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "date_range": "2025-01-01 to 2026-07-22",
+      "rows": 19012,
+      "status": "RESEARCH_EXPOSED_PROHIBITED_DURING_SPRINT_6_2"
+    }
+  },
+  "candidate_grid": {
+    "full_cartesian_product_count": 84,
+    "max_permitted_candidates": 20,
+    "frozen_candidate_count": 16,
+    "grid_construction_methodology": "Orthogonal One-Factor-At-A-Time (OFAT) sensitivity around a balanced central anchor (theta=0.40, fixed_5d exit, unconstrained pacing) plus targeted cross-factor interaction pairs. Constructed strictly using research constraints and sample size considerations, not test-period performance.",
+    "central_anchor": {
+      "config_id": "CFG-03",
+      "threshold": 0.4,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained"
+    },
+    "reference_baseline": {
+      "config_id": "CFG-BASE",
+      "threshold": 0.334,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "description": "Baseline argmax classifier with 5-session calendar exit and unconstrained entry pacing (Sprint 6.0 baseline logic)."
+    },
+    "configurations": [
+      {
+        "config_id": "CFG-01",
+        "threshold": 0.35,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "role": "threshold_sweep_low",
+        "description": "Lowest discrete filter above baseline argmax; assesses mild turnover reduction."
+      },
+      {
+        "config_id": "CFG-02",
+        "threshold": 0.38,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "role": "threshold_sweep_sub_anchor",
+        "description": "Sub-anchor threshold testing intermediate conviction filtering."
+      },
+      {
+        "config_id": "CFG-03",
+        "threshold": 0.4,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "role": "central_anchor_baseline_exit",
+        "description": "Central experimental anchor with baseline calendar exit."
+      },
+      {
+        "config_id": "CFG-04",
+        "threshold": 0.42,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "role": "threshold_sweep_moderate",
+        "description": "Moderate threshold above anchor; evaluates trade-off between selectivity and volume."
+      },
+      {
+        "config_id": "CFG-05",
+        "threshold": 0.45,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "role": "threshold_sweep_high",
+        "description": "High conviction threshold filtering for upper decile model confidence."
+      },
+      {
+        "config_id": "CFG-06",
+        "threshold": 0.48,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "role": "threshold_sweep_very_high",
+        "description": "Very high conviction threshold approaching top 1% validation signals."
+      },
+      {
+        "config_id": "CFG-07",
+        "threshold": 0.5,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "role": "threshold_sweep_extreme",
+        "description": "Extreme conviction boundary; tests upper bound of viable signal density."
+      },
+      {
+        "config_id": "CFG-08",
+        "threshold": 0.4,
+        "exit_rule": "1.5x_ATR",
+        "pacing": "unconstrained",
+        "role": "exit_sweep_tight_atr",
+        "description": "Central anchor with tight trailing stop; tests rapid loss truncation."
+      },
+      {
+        "config_id": "CFG-09",
+        "threshold": 0.4,
+        "exit_rule": "2.0x_ATR",
+        "pacing": "unconstrained",
+        "role": "exit_sweep_medium_atr",
+        "description": "Central anchor with standard trailing stop; balances drift protection and volatility tolerance."
+      },
+      {
+        "config_id": "CFG-10",
+        "threshold": 0.4,
+        "exit_rule": "2.5x_ATR",
+        "pacing": "unconstrained",
+        "role": "exit_sweep_loose_atr",
+        "description": "Central anchor with wide trailing stop; permits broader swing excursions."
+      },
+      {
+        "config_id": "CFG-11",
+        "threshold": 0.4,
+        "exit_rule": "fixed_5d",
+        "pacing": "2",
+        "role": "pacing_sweep_tight",
+        "description": "Central anchor with strict 2-entries-per-day cap; limits concurrent cluster risk."
+      },
+      {
+        "config_id": "CFG-12",
+        "threshold": 0.4,
+        "exit_rule": "fixed_5d",
+        "pacing": "3",
+        "role": "pacing_sweep_medium",
+        "description": "Central anchor with 3-entries-per-day cap; permits moderate daily entry bursts."
+      },
+      {
+        "config_id": "CFG-13",
+        "threshold": 0.42,
+        "exit_rule": "2.0x_ATR",
+        "pacing": "unconstrained",
+        "role": "interaction_moderate_threshold_atr",
+        "description": "Interaction of moderate threshold with 2.0x ATR trailing stop."
+      },
+      {
+        "config_id": "CFG-14",
+        "threshold": 0.45,
+        "exit_rule": "2.0x_ATR",
+        "pacing": "unconstrained",
+        "role": "interaction_high_threshold_atr",
+        "description": "Interaction of high conviction threshold with 2.0x ATR trailing stop."
+      },
+      {
+        "config_id": "CFG-15",
+        "threshold": 0.45,
+        "exit_rule": "2.0x_ATR",
+        "pacing": "2",
+        "role": "interaction_high_threshold_atr_paced",
+        "description": "Triple interaction: high threshold, 2.0x ATR exit, and strict daily entry pacing."
+      },
+      {
+        "config_id": "CFG-16",
+        "threshold": 0.48,
+        "exit_rule": "2.0x_ATR",
+        "pacing": "unconstrained",
+        "role": "interaction_very_high_threshold_atr",
+        "description": "Interaction of very high threshold with 2.0x ATR trailing stop."
+      }
+    ]
+  },
+  "acceptance_and_rejection_criteria": {
+    "mandatory_acceptance_criteria": [
+      {
+        "id": "M1_SHARPE_RATIO",
+        "metric": "Net Annualized Sharpe Ratio",
+        "condition": "> 0.50",
+        "definition": "Annualized net Sharpe ratio (Rf=6.0% annual, 252 sessions/year) computed from daily mark-to-market equity returns net of full statutory delivery friction and 5 bps slippage."
+      },
+      {
+        "id": "M2_BENCHMARK_OUTPERFORMANCE",
+        "metric": "Net Cumulative Strategy Return",
+        "condition": "> Net Benchmark Return",
+        "definition": "Strategy net cumulative return must exceed the 49-constituent Equal-Weight Buy & Hold benchmark net return over 2023-2024."
+      },
+      {
+        "id": "M3_MAX_DRAWDOWN",
+        "metric": "Maximum Drawdown",
+        "condition": "<= 15.00%",
+        "definition": "Peak-to-trough mark-to-market equity drawdown must not exceed 15.00% at any point in the validation period."
+      },
+      {
+        "id": "M4_MIN_TOTAL_TRADES",
+        "metric": "Total Completed Trades (N)",
+        "condition": ">= 100",
+        "definition": "Strategy must complete at least 100 closed trades over the 2-year validation period to prevent sample starvation."
+      },
+      {
+        "id": "M5_MIN_ANNUAL_TRADES",
+        "metric": "Completed Trades per Calendar Year",
+        "condition": ">= 40 in 2023 AND >= 40 in 2024",
+        "definition": "Strategy must execute at least 40 completed trades in each individual calendar year (classified by entry_date)."
+      },
+      {
+        "id": "M6_NET_PROFIT_FACTOR",
+        "metric": "Net Profit Factor",
+        "condition": ">= 1.15",
+        "definition": "Ratio of sum of net winning trades to absolute sum of net losing trades (Sum(net_pnl > 0) / |Sum(net_pnl < 0)|) must be >= 1.15."
+      },
+      {
+        "id": "M7_FRICTION_EFFICIENCY",
+        "metric": "Total Friction as % of Gross Alpha",
+        "condition": "<= 100.00%",
+        "definition": "Total statutory taxes, fees, and slippage must not exceed 100.00% of positive gross alpha (Gross Alpha must be > 0 and Friction <= Gross Alpha)."
+      },
+      {
+        "id": "M8_DEFLATED_SHARPE",
+        "metric": "Deflated Sharpe Ratio (DSR) p-value",
+        "condition": "< 0.05",
+        "definition": "DSR p-value adjusted for K=16 candidate trials, return skewness, and return kurtosis under Bailey & Lopez de Prado (2014) must be < 0.05."
+      }
+    ],
+    "automatic_rejection_triggers": [
+      {
+        "id": "R1_NON_POSITIVE_SHARPE",
+        "trigger": "Net Annualized Sharpe Ratio <= 0.0"
+      },
+      {
+        "id": "R2_BENCHMARK_LAG",
+        "trigger": "Net Cumulative Return <= Net Equal-Weight Benchmark Return"
+      },
+      {
+        "id": "R3_EXCESSIVE_DRAWDOWN",
+        "trigger": "Maximum Drawdown > 15.00% (eliminates the previous 15-20% ambiguity)"
+      },
+      {
+        "id": "R4_TOTAL_SAMPLE_STARVATION",
+        "trigger": "Total Completed Trades < 100"
+      },
+      {
+        "id": "R5_ANNUAL_SAMPLE_STARVATION",
+        "trigger": "Completed Trades in 2023 < 40 OR Completed Trades in 2024 < 40"
+      },
+      {
+        "id": "R6_INSUFFICIENT_PROFIT_FACTOR",
+        "trigger": "Net Profit Factor < 1.15"
+      },
+      {
+        "id": "R7_FRICTION_EXHAUSTION",
+        "trigger": "Total Friction > 100.00% of Gross Alpha OR Gross Alpha <= 0.0"
+      },
+      {
+        "id": "R8_INSIGNIFICANT_DSR",
+        "trigger": "DSR p-value >= 0.05 OR DSR undefined / uncomputable"
+      },
+      {
+        "id": "R9_SOLVENCY_OR_CAPACITY_BREACH",
+        "trigger": "Portfolio Cash < 0.0 on any date OR Concurrent Positions > 10 on any date"
+      },
+      {
+        "id": "R10_UNDEFINED_METRIC",
+        "trigger": "Any mandatory metric is NaN, division-by-zero, or cannot be reliably computed"
+      }
+    ],
+    "diagnostic_metrics_only": [
+      "Calmar Ratio (Annualized Return / Max Drawdown)",
+      "Annualized Portfolio Turnover (%)",
+      "Gross Sharpe Ratio",
+      "Gross Win Rate (%) vs Net Win Rate (%)",
+      "Average Net P&L per Trade (INR)",
+      "Average Holding Duration (Sessions)",
+      "Holm-Bonferroni Adjusted p-values for Secondary Metric Comparisons"
+    ]
+  },
+  "statistical_testing_procedure": {
+    "return_series": "Daily portfolio mark-to-market net return series: R_t = (Equity_t - Equity_{t-1}) / Equity_{t-1}",
+    "frequency": "Daily trading sessions (T = 490 trading sessions in 2023-2024 validation period)",
+    "annualization_factor": "sqrt(252)",
+    "risk_free_rate_annual": 0.06,
+    "risk_free_rate_daily": 0.0002380952,
+    "deflated_sharpe_ratio_specification": {
+      "reference": "Bailey, D. H., & Lopez de Prado, M. (2014). The Deflated Sharpe Ratio: Correcting for Selection Bias, Backtest Overfitting, and Non-Normality. Journal of Portfolio Management, 40(5), 94-107.",
+      "amendment_metadata": {
+        "defect_ids": [
+          "DEF-01-DSR-TRIAL-MEAN-SPECIFICATION",
+          "DEF-02-CORRELATION-HEURISTIC-REMOVAL",
+          "DEF-03-STATISTICAL-FALLBACK-ELIMINATION"
+        ],
+        "prior_flawed_formula_v1_0_0": "SR_star = sqrt(2 * ln(K))",
+        "prior_flawed_formula_v1_1_0": "SR_star = sigma_SR * EVT(K) with secondary heuristic SR_star_corr = sigma_SR * sqrt(1 - rho_bar) * EVT(K)",
+        "v1_2_0_formulation": "SR_star_ann = max(0.0, mu_SR_cohort) + sigma_SR * ((1 - gamma) * Phi_inv(1 - 1/K) + gamma * Phi_inv(1 - 1/(K * e)))",
+        "amendment_justification": "Formally aligns the expected-maximum Sharpe hurdle with Bailey & Lopez de Prado (2014) Eq. 1. Inclusion of max(0.0, mu_SR_cohort) prevents false-positive discovery for average strategies when the cohort exhibits positive drift, while enforcing a zero-skill minimum floor. Eliminates the ungrounded sqrt(1 - rho_bar) heuristic in favor of fixed K=16 primary hurdle and participation-ratio effective trial count N_eff diagnostic."
+      },
+      "number_of_trials_K": 16,
+      "trial_selection_rationale": "K=16 reflects the exact, frozen discrete candidate grid size (CFG-01 through CFG-16). No unrecorded, continuous, or preliminary trials are permitted.",
+      "formula": "DSR = Phi( ((SR_hat_daily - SR_star_daily) * sqrt(T - 1)) / sqrt(1 - gamma_3 * SR_hat_daily + ((gamma_4 - 1)/4) * SR_hat_daily^2) )",
+      "expected_max_sharpe_null": "SR_star_ann = max(0.0, mu_SR_cohort) + sigma_SR * ((1 - gamma) * Phi_inv(1 - 1/K) + gamma * Phi_inv(1 - 1/(K * e)))",
+      "expected_max_sharpe_daily": "SR_star_daily = SR_star_ann / sqrt(sessions_per_year)",
+      "cross_sectional_dispersion_sigma_SR": "Sample standard deviation of the K=16 candidate validation annualized Net Sharpe ratios: sigma_SR = sqrt( (1 / (K - 1)) * sum_{k=1}^K (SR_ann_k - mu_SR_cohort)^2 ). Evaluated empirically across all 16 candidate backtests upon completion of the Sprint 6.2 validation experiment.",
+      "degenerate_dispersion_rule": "If sigma_SR < 1e-6, or trial count K != 16, or any candidate return stream is missing/degenerate/non-finite, the DSR test FAILS CLOSED and returns status INCONCLUSIVE_DEGENERATE_DISPERSION or INVALID_CANDIDATE_SET with is_significant=False and p_value=1.0. Zero cross-sectional variance NEVER defaults to a passing or zero-hurdle state.",
+      "skewness_input": "Sample skewness gamma_3 of daily validation return series (computed from excess returns over daily risk-free rate)",
+      "kurtosis_input": "Sample Pearson kurtosis gamma_4 of daily validation return series (normal distribution = 3.0)",
+      "p_value_definition": "p_value = 1.0 - DSR",
+      "significance_threshold": 0.05,
+      "trial_accounting_and_universe": {
+        "primary_grid_trials_K": 16,
+        "candidate_universe": [
+          "CFG-01",
+          "CFG-02",
+          "CFG-03",
+          "CFG-04",
+          "CFG-05",
+          "CFG-06",
+          "CFG-07",
+          "CFG-08",
+          "CFG-09",
+          "CFG-10",
+          "CFG-11",
+          "CFG-12",
+          "CFG-13",
+          "CFG-14",
+          "CFG-15",
+          "CFG-16"
+        ],
+        "baseline_reference_treatment": "CFG-BASE is the external historical baseline anchor from Sprint 6.0 and is excluded from the K=16 candidate selection search. As an audited sensitivity diagnostic, an expanded trial count K=17 (including CFG-BASE) must be reported in Sprint 6.2 diagnostics."
+      },
+      "dependence_and_correlation_handling": {
+        "primary_assumption": "Fixed K=16 discrete candidate trials under independent-trial upper bound. Under positive dependence among candidate returns, E[max X_k] is bounded from above by the independent extreme value E[max Z_k] (Slepian lemma). Adopting fixed K=16 imposes a strict, conservative multiple-testing hurdle without empirical parameter distortion.",
+        "secondary_diagnostic": "Empirical 16x16 correlation matrix C computed from daily net portfolio returns. Average pairwise correlation rho_bar = (2 / (K * (K - 1))) * sum_{i < j} rho_{ij}. Literature-grounded effective trial count estimated via correlation matrix participation ratio (Breuer / Kirchhoff / Roy & Gopal): N_eff = K^2 / sum_{i,j} rho_{ij}^2, with diagnostic hurdle SR_star_diag = max(0.0, mu_SR) + sigma_SR * EVT(N_eff). Reported strictly as an exploratory diagnostic; binding gate decision remains fixed K=16."
+      },
+      "cohort_mean_mu_SR": "Sample mean of the K=16 candidate validation annualized Net Sharpe ratios: mu_SR_cohort = (1 / K) * sum_{k=1}^K SR_ann_k. Formally bounded below by 0.0 to ensure the multiple-testing hurdle is at least as demanding as testing against a zero-skill benchmark.",
+      "evaluation_harness_integration": {
+        "module": "src/backtest/cross_sectional_evaluation.py",
+        "class": "CrossSectionalEvaluator",
+        "single_run_fallback_behavior": "Individual candidate simulation runs return status PENDING_CROSS_SECTIONAL_EVALUATION with NaN DSR p-values. DSR is evaluated strictly cross-sectionally across all 16 completed candidates."
+      }
+    },
+    "multiple_comparisons_correction": {
+      "method": "Holm-Bonferroni Step-Down Procedure",
+      "application": "Applied across secondary metric comparisons for all K=16 configurations to control Family-Wise Error Rate (FWER) at alpha = 0.05."
+    },
+    "serial_correlation_and_overlap_disclosure": {
+      "disclosure": "Positions are held for up to 5 trading sessions, producing overlapping holding periods that induce positive serial correlation in daily portfolio equity returns. Standard i.i.d. assumptions underestimate Sharpe standard errors. When calculating Sharpe ratios, a Newey-West / HAC adjustment with 5 lags must be reported in diagnostics alongside the classical Sharpe ratio."
+    },
+    "tooling_implementation_status": "IMPLEMENTED AND REMEDIATED \u2014 src/utils/statistical_tooling.py, src/backtest/cross_sectional_evaluation.py, and src/backtest/event_driven_engine.py remediated in Sprint 6.1.8."
+  },
+  "exit_rule_technical_feasibility": {
+    "available_price_fields": [
+      "Date",
+      "Open",
+      "High",
+      "Low",
+      "Close",
+      "Adj Close",
+      "Volume"
+    ],
+    "bar_resolution": "Daily OHLCV bars only (no intraday tick, minute, or L2 order book data)",
+    "execution_timing_convention": "Signal generated at session t Close (15:30 IST) -> Executed at session t+1 Open (09:15 IST) with 5 bps slippage",
+    "atr_calculation_specification": {
+      "period": 14,
+      "true_range_formula": "TR_t = max(High_t - Low_t, |High_t - Close_{t-1}|, |Low_t - Close_{t-1}|)",
+      "atr_formula": "ATR_{14, t} = (1/14) * sum_{i=0}^{13} TR_{t-i}",
+      "availability_timing": "ATR for session t is finalized only after session t Close print."
+    },
+    "trailing_stop_logic_under_daily_bars": {
+      "trigger_evaluation_timing": "End-of-Day Close Inspection (Zero Look-Ahead): At session t Close, inspect whether Close_t <= (Peak_Close_since_entry - multiplier * ATR_{14, t})",
+      "execution_timing": "If stop triggered at session t Close, position exits at session t+1 Open with 5 bps slippage",
+      "gap_down_handling": "If session t+1 Open gaps below the trigger level, execution occurs at Open_{t+1} * (1 - slippage), absorbing the full adverse gap. No artificial fill at the stop price.",
+      "intraday_stop_rejection": "Intraday stop simulation (filling at the exact stop level when Low <= Stop) is STRICTLY REJECTED because daily bars cannot determine whether High occurred before Low, nor can they determine the fill price during gap events."
+    },
+    "backtest_engine_implementation_status": "IMPLEMENTED AND REMEDIATED \u2014 EventDrivenBacktestEngine parameterization implemented in Sprint 6.1.4 and target_alloc sizing remediated in Sprint 6.1.6."
+  },
+  "portfolio_and_execution_invariants": {
+    "initial_capital_inr": 1000000.0,
+    "max_concurrent_positions": 10,
+    "target_allocation_per_stock_pct": 0.1,
+    "cash_floor_inr": 0.0,
+    "integer_shares_only": true,
+    "zero_leverage": true,
+    "signal_timing": "Session t Close (15:30 IST)",
+    "execution_timing": "Session t+1 Open (09:15 IST)",
+    "execution_slippage_bps": 5.0,
+    "statutory_cost_model": {
+      "model_class": "IndianEquityCostModel",
+      "stt_rate": "0.10% on Buy + 0.10% on Sell (Delivery)",
+      "stamp_duty_rate": "0.015% on Buy Leg",
+      "nse_turnover_fee_rate": "0.00297% on Turnover",
+      "brokerage_rate": "min(0.03%, Rs 20.00 per order)",
+      "sebi_turnover_rate": "0.0001% (Rs 10 per Crore)",
+      "gst_rate": "18.0% of (Brokerage + Exchange Fee + SEBI Fee)"
+    },
+    "model_feature_space": "Exact 30 approved econometric features (APPROVED_FEATURES). Zero raw OHLCV or identifier leakage.",
+    "model_artifact": "models/lightgbm.joblib (SHA256: 41e61760fc...)"
+  },
+  "sample_size_and_benchmark_specifications": {
+    "completed_trade_definition": {
+      "entry": "Order successfully executed at session t+1 Open with cash debited and shares credited.",
+      "exit": "Position closed at session exit Open (or synthetic final session Close) with cash credited.",
+      "partial_fills": "Prohibited (all-or-none integer shares).",
+      "rejected_orders": "Orders rejected due to position cap or volume halts do NOT count as completed trades.",
+      "end_of_period_liquidations": "Liquidations on the final validation session are counted in total trades but flagged as synthetic exits in diagnostics."
+    },
+    "calendar_year_assignment": {
+      "assignment_rule": "Every trade is assigned to a calendar year based strictly on its ENTRY_DATE.",
+      "validation_calendar_years": [
+        2023,
+        2024
+      ],
+      "annual_trade_minimum": 40
+    },
+    "benchmark_specification": {
+      "name": "NIFTY 50 Equal-Weight Buy & Hold (Validation Period)",
+      "period": "2023-01-02 to 2024-12-23",
+      "constituents_count": 49,
+      "starting_capital_inr": 1000000.0,
+      "allocation_per_stock_inr": 20408.16,
+      "entry_friction_inr": 1920.0,
+      "valuation_convention": "Mark-to-market daily close on identical session calendar as strategy."
+    }
+  },
+  "prohibited_actions": [
+    "Do not execute any backtest on test_dataset.parquet (2025-01-01 to 2026-07-22).",
+    "Do not expand the candidate grid beyond the 16 frozen configurations.",
+    "Do not perform continuous parameter tuning, third-decimal sweeps, or random search.",
+    "Do not add, remove, or modify candidates after validation results are visible.",
+    "Do not retrain, recalibrate, or modify models/lightgbm.joblib.",
+    "Do not modify feature definitions, labels, or dataset parquet files.",
+    "Do not alter the statutory cost model, 5 bps slippage, or next-session execution timing.",
+    "Do not relax any mandatory acceptance criterion or ignore rejection triggers.",
+    "Do not fabricate or proxy DSR significance without genuine statistical computation.",
+    "Do not deploy live capital, dashboards, or frontends based on validation backtests."
+  ],
+  "required_outputs_from_sprint_6_2": [
+    "data/reports/sprint_6_2_validation_backtest_report.md",
+    "data/reports/sprint_6_2_validation_backtest_summary.json",
+    "data/reports/sprint_6_2_trade_ledger_validation.csv",
+    "data/reports/sprint_6_2_portfolio_ledger_validation.csv",
+    "data/reports/sprint_6_2_frozen_config.json",
+    "tests/test_sprint_6_2_validation_backtest.py"
+  ],
+  "freeze_status_and_blockers": {
+    "is_frozen": true,
+    "amendment_timestamp": "2026-10-29T02:30:00+05:30",
+    "overall_governance_decision": "AMENDED_READY_FOR_INDEPENDENT_RE_GATE_AUDIT",
+    "blocker_resolution_catalog": [
+      {
+        "blocker_id": "BLK-01-ENGINE-ATR-STOP-MISSING",
+        "status": "RESOLVED_IN_SPRINT_6_1_4",
+        "component": "src/backtest/event_driven_engine.py",
+        "resolution": "Implemented EOD-evaluated, next-open-executed ATR trailing stop tracking in EventDrivenBacktestEngine."
+      },
+      {
+        "blocker_id": "BLK-02-ENGINE-THRESHOLD-AND-PACING-MISSING",
+        "status": "RESOLVED_IN_SPRINT_6_1_4",
+        "component": "src/backtest/event_driven_engine.py",
+        "resolution": "Implemented prob_buy_threshold filtering and max_daily_entries pacing in EventDrivenBacktestEngine."
+      },
+      {
+        "blocker_id": "BLK-03-STATISTICAL-DSR-TOOLING-MISSING",
+        "status": "RESOLVED_IN_SPRINT_6_1_4",
+        "component": "src/utils/statistical_tooling.py",
+        "resolution": "Implemented deflated_sharpe_ratio(), holm_bonferroni_correction(), and newey_west_hac_sharpe() in statistical_tooling.py."
+      },
+      {
+        "blocker_id": "BLK-04-ENGINE-TARGET-ALLOC-NAME-ERROR",
+        "status": "RESOLVED_IN_SPRINT_6_1_6",
+        "component": "src/backtest/event_driven_engine.py",
+        "resolution": "Restored target_alloc = min(cash, current_equity * self.max_single_stock_pct) in candidate BUY execution loop."
+      },
+      {
+        "blocker_id": "BLK-05-PROTOCOL-DSR-HURDLE-MISCALIBRATION",
+        "status": "RESOLVED_IN_SPRINT_6_1_8",
+        "component": "data/reports/sprint_6_2_preregistered_protocol.json, src/backtest/cross_sectional_evaluation.py, src/utils/statistical_tooling.py",
+        "resolution": "Formalized Bailey & Lopez de Prado (2014) Eq. 1 hurdle with cohort mean max(0.0, mu_SR) and dispersion sigma_SR * EVT(16); removed sqrt(1 - rho_bar) heuristic in favor of participation ratio N_eff diagnostic; eliminated engine sqrt(2*ln(K)) fallback in favor of pending status and implemented deterministic cross-sectional evaluation harness."
+      }
+    ],
+    "unresolved_blockers": []
+  }
+}

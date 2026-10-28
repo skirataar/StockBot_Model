@@ -1,0 +1,164 @@
+{
+  "experiment_id": "SPRINT-6.2-VALIDATION-EXPERIMENT",
+  "generation_timestamp_utc": "2026-10-28T21:34:02.716823+00:00",
+  "canonical_repository": "/home/skirataar/StockBot/StockBot_Model",
+  "git_commit": "8450e91288c82c4e68c2aacd076c96141a973f96",
+  "protocol_version": "1.2.0-AMENDED",
+  "protocol_sha256": "0384d6a1b9ac7738a92e295fd94bfac113a9a99ce2f399f11ffa5d66164223cb",
+  "target_dataset": "data/processed/validation_dataset.parquet",
+  "target_dataset_sha256": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+  "quarantined_test_dataset": "data/processed/test_dataset.parquet",
+  "quarantined_test_dataset_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+  "frozen_model": "models/lightgbm.joblib",
+  "frozen_model_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+  "code_hashes": {
+    "src/backtest/event_driven_engine.py": "30d5b11a69d9f2b91580fdd4c9b42eee8e7df865a8ac7138fa059740a7cb41d0",
+    "src/backtest/cross_sectional_evaluation.py": "8017860e4e0c245928eee4e1c44317036136b2121665734ecfb913795a375b6c",
+    "src/utils/statistical_tooling.py": "8819d31a1ded2e09dd22be2269730fd22eca05244cc0a79a8f4487b9dbf30b0e"
+  },
+  "candidate_grid": [
+    {
+      "config_id": "CFG-01",
+      "threshold": 0.35,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "role": "threshold_sweep_low",
+      "description": "Lowest discrete filter above baseline argmax; assesses mild turnover reduction."
+    },
+    {
+      "config_id": "CFG-02",
+      "threshold": 0.38,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "role": "threshold_sweep_sub_anchor",
+      "description": "Sub-anchor threshold testing intermediate conviction filtering."
+    },
+    {
+      "config_id": "CFG-03",
+      "threshold": 0.4,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "role": "central_anchor_baseline_exit",
+      "description": "Central experimental anchor with baseline calendar exit."
+    },
+    {
+      "config_id": "CFG-04",
+      "threshold": 0.42,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "role": "threshold_sweep_moderate",
+      "description": "Moderate threshold above anchor; evaluates trade-off between selectivity and volume."
+    },
+    {
+      "config_id": "CFG-05",
+      "threshold": 0.45,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "role": "threshold_sweep_high",
+      "description": "High conviction threshold filtering for upper decile model confidence."
+    },
+    {
+      "config_id": "CFG-06",
+      "threshold": 0.48,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "role": "threshold_sweep_very_high",
+      "description": "Very high conviction threshold approaching top 1% validation signals."
+    },
+    {
+      "config_id": "CFG-07",
+      "threshold": 0.5,
+      "exit_rule": "fixed_5d",
+      "pacing": "unconstrained",
+      "role": "threshold_sweep_extreme",
+      "description": "Extreme conviction boundary; tests upper bound of viable signal density."
+    },
+    {
+      "config_id": "CFG-08",
+      "threshold": 0.4,
+      "exit_rule": "1.5x_ATR",
+      "pacing": "unconstrained",
+      "role": "exit_sweep_tight_atr",
+      "description": "Central anchor with tight trailing stop; tests rapid loss truncation."
+    },
+    {
+      "config_id": "CFG-09",
+      "threshold": 0.4,
+      "exit_rule": "2.0x_ATR",
+      "pacing": "unconstrained",
+      "role": "exit_sweep_medium_atr",
+      "description": "Central anchor with standard trailing stop; balances drift protection and volatility tolerance."
+    },
+    {
+      "config_id": "CFG-10",
+      "threshold": 0.4,
+      "exit_rule": "2.5x_ATR",
+      "pacing": "unconstrained",
+      "role": "exit_sweep_loose_atr",
+      "description": "Central anchor with wide trailing stop; permits broader swing excursions."
+    },
+    {
+      "config_id": "CFG-11",
+      "threshold": 0.4,
+      "exit_rule": "fixed_5d",
+      "pacing": "2",
+      "role": "pacing_sweep_tight",
+      "description": "Central anchor with strict 2-entries-per-day cap; limits concurrent cluster risk."
+    },
+    {
+      "config_id": "CFG-12",
+      "threshold": 0.4,
+      "exit_rule": "fixed_5d",
+      "pacing": "3",
+      "role": "pacing_sweep_medium",
+      "description": "Central anchor with 3-entries-per-day cap; permits moderate daily entry bursts."
+    },
+    {
+      "config_id": "CFG-13",
+      "threshold": 0.42,
+      "exit_rule": "2.0x_ATR",
+      "pacing": "unconstrained",
+      "role": "interaction_moderate_threshold_atr",
+      "description": "Interaction of moderate threshold with 2.0x ATR trailing stop."
+    },
+    {
+      "config_id": "CFG-14",
+      "threshold": 0.45,
+      "exit_rule": "2.0x_ATR",
+      "pacing": "unconstrained",
+      "role": "interaction_high_threshold_atr",
+      "description": "Interaction of high conviction threshold with 2.0x ATR trailing stop."
+    },
+    {
+      "config_id": "CFG-15",
+      "threshold": 0.45,
+      "exit_rule": "2.0x_ATR",
+      "pacing": "2",
+      "role": "interaction_high_threshold_atr_paced",
+      "description": "Triple interaction: high threshold, 2.0x ATR exit, and strict daily entry pacing."
+    },
+    {
+      "config_id": "CFG-16",
+      "threshold": 0.48,
+      "exit_rule": "2.0x_ATR",
+      "pacing": "unconstrained",
+      "role": "interaction_very_high_threshold_atr",
+      "description": "Interaction of very high threshold with 2.0x ATR trailing stop."
+    }
+  ],
+  "reference_baseline": {
+    "config_id": "CFG-BASE",
+    "threshold": 0.334,
+    "exit_rule": "fixed_5d",
+    "pacing": "unconstrained",
+    "description": "Baseline argmax classifier with 5-session calendar exit and unconstrained entry pacing (Sprint 6.0 baseline logic)."
+  },
+  "execution_rules": {
+    "initial_capital": 1000000.0,
+    "max_concurrent_positions": 10,
+    "position_sizing": "min(cash, equity * 0.10)",
+    "slippage_rate": 0.0005,
+    "risk_free_rate_annual": 0.06,
+    "trading_sessions_per_year": 252
+  }
+}

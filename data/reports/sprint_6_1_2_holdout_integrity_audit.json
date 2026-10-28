@@ -1,0 +1,392 @@
+{
+  "metadata": {
+    "audit_id": "sprint_6_1_2_holdout_integrity_audit",
+    "timestamp": "2026-10-28T20:30:00+05:30",
+    "auditor": "Lead Quantitative Researcher & Independent Research Governance Auditor",
+    "governance_framework": "Institutional Quantitative Research Standards & Pre-Registration Protocol",
+    "target_sprints_audited": [
+      "Sprint 5.0",
+      "Sprint 5.1",
+      "Sprint 5.1.1",
+      "Sprint 6.0",
+      "Sprint 6.0.1",
+      "Sprint 6.0.2",
+      "Sprint 6.0.3",
+      "Sprint 6.1",
+      "Sprint 6.1.1"
+    ],
+    "audit_nature": "Strictly read-only forensic quantitative governance audit. Zero model retraining, zero parameter tuning, zero backtest engine alterations.",
+    "status": "COMPLETE"
+  },
+  "executive_verdict": {
+    "verdict": "PASS WITH LIMITATIONS",
+    "holdout_integrity_status": "COMPROMISED_RESEARCH_EXPOSED",
+    "sprint_6_2_authorization": "AUTHORIZED_VALIDATION_ONLY",
+    "verdict_summary": "The research program successfully adheres to operational and accounting invariants: the frozen LightGBM model, dataset partitions, and canonical ledgers remain cryptographically unmodified, and no strategy optimization code was committed during Sprints 6.1 or 6.1.1. However, the claim that 'the holdout test set was not used for strategy selection or optimization' is scientifically UNJUSTIFIED. The core hypotheses proposed for Sprint 6.2—specifically tuning probability thresholds in [0.40, 0.48] and eliminating 5-day calendar exits—were directly formulated after observing the test set's P&L decomposition. Consequently, the 2025-01-01 to 2026-07-22 test period is formally classified as RESEARCH-EXPOSED for those hypotheses. Sprint 6.2 is AUTHORIZED TO PROCEED strictly as a validation-only experiment on the 2023-2024 validation dataset. The existing test set CANNOT be described or utilized as an untouched out-of-sample holdout."
+  },
+  "research_timeline_reconstruction": {
+    "chronology": [
+      {
+        "sprint": "Sprint 4.5.2",
+        "date_or_timestamp": "2026-10-27",
+        "objective": "Dataset construction and leakage-free chronological splitting",
+        "datasets_used": {
+          "training": "2010-01-04 to 2022-12-23 (146,878 rows, 48 stocks)",
+          "validation": "2023-01-02 to 2024-12-23 (23,658 rows, 49 stocks)",
+          "test": "2025-01-01 to 2026-07-22 (19,012 rows, 49 stocks)"
+        },
+        "boundary_purging": "5-session forward horizon purging applied between train/val (240 rows) and val/test (245 rows)",
+        "test_set_touched": false
+      },
+      {
+        "sprint": "Sprint 5.0",
+        "date_or_timestamp": "2026-10-28T00:16:28+05:30",
+        "objective": "Baseline ML classification model training and architecture selection",
+        "datasets_used": {
+          "model_training": "Training dataset (146,878 rows)",
+          "model_selection": "Validation dataset (23,658 rows) - LightGBM selected with Macro-F1 = 0.3510",
+          "model_evaluation": "Test dataset (19,012 rows) evaluated ONCE for classification metrics (Macro-F1 = 0.3810, Accuracy = 42.75%)"
+        },
+        "test_set_touched": true,
+        "test_set_exposure_type": "First evaluation of classification metrics. No hyperparameter or threshold tuning on test data."
+      },
+      {
+        "sprint": "Sprint 5.1 & 5.1.1",
+        "date_or_timestamp": "2026-10-28T00:33:00+05:30",
+        "objective": "Model integrity verification and feature explainability",
+        "datasets_used": {
+          "explainability": "Validation dataset used for permutation importance",
+          "test_set": "Preserved untouched; cryptographic SHA-256 hash verified"
+        },
+        "test_set_touched": false,
+        "test_set_exposure_type": "Hash verification only; zero model re-evaluation"
+      },
+      {
+        "sprint": "Sprint 6.0",
+        "date_or_timestamp": "2026-10-28T01:06:00+05:30",
+        "objective": "Event-driven backtest execution under Indian market microstructure",
+        "datasets_used": {
+          "backtest_dataset": "Test dataset (2025-01-01 to 2026-07-22, 388 sessions) executed directly in EventDrivenBacktestEngine",
+          "validation_dataset": "NEVER BACKTESTED; zero trades executed on 2023-2024 validation period"
+        },
+        "test_set_touched": true,
+        "test_set_exposure_type": "First portfolio backtest evaluation. Produced 621 completed trades (Gross P&L: +₹52,528.87, Friction: ₹213,207.51, Net P&L: -₹160,678.64, Ending Equity: ₹840,519.64)."
+      },
+      {
+        "sprint": "Sprint 6.0.1 - 6.0.3",
+        "date_or_timestamp": "2026-10-28T01:15:00+05:30 to 2026-10-28T01:45:00+05:30",
+        "objective": "Accounting reconciliation, fee formula audit, and invariant verification",
+        "datasets_used": {
+          "source_artifacts": "trade_ledger.csv and portfolio_ledger.csv generated in Sprint 6.0"
+        },
+        "test_set_touched": true,
+        "test_set_exposure_type": "Post-hoc accounting audit of test backtest trades"
+      },
+      {
+        "sprint": "Sprint 6.1",
+        "date_or_timestamp": "2026-10-28T01:52:00+05:30",
+        "objective": "Strategy performance diagnostics and root-cause loss decomposition",
+        "datasets_used": {
+          "source_artifacts": "trade_ledger.csv, portfolio_ledger.csv, test_dataset.parquet"
+        },
+        "test_set_touched": true,
+        "test_set_exposure_type": "Forensic decomposition of 621 test trades by predicted BUY probability bands and exit reasons. Crucially, Section 9 formulated Sprint 6.2 hypotheses directly targeting test-period performance drivers."
+      },
+      {
+        "sprint": "Sprint 6.1.1",
+        "date_or_timestamp": "2026-10-28T02:15:00+05:30",
+        "objective": "Independent diagnostic reconciliation and discrepancy resolution",
+        "datasets_used": {
+          "source_artifacts": "sprint_6_1_strategy_diagnostics_report.md vs sprint_6_1_strategy_diagnostics.json"
+        },
+        "test_set_touched": true,
+        "test_set_exposure_type": "Reconciled 12 discrepancies to canonical JSON. Claimed test set was not used for strategy selection, but overlooked hypothesis-level information leakage."
+      },
+      {
+        "sprint": "Sprint 6.1.2 (Current)",
+        "date_or_timestamp": "2026-10-28T20:30:00+05:30",
+        "objective": "Holdout integrity audit, research selection bias assessment, and preregistration of Sprint 6.2 protocol",
+        "datasets_used": {
+          "scope": "Read-only inspection of all prior sprint artifacts, code, and datasets"
+        },
+        "test_set_touched": true,
+        "test_set_exposure_type": "Audit inspection only. Formally reclassifies test set as RESEARCH-EXPOSED."
+      }
+    ]
+  },
+  "holdout_integrity_assessment": {
+    "claim_audited": "The holdout test set was not used for strategy selection or optimization.",
+    "claim_verdict": "FALSE / SCIENTIFICALLY UNJUSTIFIED (True only in narrow code-commit sense; false under quantitative research governance)",
+    "detailed_findings": {
+      "probability_band_finding_scrutiny": {
+        "claimed_insight": "Trades with P(BUY) >= 0.40 were robustly profitable (+₹66,623.36 net across 271 trades) with positive edge across all sub-bands.",
+        "empirical_breakdown": {
+          "band_033_040": {
+            "trade_count": 350,
+            "share_pct": 56.36,
+            "gross_pnl_inr": -106335.06,
+            "costs_inr": 120966.94,
+            "net_pnl_inr": -227302.0,
+            "gross_win_rate_pct": 45.43,
+            "net_win_rate_pct": 40.0,
+            "gross_profit_factor": 0.7524,
+            "net_profit_factor": 0.544,
+            "mean_net_pnl_inr": -649.43,
+            "assessment": "Catastrophic loss band; generated >100% of portfolio net loss."
+          },
+          "band_040_045": {
+            "trade_count": 181,
+            "share_pct": 29.15,
+            "gross_pnl_inr": 58778.41,
+            "costs_inr": 61834.58,
+            "net_pnl_inr": -3056.17,
+            "gross_win_rate_pct": 53.59,
+            "net_win_rate_pct": 49.17,
+            "gross_profit_factor": 1.2674,
+            "net_profit_factor": 0.9877,
+            "mean_net_pnl_inr": -16.88,
+            "assessment": "CRITICAL AUDIT DISCOVERY: This band is NET NEGATIVE (-₹3,056.17) after friction, with net win rate < 50% and net profit factor < 1.0. It constitutes 66.8% of all trades in the P >= 0.40 bucket. Aggregating it into a monolithic 'P >= 0.40 profitable bucket' masks that the majority of trades in that bucket lost money net of friction."
+          },
+          "band_045_050": {
+            "trade_count": 64,
+            "share_pct": 10.31,
+            "gross_pnl_inr": 48676.56,
+            "costs_inr": 21635.19,
+            "net_pnl_inr": 27041.37,
+            "gross_win_rate_pct": 54.69,
+            "net_win_rate_pct": 54.69,
+            "gross_profit_factor": 1.5541,
+            "net_profit_factor": 1.2773,
+            "mean_net_pnl_inr": 422.52,
+            "assessment": "Modestly profitable, but sample size is small (64 trades over 1.5 years across 49 stocks)."
+          },
+          "band_050_100": {
+            "trade_count": 26,
+            "share_pct": 4.19,
+            "gross_pnl_inr": 51408.96,
+            "costs_inr": 8770.8,
+            "net_pnl_inr": 42638.16,
+            "gross_win_rate_pct": 57.69,
+            "net_win_rate_pct": 50.0,
+            "gross_profit_factor": 2.6441,
+            "net_profit_factor": 2.2155,
+            "mean_net_pnl_inr": 1639.93,
+            "assessment": "Severe small-sample fragility: only 26 trades occurred over 388 trading sessions (approx 1 trade every 15 sessions). Over 64% of the claimed '+₹66.6k profit' in P >= 0.40 relies on these 26 trades. This cannot be characterized as a statistically robust trading edge."
+          },
+          "combined_040_100": {
+            "trade_count": 271,
+            "share_pct": 43.64,
+            "gross_pnl_inr": 158863.93,
+            "costs_inr": 92240.57,
+            "net_pnl_inr": 66623.36,
+            "gross_win_rate_pct": 54.24,
+            "net_win_rate_pct": 50.55,
+            "gross_profit_factor": 1.4688,
+            "net_profit_factor": 1.1746,
+            "mean_net_pnl_inr": 245.84,
+            "assessment": "Positive aggregate net P&L is driven entirely by the top 90 trades (N=64 + N=26), while 181 trades in [0.40, 0.45) were net losers."
+          }
+        }
+      },
+      "exit_mechanism_finding_scrutiny": {
+        "early_sell_signal": {
+          "trades_count": 337,
+          "share_pct": 54.27,
+          "gross_pnl_inr": 278313.73,
+          "costs_inr": 117420.12,
+          "net_pnl_inr": 160893.61,
+          "net_win_rate_pct": 51.63,
+          "mean_net_pnl_inr": 477.43
+        },
+        "max_hold_5d": {
+          "trades_count": 276,
+          "share_pct": 44.44,
+          "gross_pnl_inr": -214554.66,
+          "costs_inr": 93273.12,
+          "net_pnl_inr": -307827.78,
+          "net_win_rate_pct": 37.32,
+          "mean_net_pnl_inr": -1115.32
+        },
+        "synthetic_liquidation": {
+          "trades_count": 8,
+          "share_pct": 1.29,
+          "gross_pnl_inr": -11230.2,
+          "costs_inr": 2514.27,
+          "net_pnl_inr": -13744.47,
+          "net_win_rate_pct": 0.0,
+          "mean_net_pnl_inr": -1718.06
+        },
+        "assessment": "The post-hoc characterization of MAX_HOLD_5D as an 'adverse selection trap' is descriptively true of this specific historical realization. However, designing an exit rule or stop-loss specifically to eliminate this category after inspecting test results is textbook research snooping."
+      },
+      "research_selection_bias_and_harking": {
+        "mechanism": "Hypothesizing After Results are Known (HARKing)",
+        "evidence": "In Sprint 6.1 Section 9, Hypothesis 1 explicitly bounded the threshold search space to theta in [0.40, 0.48], and Hypothesis 2 explicitly targeted the truncation of MAX_HOLD_5D. Both choices were conditioned on observing the test period results.",
+        "governance_classification": "RESEARCH-EXPOSED. The 2025-01-01 to 2026-07-22 test period has been exposed to the researcher's feedback loop. Any future backtest of these candidate rules on this period will suffer from confirmation bias and cannot be treated as an untouched out-of-sample test."
+      }
+    }
+  },
+  "facts_questions_assumptions": {
+    "confirmed_facts": [
+      "The LightGBM model artifact (SHA256: 41e61760fc...) has remained strictly frozen and unchanged since Sprint 5.0.",
+      "The test dataset (SHA256: 7f9d0ce56b...) has remained cryptographically identical since Sprint 4.5.2.",
+      "The backtest trade ledger (621 trades) and portfolio ledger (388 sessions) were generated in Sprint 6.0 and remain unchanged.",
+      "The EventDrivenBacktestEngine was run directly and exclusively on test_dataset.parquet in Sprint 6.0.",
+      "The validation dataset (2023-01-02 to 2024-12-23, 23,658 rows) has NEVER been evaluated in the event-driven backtest engine; zero trades exist for this period in trade_ledger.csv.",
+      "In the test backtest, trades entered with P(BUY) in [0.40, 0.45) (N=181) were net losers (-₹3,056.17 net P&L) after statutory taxes and slippage.",
+      "In the test backtest, trades entered with P(BUY) >= 0.50 numbered only 26 trades over 388 sessions.",
+      "On the validation dataset, model predictions with P(BUY) >= 0.50 occur in only 35 of 23,658 samples (0.15%), and P(BUY) >= 0.45 in only 238 samples (1.01%), indicating severe signal starvation risk.",
+      "All labeled constituent price series in data/labeled/ terminate on or before 2026-07-22; no post-2026-07-22 data exists in the repository.",
+      "No candidate strategies or parameter grids were executed against the test set in Sprint 6.1 or 6.1.1 (the audit was read-only)."
+    ],
+    "unresolved_questions": [
+      "Whether the superior performance of EARLY_SELL_SIGNAL (+₹160.9k) over MAX_HOLD_5D (-₹307.8k) is a persistent economic phenomenon or a sample-specific artifact of the 2025-2026 large-cap regime.",
+      "Whether an entry threshold selected on validation data (e.g. theta = 0.42) will generate sufficient trades in live trading to meet diversification and capacity requirements.",
+      "Whether intraday trailing stop losses (e.g. 1.5x ATR) can be executed without substantial intra-session slippage and execution whip-saws in Indian cash delivery markets.",
+      "Whether transitioning to Single Stock Futures (F&O) would eliminate delivery tax drag without introducing margin financing costs or liquidity discounts in lower-tier NIFTY constituents.",
+      "What true out-of-sample Sharpe ratio the strategy would produce on post-July 2026 market data.",
+      "Whether model class probabilities require Platt scaling or isotonic recalibration on validation data before thresholding."
+    ],
+    "explicit_assumptions": [
+      "Assumed that statutory Indian equity delivery costs (STT 10 bps both legs, Stamp Duty 15 bps buy, NSE charges, Brokerage min(0.03%, ₹20), SEBI, GST 18%, and 5 bps execution slippage) remain identical for all comparative backtests.",
+      "Assumed that the execution timing convention (signal at session t Close -> fill at session t+1 Open) must be strictly maintained to guarantee zero look-ahead bias.",
+      "Assumed that the maximum portfolio capacity of 10 concurrent positions and 10% target allocation per position are fixed institutional constraints.",
+      "Assumed that the validation period (2023-01-02 to 2024-12-23) represents an unbiased in-sample development dataset because it was never backtested in Sprint 6.0.",
+      "Assumed that any research hypothesis inspired by test-period inspection is contaminated for that period regardless of researcher intent.",
+      "Assumed that the Equal-Weight Buy-and-Hold benchmark across all 49 approved constituents is the only fair and valid passive hurdle."
+    ]
+  },
+  "preregistered_sprint_6_2_protocol": {
+    "protocol_id": "PREREG-SPRINT-6-2-VALIDATION-ONLY",
+    "mandate": "Strictly validation-only exploration. ZERO backtest execution on test_dataset.parquet.",
+    "dataset": "data/processed/validation_dataset.parquet (2023-01-02 to 2024-12-23, 23,658 observations, 49 constituents)",
+    "candidate_hypotheses": [
+      {
+        "id": "H1_CONVICTION_THRESHOLD",
+        "description": "Probability threshold entry filtering theta",
+        "rationale": "Filters out negative expected value trades and reduces statutory turnover drag.",
+        "search_space": [0.35, 0.38, 0.40, 0.42, 0.45, 0.48, 0.50],
+        "grid_size": 7
+      },
+      {
+        "id": "H2_DYNAMIC_VOLATILITY_EXIT",
+        "description": "ATR-based volatility trailing stop combined with calendar exit",
+        "rationale": "Mitigates drift losses in decaying positions while preserving momentum winners.",
+        "search_space": ["1.5x_ATR", "2.0x_ATR", "2.5x_ATR", "none_fixed_5d"],
+        "grid_size": 4
+      },
+      {
+        "id": "H3_TURNOVER_PACING",
+        "description": "Maximum new position entries per session",
+        "rationale": "Prevents portfolio saturation on single-day market-wide volatility spikes.",
+        "search_space": [2, 3, "unconstrained"],
+        "grid_size": 3
+      }
+    ],
+    "search_space_constraints": {
+      "total_grid_combinations_cap": 20,
+      "continuous_parameter_tuning_prohibited": true,
+      "third_decimal_tuning_prohibited": true
+    },
+    "metrics_hierarchy": {
+      "primary_objective": "Net Annualized Sharpe Ratio (Rf = 6.0%) on Validation Dataset after all statutory taxes and 5 bps slippage",
+      "secondary_metrics": [
+        "Net Cumulative Return (%)",
+        "Net Profit Factor",
+        "Maximum Drawdown (%)",
+        "Calmar Ratio",
+        "Annualized Portfolio Turnover (%)",
+        "Total Friction as % of Gross Alpha",
+        "Total Executed Trades Count (N)"
+      ]
+    },
+    "portfolio_and_execution_invariants": {
+      "initial_capital_inr": 1000000.0,
+      "max_positions": 10,
+      "max_allocation_per_stock_pct": 0.10,
+      "cash_floor_inr": 0.0,
+      "integer_shares_only": true,
+      "zero_leverage": true,
+      "signal_timing": "Session t Close (15:30 IST)",
+      "execution_timing": "Session t+1 Open (09:15 IST)",
+      "modeled_slippage_bps": 5.0,
+      "statutory_cost_model": "IndianEquityCostModel (Delivery: STT 10 bps buy+sell, Stamp Duty 15 bps buy, Brokerage min(0.03%, ₹20), GST 18%, SEBI ₹10/Cr, NSE 0.00297%)"
+    },
+    "sample_size_safeguards": {
+      "min_trades_total": 100,
+      "min_trades_per_year": 40,
+      "rationale": "Rules generating fewer than 100 trades over 2 years (or <40/year) suffer from sample starvation and cannot establish statistical significance."
+    },
+    "multiple_comparisons_and_overfitting_control": {
+      "methodology": "Deflated Sharpe Ratio (DSR) & Family-Wise Error Rate (Holm-Bonferroni correction)",
+      "effective_trials_parameter": 20,
+      "significance_threshold": 0.05
+    },
+    "benchmark_definition": {
+      "benchmark_name": "NIFTY 50 Equal-Weight Buy & Hold (Validation Period)",
+      "constituents": 49,
+      "period": "2023-01-02 to 2024-12-23",
+      "starting_capital_inr": 1000000.0,
+      "entry_friction_inr": 1920.0
+    },
+    "acceptance_rejection_criteria": {
+      "acceptance_conditions": [
+        "Net Sharpe Ratio on Validation > 0.50",
+        "Net Strategy Return > Net Benchmark Return over 2023-2024",
+        "Maximum Drawdown <= 15.0%",
+        "Total Completed Trades >= 100",
+        "Deflated Sharpe Ratio p-value < 0.05"
+      ],
+      "rejection_triggers": [
+        "Net Sharpe Ratio <= 0.0",
+        "Underperforming Equal-Weight Benchmark",
+        "Maximum Drawdown > 20.0%",
+        "Total Trades < 100 (signal starvation)",
+        "Friction consuming > 100% of gross alpha"
+      ]
+    },
+    "parameter_freezing_milestone": {
+      "point_of_freezing": "At the conclusion of Sprint 6.2 validation backtests, the optimal parameter set must be committed to sprint_6_2_frozen_config.json with a cryptographic SHA-256 hash. Zero re-tuning permitted thereafter."
+    }
+  },
+  "final_out_of_sample_evaluation_design": {
+    "repository_data_ceiling": "2026-07-22",
+    "evaluation_paradox": "The 2025-01-01 to 2026-07-22 test period cannot serve as an untouched holdout because its results informed the Sprint 6.2 hypotheses. Simultaneously, no post-2026-07-22 data currently exists in the repository.",
+    "recommended_evaluation_plan": {
+      "tier_1_gold_standard": {
+        "name": "Chronological Forward Extension (Genuine Out-of-Sample)",
+        "method": "Acquire fresh market data for the 49 constituents from 2026-07-23 to 2026-10-28 (~68 trading sessions) or initiate forward paper-trading. Evaluate the frozen Sprint 6.2 strategy exactly once on this new data.",
+        "evidentiary_weight": "GOLD STANDARD - 100% Uncontaminated Out-of-Sample Evidence"
+      },
+      "tier_2_contingency_reporting": {
+        "name": "Disclosed Research-Exposed Historical Re-Evaluation",
+        "method": "If external data acquisition is impossible, the frozen Sprint 6.2 configuration may be re-run on the 2025-01-01 to 2026-07-22 test period. HOWEVER, the report must prominently state: 'This evaluation is conducted on a research-exposed historical period. Performance cannot be interpreted as out-of-sample validation.'",
+        "evidentiary_weight": "DEGRADED / CONFIRMATORY ONLY"
+      },
+      "tier_3_structural_validation": {
+        "name": "Purged & Embargoed Walk-Forward Cross-Validation (2010-2024)",
+        "method": "Execute 5-fold expanding walk-forward cross-validation across the 2010-2024 training and validation history with 5-session boundary purging and 5-session embargoes to verify parameter stability across market cycles.",
+        "evidentiary_weight": "STRONG ARCHIVAL VALIDATION"
+      }
+    }
+  },
+  "audit_traceability_and_evidence": {
+    "canonical_hashes": {
+      "models/lightgbm.joblib": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "data/processed/test_dataset.parquet": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "data/processed/validation_dataset.parquet": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "data/processed/training_dataset.parquet": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "data/reports/trade_ledger.csv": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "data/reports/portfolio_ledger.csv": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78"
+    },
+    "verification_suite": "tests/test_sprint_6_1_2_holdout_integrity.py",
+    "commands_executed": [
+      "pytest -v tests/test_sprint_6_1_2_holdout_integrity.py",
+      "python3 -c 'import hashlib...'"
+    ],
+    "limitations_of_audit": [
+      "The audit cannot verify intraday order book dynamics without tick-level data.",
+      "The audit cannot reconstruct human researcher intent beyond documented commits, reports, and code artifacts.",
+      "The audit is bounded by the historical dataset ceiling of 2026-07-22."
+    ]
+  }
+}

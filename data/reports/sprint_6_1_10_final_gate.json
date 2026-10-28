@@ -1,0 +1,208 @@
+{
+  "governance_metadata": {
+    "sprint_id": "SPRINT-6.1.10",
+    "title": "Final Statistical Gate and Validation-Experiment Preregistration Review",
+    "auditor_role": "Lead Quantitative Research Auditor & Governance Authority",
+    "timestamp": "2026-10-29T02:50:00+05:30",
+    "canonical_repository_root": "/home/skirataar/StockBot/StockBot_Model",
+    "requested_path_reconciliation": {
+      "requested_path": "/home/skirataar/Website/StockBot_Model",
+      "canonical_path": "/home/skirataar/StockBot/StockBot_Model",
+      "status": "NON_EXISTENT_RESOLVED_TO_CANONICAL"
+    },
+    "git_status": {
+      "branch": "main",
+      "commit": "8450e91288c82c4e68c2aacd076c96141a973f96",
+      "working_tree_clean_for_code": true
+    },
+    "audit_type": "SOURCE_VERIFIED_READ_ONLY_AUDIT",
+    "final_decision": "AUTHORIZED — SPRINT 6.2 VALIDATION-ONLY BACKTESTS MAY BEGIN"
+  },
+  "protected_artifact_integrity": {
+    "models/lightgbm.joblib": {
+      "expected_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "actual_sha256": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "status": "MATCH"
+    },
+    "data/processed/training_dataset.parquet": {
+      "expected_sha256": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "actual_sha256": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "status": "MATCH"
+    },
+    "data/processed/validation_dataset.parquet": {
+      "expected_sha256": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "actual_sha256": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "status": "MATCH"
+    },
+    "data/processed/test_dataset.parquet": {
+      "expected_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "actual_sha256": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "status": "MATCH"
+    },
+    "data/reports/trade_ledger.csv": {
+      "expected_sha256": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "actual_sha256": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "status": "MATCH"
+    },
+    "data/reports/portfolio_ledger.csv": {
+      "expected_sha256": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "actual_sha256": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "status": "MATCH"
+    },
+    "data/reports/sprint_6_2_preregistered_protocol_v1_0_0_frozen.json": {
+      "expected_sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+      "actual_sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+      "status": "MATCH"
+    }
+  },
+  "protocol_specification_and_byte_identity": {
+    "active_protocol_path": "data/reports/sprint_6_2_preregistered_protocol.json",
+    "versioned_protocol_path": "data/reports/sprint_6_2_preregistered_protocol_v1_2_0.json",
+    "sha256": "0384d6a1b9ac7738a92e295fd94bfac113a9a99ce2f399f11ffa5d66164223cb",
+    "byte_identical": true,
+    "version": "1.2.0-AMENDED"
+  },
+  "candidate_grid_inventory": {
+    "frozen_candidate_count": 16,
+    "baseline_id": "CFG-BASE",
+    "candidates": [
+      {
+        "config_id": "CFG-01",
+        "threshold": 0.35,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "sha256_canonical": "463c667f4ab4ed902df35c24f60d62fe50669d511a5b8bbec4a7a8d51199a0e6"
+      },
+      {
+        "config_id": "CFG-02",
+        "threshold": 0.38,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "sha256_canonical": "c0ff481d899c11352fef9c336b9c9f28d6c703b07ae08ea969a5a3a78fcb1458"
+      },
+      {
+        "config_id": "CFG-03",
+        "threshold": 0.4,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "sha256_canonical": "85e6aa9004761da177651a146039ea73062bf6cff4cba6c38a203f191b402830"
+      },
+      {
+        "config_id": "CFG-04",
+        "threshold": 0.42,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "sha256_canonical": "1f99754f950595a5fbc8d31cc9c0c169d273a5a40b3ffeb8e227a695d7eb80dc"
+      },
+      {
+        "config_id": "CFG-05",
+        "threshold": 0.45,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "sha256_canonical": "1204b7853425819c968f92ae07b22d1a3c706fe518a38d77f28bc894b8e23fef"
+      },
+      {
+        "config_id": "CFG-06",
+        "threshold": 0.48,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "sha256_canonical": "748c7287f02ec059d72c1c3836d559b19dfb4f3b584a7e9309b8b090bc19b88e"
+      },
+      {
+        "config_id": "CFG-07",
+        "threshold": 0.5,
+        "exit_rule": "fixed_5d",
+        "pacing": "unconstrained",
+        "sha256_canonical": "bd70a97524200b9c2409f87ef9283e33f377c8672018861d9a263c784918f6f5"
+      },
+      {
+        "config_id": "CFG-08",
+        "threshold": 0.4,
+        "exit_rule": "1.5x_ATR",
+        "pacing": "unconstrained",
+        "sha256_canonical": "2380bc4a88a9fed01f092320b98544e3fe8bfbb4b449c2583d73b6aa8a846f36"
+      },
+      {
+        "config_id": "CFG-09",
+        "threshold": 0.4,
+        "exit_rule": "2.0x_ATR",
+        "pacing": "unconstrained",
+        "sha256_canonical": "ec15f30d4d800760f380e2f5b822061ea335f63116514eb586ea331a98075f8a"
+      },
+      {
+        "config_id": "CFG-10",
+        "threshold": 0.4,
+        "exit_rule": "2.5x_ATR",
+        "pacing": "unconstrained",
+        "sha256_canonical": "858e4bd8a204f7d8c6bdfc3647ceb6d85949d214a1a5b82a3c79e6df77bc7916"
+      },
+      {
+        "config_id": "CFG-11",
+        "threshold": 0.4,
+        "exit_rule": "fixed_5d",
+        "pacing": "2",
+        "sha256_canonical": "9ad2880a3d8e2086e7a602166946bf8b3fb5b2b2b1c6759fc0cc63ea119859f1"
+      },
+      {
+        "config_id": "CFG-12",
+        "threshold": 0.4,
+        "exit_rule": "fixed_5d",
+        "pacing": "3",
+        "sha256_canonical": "2dc06ff50b9cff76214f7b2e95a98292c30df0ef5d8363a0bf3bf20033fa26eb"
+      },
+      {
+        "config_id": "CFG-13",
+        "threshold": 0.42,
+        "exit_rule": "2.0x_ATR",
+        "pacing": "unconstrained",
+        "sha256_canonical": "af74c4eaaddd25fe3871578f7e9a0cb9b09d0cb45763955e8d9c2826cfd49575"
+      },
+      {
+        "config_id": "CFG-14",
+        "threshold": 0.45,
+        "exit_rule": "2.0x_ATR",
+        "pacing": "unconstrained",
+        "sha256_canonical": "467170ca46746e326aaae4a7b5bb400d463eeb6dff93bcf9509df636eb0f413a"
+      },
+      {
+        "config_id": "CFG-15",
+        "threshold": 0.45,
+        "exit_rule": "2.0x_ATR",
+        "pacing": "2",
+        "sha256_canonical": "6020acb587f80870f78f8cb6440f36f6d0f1712a64c5bc407ef466827a5bc8aa"
+      },
+      {
+        "config_id": "CFG-16",
+        "threshold": 0.48,
+        "exit_rule": "2.0x_ATR",
+        "pacing": "unconstrained",
+        "sha256_canonical": "78cf65b8b4768506fa34d5804369e06190547ae071f654b1fec3583526685f0e"
+      }
+    ]
+  },
+  "statistical_decision_rules": {
+    "primary_endpoint": "Net Annualized Sharpe Ratio of top candidate (Rf=6.0% annual, 252 sessions/year)",
+    "primary_null_hypothesis": "H0: SR <= SR_star_ann vs H1: SR > SR_star_ann",
+    "expected_max_hurdle_formula": "SR_star_ann = max(0.0, mu_SR_cohort) + sigma_SR * EVT(16)",
+    "evt_factor_value": 1.8004542393102163,
+    "mertens_asymptotic_variance": "V = 1 - gamma_3 * SR_daily + ((gamma_4 - 1)/4) * SR_daily^2 (evaluated on daily scale)",
+    "significance_threshold": "p_value < 0.05 (DSR > 0.95)",
+    "multiple_comparisons_procedure": "Holm-Bonferroni step-down applied to secondary candidate hypotheses across the 16 trials; not double-counted with DSR",
+    "degeneracy_stopping_rule": "If sigma_SR < 1e-6 or any candidate output is non-finite or missing, fails closed with INCONCLUSIVE_DEGENERATE_DISPERSION"
+  },
+  "validation_experiment_governance_scope": {
+    "dataset_target": "data/processed/validation_dataset.parquet",
+    "date_window": "2023-01-02 to 2024-12-23",
+    "universe_constituents": 49,
+    "quarantined_test_period": "2025-01-01 to 2026-07-22 (strictly prohibited)",
+    "frozen_model_path": "models/lightgbm.joblib",
+    "execution_engine_class": "EventDrivenBacktestEngine",
+    "cross_sectional_evaluator_class": "CrossSectionalEvaluator"
+  },
+  "audit_conclusion": {
+    "blockers_remaining": 0,
+    "unresolved_ambiguities": 0,
+    "authorization_decision": "AUTHORIZED — SPRINT 6.2 VALIDATION-ONLY BACKTESTS MAY BEGIN",
+    "scope_limitations": "Authorization applies strictly to validation_dataset.parquet. Zero test-set backtests authorized. No live trading deployment authorized."
+  }
+}

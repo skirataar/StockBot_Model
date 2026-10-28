@@ -1,0 +1,124 @@
+{
+  "sprint_id": "SPRINT-6-1-4",
+  "sprint_name": "Backtest Engine Parameterization & Statistical Tooling",
+  "timestamp": "2026-10-28T21:15:00+05:30",
+  "governance_decision": "READY FOR SPRINT 6.2 ENGINEERING GATE",
+  "author_role": "Lead Quantitative Research Engineer & Research Governance Auditor",
+  "execution_scope": "ENGINEERING_AND_UNIT_TESTING_ONLY",
+  "historical_backtest_executed": false,
+  "validation_dataset_inspected": false,
+  "test_dataset_inspected": false,
+  "protocol_integrity": {
+    "protocol_path": "data/reports/sprint_6_2_preregistered_protocol.json",
+    "preflight_sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+    "post_sprint_sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+    "is_unmodified": true
+  },
+  "canonical_artifact_hashes": {
+    "models/lightgbm.joblib": {
+      "expected": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "actual": "41e61760fc31c72095cd2071fdb843657bd76143ed4535f9b247db78e0c73761",
+      "status": "MATCH"
+    },
+    "data/processed/validation_dataset.parquet": {
+      "expected": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "actual": "a937fde4c039f4e55025a3bb338dd5894879f928efc55fd0a18fbdf43df23cf8",
+      "status": "MATCH"
+    },
+    "data/processed/training_dataset.parquet": {
+      "expected": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "actual": "1d39b686f111e8caecb00cf268de7de00b8fe0dfa5d2073a9173bea0e4b2cf56",
+      "status": "MATCH"
+    },
+    "data/processed/test_dataset.parquet": {
+      "expected": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "actual": "7f9d0ce56b42a7cc2780f90edb4b27d9bc923847c6778e5ba4c6ebc754915381",
+      "status": "MATCH"
+    },
+    "data/reports/trade_ledger.csv": {
+      "expected": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "actual": "f5340b8402c198730d53e4126a8b40463c7cdd832fc0919c1b6bafacf501eeff",
+      "status": "MATCH"
+    },
+    "data/reports/portfolio_ledger.csv": {
+      "expected": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "actual": "f565b8c09b958023a243394bfb6e96887dd3588d44d38623c2b24faa43117f78",
+      "status": "MATCH"
+    }
+  },
+  "blocker_resolution_status": [
+    {
+      "blocker_id": "BLK-01-ENGINE-ATR-STOP-MISSING",
+      "component": "src/backtest/event_driven_engine.py",
+      "status": "RESOLVED",
+      "implementation": "Implemented compute_atr_series (14-session SMA ATR), EOD Close trailing stop inspection against peak close, next-session Open execution with 5 bps slippage, adverse gap absorption, and deterministic exit precedence."
+    },
+    {
+      "blocker_id": "BLK-02-ENGINE-THRESHOLD-AND-PACING-MISSING",
+      "component": "src/backtest/event_driven_engine.py",
+      "status": "RESOLVED",
+      "implementation": "Introduced StrategyConfig dataclass and parameterized run_simulation() with prob_buy_threshold (with equality accepted and argmax baseline preservation) and max_daily_entries (counting filled orders, rejecting excess with DAILY_ENTRY_PACING_LIMIT_REACHED)."
+    },
+    {
+      "blocker_id": "BLK-03-STATISTICAL-DSR-TOOLING-MISSING",
+      "component": "src/utils/statistical_tooling.py",
+      "status": "RESOLVED",
+      "implementation": "Implemented deflated_sharpe_ratio() using Bailey & Lopez de Prado (2014) formulation with Pearson kurtosis, holm_bonferroni_correction() step-down procedure, and newey_west_hac_sharpe() with 5 lags."
+    }
+  ],
+  "unit_testing_summary": {
+    "test_suite": "tests/test_sprint_6_1_4_engine_parameterization.py",
+    "total_tests_run": 23,
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "execution_time_seconds": 2.33,
+    "test_data_nature": "100% synthetic in-memory fixtures (zero parquet datasets loaded)",
+    "coverage_breakdown": {
+      "ScopeA_EntryThreshold": 4,
+      "ScopeB_DailyEntryPacing": 5,
+      "ScopeC_ATRExits": 6,
+      "ScopeD_StatisticalTooling": 5,
+      "ScopeE_ConfigurationCompatibility": 3
+    }
+  },
+  "regression_testing_summary": {
+    "test_suites_executed": [
+      "tests/test_sprint_6_1_4_engine_parameterization.py",
+      "tests/test_sprint_6_1_3_protocol_normalization.py",
+      "tests/test_sprint_6_1_2_holdout_integrity.py"
+    ],
+    "total_regression_tests_run": 46,
+    "total_passed": 46,
+    "total_failed": 0,
+    "historical_backtests_in_test_suite": 0
+  },
+  "files_modified_or_created": [
+    {
+      "path": "src/utils/statistical_tooling.py",
+      "action": "CREATED",
+      "purpose": "Implements deflated_sharpe_ratio, holm_bonferroni_correction, and newey_west_hac_sharpe."
+    },
+    {
+      "path": "src/backtest/event_driven_engine.py",
+      "action": "MODIFIED",
+      "purpose": "Added StrategyConfig dataclass, 14-period SMA ATR calculation, EOD trailing stop evaluation, prob_buy thresholding, daily entry pacing, and DSR/HAC metric integration."
+    },
+    {
+      "path": "tests/test_sprint_6_1_4_engine_parameterization.py",
+      "action": "CREATED",
+      "purpose": "Comprehensive unit test suite covering Scopes A through E using synthetic fixtures."
+    },
+    {
+      "path": "data/reports/sprint_6_1_4_engine_parameterization.json",
+      "action": "CREATED",
+      "purpose": "Machine-readable engineering verification artifact."
+    },
+    {
+      "path": "data/reports/sprint_6_1_4_engine_parameterization_report.md",
+      "action": "CREATED",
+      "purpose": "Formal quantitative engineering and research governance report."
+    }
+  ],
+  "next_authorized_action": "Sprint 6.2 Pre-Backtest Engineering Review and Authorization"
+}

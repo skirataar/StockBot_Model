@@ -1,0 +1,114 @@
+{
+  "metadata": {
+    "report_id": "sprint_6_1_3_protocol_normalization",
+    "timestamp": "2026-10-28T20:55:00+05:30",
+    "author_role": "Lead Quantitative Researcher & Research Governance Auditor",
+    "mission": "Protocol normalization, candidate grid de-confliction, and freezing prior to Sprint 6.2 execution",
+    "status": "COMPLETE",
+    "final_governance_decision": "BLOCKED — PROTOCOL OR IMPLEMENTATION ISSUES REMAIN"
+  },
+  "candidate_grid_normalization": {
+    "initial_cartesian_product": {
+      "thresholds_count": 7,
+      "thresholds": [0.35, 0.38, 0.40, 0.42, 0.45, 0.48, 0.50],
+      "exit_rules_count": 4,
+      "exit_rules": ["1.5x_ATR", "2.0x_ATR", "2.5x_ATR", "fixed_5d"],
+      "pacing_rules_count": 3,
+      "pacing_rules": ["2", "3", "unconstrained"],
+      "total_combinations": 84
+    },
+    "protocol_constraint_cap": 20,
+    "normalized_candidate_count": 16,
+    "deconfliction_methodology": "Orthogonal One-Factor-At-A-Time (OFAT) sensitivity around a balanced central anchor (theta=0.40, fixed_5d exit, unconstrained pacing) plus targeted cross-factor interaction pairs. Constructed strictly using research constraints and sample size considerations, not test-period performance.",
+    "frozen_candidates": [
+      {"config_id": "CFG-01", "threshold": 0.35, "exit_rule": "fixed_5d", "pacing": "unconstrained", "role": "threshold_sweep_low"},
+      {"config_id": "CFG-02", "threshold": 0.38, "exit_rule": "fixed_5d", "pacing": "unconstrained", "role": "threshold_sweep_sub_anchor"},
+      {"config_id": "CFG-03", "threshold": 0.40, "exit_rule": "fixed_5d", "pacing": "unconstrained", "role": "central_anchor_baseline_exit"},
+      {"config_id": "CFG-04", "threshold": 0.42, "exit_rule": "fixed_5d", "pacing": "unconstrained", "role": "threshold_sweep_moderate"},
+      {"config_id": "CFG-05", "threshold": 0.45, "exit_rule": "fixed_5d", "pacing": "unconstrained", "role": "threshold_sweep_high"},
+      {"config_id": "CFG-06", "threshold": 0.48, "exit_rule": "fixed_5d", "pacing": "unconstrained", "role": "threshold_sweep_very_high"},
+      {"config_id": "CFG-07", "threshold": 0.50, "exit_rule": "fixed_5d", "pacing": "unconstrained", "role": "threshold_sweep_extreme"},
+      {"config_id": "CFG-08", "threshold": 0.40, "exit_rule": "1.5x_ATR", "pacing": "unconstrained", "role": "exit_sweep_tight_atr"},
+      {"config_id": "CFG-09", "threshold": 0.40, "exit_rule": "2.0x_ATR", "pacing": "unconstrained", "role": "exit_sweep_medium_atr"},
+      {"config_id": "CFG-10", "threshold": 0.40, "exit_rule": "2.5x_ATR", "pacing": "unconstrained", "role": "exit_sweep_loose_atr"},
+      {"config_id": "CFG-11", "threshold": 0.40, "exit_rule": "fixed_5d", "pacing": "2", "role": "pacing_sweep_tight"},
+      {"config_id": "CFG-12", "threshold": 0.40, "exit_rule": "fixed_5d", "pacing": "3", "role": "pacing_sweep_medium"},
+      {"config_id": "CFG-13", "threshold": 0.42, "exit_rule": "2.0x_ATR", "pacing": "unconstrained", "role": "interaction_moderate_threshold_atr"},
+      {"config_id": "CFG-14", "threshold": 0.45, "exit_rule": "2.0x_ATR", "pacing": "unconstrained", "role": "interaction_high_threshold_atr"},
+      {"config_id": "CFG-15", "threshold": 0.45, "exit_rule": "2.0x_ATR", "pacing": "2", "role": "interaction_high_threshold_atr_paced"},
+      {"config_id": "CFG-16", "threshold": 0.48, "exit_rule": "2.0x_ATR", "pacing": "unconstrained", "role": "interaction_very_high_threshold_atr"}
+    ]
+  },
+  "acceptance_criteria_normalization": {
+    "reconciliation_of_sprint_6_1_2_conflicts": [
+      {
+        "issue": "Drawdown Threshold Ambiguity",
+        "description": "Sprint 6.1.2 Section 5.8 listed Max Drawdown <= 15.0% under acceptance conditions, but listed Max Drawdown > 20.0% under rejection triggers, leaving a 15.01% to 20.00% ambiguous gray zone.",
+        "resolution": "NORMALIZED to strict 15.00%. Maximum Drawdown <= 15.00% is mandatory. Any drawdown > 15.00% triggers automatic rejection."
+      },
+      {
+        "issue": "Net Profit Factor Status",
+        "description": "Sprint 6.1.2 Section 5.3 listed Net Profit Factor > 1.15 as a secondary constraint, but omitted it from the formal acceptance conditions in Section 5.8.",
+        "resolution": "NORMALIZED to mandatory acceptance criterion M6: Net Profit Factor >= 1.15."
+      },
+      {
+        "issue": "Annual Trade Count Minimum",
+        "description": "Sprint 6.1.2 Section 5.5 specified >= 40 trades per year, but Section 5.8 only checked Total Completed Trades >= 100.",
+        "resolution": "NORMALIZED to mandatory acceptance criterion M5: >= 40 trades in 2023 AND >= 40 trades in 2024 (classified by entry_date)."
+      },
+      {
+        "issue": "Friction Efficiency Formula",
+        "description": "Sprint 6.1.2 listed friction > 100% of gross alpha as a rejection trigger without defining the condition when Gross Alpha <= 0.",
+        "resolution": "NORMALIZED: Strategy must generate Gross Alpha > 0 and Total Friction <= Gross Alpha. If Gross Alpha <= 0, the candidate is automatically rejected."
+      }
+    ],
+    "mandatory_criteria_count": 8,
+    "automatic_rejection_triggers_count": 10,
+    "diagnostic_metrics_count": 7
+  },
+  "technical_feasibility_audit": {
+    "engine_source_file": "src/backtest/event_driven_engine.py",
+    "inspected_capabilities": {
+      "entry_threshold_parameter": {
+        "status": "UNIMPLEMENTED",
+        "code_evidence": "Line 382 checks 'if sig == 1:', hardcoding model argmax prediction. No threshold parameter exists."
+      },
+      "entry_pacing_parameter": {
+        "status": "UNIMPLEMENTED",
+        "code_evidence": "Line 390 sets 'available_slots = self.max_positions - len(open_positions)'. No daily entry cap exists."
+      },
+      "atr_trailing_stop_logic": {
+        "status": "UNIMPLEMENTED",
+        "code_evidence": "Lines 318 and 475 only support holding_sessions >= 5 or early_exit_staged on model SELL. Zero ATR calculation or stop logic exists."
+      },
+      "deflated_sharpe_tooling": {
+        "status": "UNIMPLEMENTED",
+        "code_evidence": "Zero DSR implementation exists anywhere in src/ or tests/."
+      }
+    },
+    "feasibility_verdict": "BLOCKED — Engine and statistical tooling modifications are strictly required before candidate backtests can be executed."
+  },
+  "frozen_protocol_artifact": {
+    "file_path": "data/reports/sprint_6_2_preregistered_protocol.json",
+    "sha256": "a49361b17e619e88d75cb2b9e5c35b41e767f423a8ee2ffe2237f0450ae4ab8a",
+    "bytes_hashed": "Full exact UTF-8 file bytes of sprint_6_2_preregistered_protocol.json"
+  },
+  "unresolved_blockers": [
+    {
+      "id": "BLK-01",
+      "summary": "EventDrivenBacktestEngine lacks ATR trailing stop logic and state tracking.",
+      "severity": "CRITICAL_BLOCKER"
+    },
+    {
+      "id": "BLK-02",
+      "summary": "EventDrivenBacktestEngine lacks probability threshold filtering and daily pacing parameters.",
+      "severity": "CRITICAL_BLOCKER"
+    },
+    {
+      "id": "BLK-03",
+      "summary": "Codebase lacks Deflated Sharpe Ratio (DSR) and Holm-Bonferroni statistical calculation functions.",
+      "severity": "CRITICAL_BLOCKER"
+    }
+  ],
+  "verification_suite": "tests/test_sprint_6_1_3_protocol_normalization.py"
+}
